@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.clients
 
+import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
 import com.ianarbuckle.gymplannerservice.model.Client
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service

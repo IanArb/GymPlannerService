@@ -34,7 +34,14 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+    testImplementation("com.google.truth:truth:1.4.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    testImplementation("io.mockk:mockk:1.13.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.17.0")
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-inline:3.12.4") // The mockito-inline dependency
 }
 
 kotlin {

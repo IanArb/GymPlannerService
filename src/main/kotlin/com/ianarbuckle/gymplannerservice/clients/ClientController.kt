@@ -7,23 +7,23 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("api/v1/clients")
+@RequestMapping("/api/v1")
 class ClientController(private val clientGymPlansService: ClientGymPlansService) {
 
-    @GetMapping
+    @GetMapping("/clients")
     suspend fun findAllClients(): Flow<Client> = clientGymPlansService.findAllClients()
 
     @GetMapping("{id}")
     suspend fun findClientById(@PathVariable id: String): Client? = clientGymPlansService.findClientById(id)
 
-    @PostMapping
+    @PostMapping("/clients")
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun saveGymPlan(@Valid @RequestBody client: Client) = clientGymPlansService.createClient(client)
 
-    @PutMapping
+    @PutMapping("/clients")
     suspend fun updateGymPlan(@Valid @RequestBody client: Client) = clientGymPlansService.updateClient(client)
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/clients/{id}")
     suspend fun deleteClientById(@PathVariable id: String) = clientGymPlansService.deleteById(id)
 
 }

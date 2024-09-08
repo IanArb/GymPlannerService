@@ -1,4 +1,4 @@
-package com.ianarbuckle.gymplannerservice.trainers
+package com.ianarbuckle.gymplannerservice.trainers.data
 
 import com.ianarbuckle.gymplannerservice.model.PersonalTrainer
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository

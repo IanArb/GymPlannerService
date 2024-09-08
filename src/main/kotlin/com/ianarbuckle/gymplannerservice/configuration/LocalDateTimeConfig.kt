@@ -9,12 +9,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class LocalDateTimeConfig {
-
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
+    fun objectMapper(): ObjectMapper =
+        ObjectMapper()
             .registerModule(KotlinModule.Builder().build())
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-    }
 }

@@ -1,13 +1,10 @@
 package com.ianarbuckle.gymplannerservice.clients
 
-import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
 import com.ianarbuckle.gymplannerservice.data.DataProvider
-import kotlinx.coroutines.flow.flowOf
-import org.mockito.Mockito.`when` as whenever
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.anyString
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
@@ -18,13 +15,13 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
+import org.mockito.Mockito.`when` as whenever
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(controllers = [ClientController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 class ClientGymPlanControllerTests {
-
     @Autowired
     lateinit var webTestClient: WebTestClient
 
@@ -36,8 +33,8 @@ class ClientGymPlanControllerTests {
         runTest {
             val createClient = DataProvider.createClient()
 
-
-            val clientJson = """
+            val clientJson =
+                """
 {
     "firstName": "Pablo",
     "surname": "Escobar",
@@ -87,41 +84,55 @@ class ClientGymPlanControllerTests {
         ]
     }
 }
-            """.trimIndent()
+                """.trimIndent()
 
-            webTestClient.post()
+            webTestClient
+                .post()
                 .uri("/api/v1/clients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(clientJson))
                 .exchange()
-                .expectStatus().isCreated()
-
+                .expectStatus()
+                .isCreated()
         }
     }
 
     @Test
-    fun `get all clients endpoint should return 200`() = runTest {
-        webTestClient.get().uri("/api/v1/clients")
-            .exchange()
-            .expectStatus().isOk
-            .expectHeader().contentType(MediaType.APPLICATION_JSON)
-            .expectBody()
-    }
+    fun `get all clients endpoint should return 200`() =
+        runTest {
+            webTestClient
+                .get()
+                .uri("/api/v1/clients")
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+        }
 
     @Test
-    fun `getClient should return 404 if client not found`() = runTest {
-        whenever(clientService.findClientById(anyString())).thenReturn(null)
+    fun `getClient should return 404 if client not found`() =
+        runTest {
+            whenever(clientService.findClientById(anyString())).thenReturn(null)
 
-        webTestClient.get().uri("/clients/2")
-            .exchange()
-            .expectStatus().isNotFound
-    }
+            webTestClient
+                .get()
+                .uri("/clients/2")
+                .exchange()
+                .expectStatus()
+                .isNotFound
+        }
 
     @Test
-    fun `test delete endpoint returns 200`() = runTest {
-        webTestClient.delete().uri("/api/v1/clients/1")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isOk
-    }
+    fun `test delete endpoint returns 200`() =
+        runTest {
+            webTestClient
+                .delete()
+                .uri("/api/v1/clients/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
 }

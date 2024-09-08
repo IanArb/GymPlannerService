@@ -7,28 +7,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeClientGymPlanService : ClientGymPlansService {
+    override suspend fun findAllClients(): Flow<Client> = flowOf(DataProvider.createClient())
 
-    override suspend fun findAllClients(): Flow<Client> {
-        return flowOf(DataProvider.createClient())
-    }
+    override suspend fun findClientById(id: String): Client? = DataProvider.createClient()
 
-    override suspend fun findClientById(id: String): Client? {
-        return DataProvider.createClient()
-    }
-
-    override suspend fun createClient(client: Client): Client {
-        return DataProvider.createClient()
-    }
+    override suspend fun createClient(client: Client): Client = DataProvider.createClient()
 
     override suspend fun updateClient(client: Client) {
-        //noop
+        // noop
     }
 
     override suspend fun deleteById(id: String) {
-        //noop
+        // noop
     }
 
     override suspend fun deleteAll() {
-        //noop
+        // noop
     }
 }

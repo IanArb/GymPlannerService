@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring") version "2.0.0"
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "com.ianarbuckle"
@@ -52,4 +53,11 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint("1.3.1")
+    }
 }

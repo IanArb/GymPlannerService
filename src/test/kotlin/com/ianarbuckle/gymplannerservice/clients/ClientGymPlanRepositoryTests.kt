@@ -10,20 +10,21 @@ import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ClientGymPlanRepositoryTests {
-
     private val gymPlanRepository = FakeClientGymPlanRepository()
 
     @Test
-    fun `verify that find returns the list of clients`() = runTest {
-        gymPlanRepository.findAll().test {
-            assertThat(awaitItem()).isEqualTo(DataProvider.createClient())
-            assertThat(awaitItem()).isEqualTo(DataProvider.createClient(id = "2"))
-            awaitComplete()
+    fun `verify that find returns the list of clients`() =
+        runTest {
+            gymPlanRepository.findAll().test {
+                assertThat(awaitItem()).isEqualTo(DataProvider.createClient())
+                assertThat(awaitItem()).isEqualTo(DataProvider.createClient(id = "2"))
+                awaitComplete()
+            }
         }
-    }
 
     @Test
-    fun `verify save creates the client`() = runTest {
-        assertThat(gymPlanRepository.save(DataProvider.createClient())).isEqualTo(DataProvider.createClient())
-    }
+    fun `verify save creates the client`() =
+        runTest {
+            assertThat(gymPlanRepository.save(DataProvider.createClient())).isEqualTo(DataProvider.createClient())
+        }
 }

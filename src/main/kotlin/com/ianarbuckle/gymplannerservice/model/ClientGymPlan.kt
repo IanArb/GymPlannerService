@@ -53,7 +53,7 @@ data class PersonalTrainer(
 @Document
 data class Session(
     val name: String,
-    val workouts: List<Workout>
+    val workouts: List<Workout>,
 )
 
 @Document

@@ -12,11 +12,12 @@ import kotlin.reflect.KClass
 annotation class FutureDate(
     val message: String = "Date must be in the future",
     val groups: Array<KClass<*>> = [],
-    val payload: Array<KClass<out Payload>> = []
+    val payload: Array<KClass<out Payload>> = [],
 )
 
 class FutureDateValidator : ConstraintValidator<FutureDate, LocalDateTime> {
-    override fun isValid(value: LocalDateTime?, context: ConstraintValidatorContext): Boolean {
-        return value?.isAfter(LocalDateTime.now()) ?: false
-    }
+    override fun isValid(
+        value: LocalDateTime?,
+        context: ConstraintValidatorContext,
+    ): Boolean = value?.isAfter(LocalDateTime.now()) ?: false
 }

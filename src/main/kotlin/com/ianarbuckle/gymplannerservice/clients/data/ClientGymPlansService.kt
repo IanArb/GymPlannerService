@@ -1,7 +1,5 @@
-package com.ianarbuckle.gymplannerservice.clients
+package com.ianarbuckle.gymplannerservice.clients.data
 
-import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
-import com.ianarbuckle.gymplannerservice.model.Client
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
@@ -20,7 +18,7 @@ interface ClientGymPlansService {
 }
 
 @Service
-class DefaultClientGymPlansService(
+class ClientGymPlansServiceImpl(
     private val repository: ClientGymPlansRepository,
 ) : ClientGymPlansService {
     override suspend fun findAllClients(): Flow<Client> = repository.findAll()

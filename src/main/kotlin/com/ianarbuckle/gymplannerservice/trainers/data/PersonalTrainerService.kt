@@ -1,7 +1,6 @@
-package com.ianarbuckle.gymplannerservice.trainers
+package com.ianarbuckle.gymplannerservice.trainers.data
 
-import com.ianarbuckle.gymplannerservice.model.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
+import com.ianarbuckle.gymplannerservice.clients.data.PersonalTrainer
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 

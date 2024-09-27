@@ -3,7 +3,7 @@ package com.ianarbuckle.gymplannerservice.clients
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.clients.fakes.FakeClientGymPlanRepository
-import com.ianarbuckle.gymplannerservice.data.DataProvider
+import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.Test
@@ -16,8 +16,8 @@ class ClientGymPlanRepositoryTests {
     fun `verify that find returns the list of clients`() =
         runTest {
             gymPlanRepository.findAll().test {
-                assertThat(awaitItem()).isEqualTo(DataProvider.createClient())
-                assertThat(awaitItem()).isEqualTo(DataProvider.createClient(id = "2"))
+                assertThat(awaitItem()).isEqualTo(ClientsDataProvider.createClient())
+                assertThat(awaitItem()).isEqualTo(ClientsDataProvider.createClient(id = "2"))
                 awaitComplete()
             }
         }
@@ -25,6 +25,6 @@ class ClientGymPlanRepositoryTests {
     @Test
     fun `verify save creates the client`() =
         runTest {
-            assertThat(gymPlanRepository.save(DataProvider.createClient())).isEqualTo(DataProvider.createClient())
+            assertThat(gymPlanRepository.save(ClientsDataProvider.createClient())).isEqualTo(ClientsDataProvider.createClient())
         }
 }

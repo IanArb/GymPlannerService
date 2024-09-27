@@ -1,6 +1,7 @@
 package com.ianarbuckle.gymplannerservice.clients
 
-import com.ianarbuckle.gymplannerservice.data.DataProvider
+import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
+import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,7 +32,7 @@ class ClientGymPlanControllerTests {
     @Test
     fun `saveClient should return created client`() {
         runTest {
-            val createClient = DataProvider.createClient()
+            val createClient = ClientsDataProvider.createClient()
 
             val clientJson =
                 """

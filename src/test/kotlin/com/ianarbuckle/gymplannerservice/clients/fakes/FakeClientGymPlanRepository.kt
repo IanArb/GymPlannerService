@@ -1,8 +1,8 @@
 package com.ianarbuckle.gymplannerservice.clients.fakes
 
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
-import com.ianarbuckle.gymplannerservice.data.DataProvider
-import com.ianarbuckle.gymplannerservice.model.Client
+import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
+import com.ianarbuckle.gymplannerservice.clients.data.Client
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
@@ -38,24 +38,24 @@ class FakeClientGymPlanRepository : ClientGymPlansRepository {
 
     override fun findAll(): Flow<Client> =
         flowOf(
-            DataProvider.createClient(),
-            DataProvider.createClient(
+            ClientsDataProvider.createClient(),
+            ClientsDataProvider.createClient(
                 id = "2",
             ),
         )
 
     override fun findAllById(ids: Iterable<String>): Flow<Client> =
         flowOf(
-            DataProvider.createClient(),
-            DataProvider.createClient(
+            ClientsDataProvider.createClient(),
+            ClientsDataProvider.createClient(
                 id = Random.nextLong().toString(),
             ),
         )
 
     override fun findAllById(ids: Flow<String>): Flow<Client> =
         flowOf(
-            DataProvider.createClient(),
-            DataProvider.createClient(
+            ClientsDataProvider.createClient(),
+            ClientsDataProvider.createClient(
                 id = Random.nextLong().toString(),
             ),
         )
@@ -64,7 +64,7 @@ class FakeClientGymPlanRepository : ClientGymPlansRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun <S : Client> save(entity: S): Client = DataProvider.createClient()
+    override suspend fun <S : Client> save(entity: S): Client = ClientsDataProvider.createClient()
 
     override fun <S : Client> saveAll(entities: Iterable<S>): Flow<S> {
         TODO("Not yet implemented")

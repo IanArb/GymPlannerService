@@ -1,14 +1,14 @@
 package com.ianarbuckle.gymplannerservice.data
 
-import com.ianarbuckle.gymplannerservice.model.Client
-import com.ianarbuckle.gymplannerservice.model.GymPlan
-import com.ianarbuckle.gymplannerservice.model.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.model.Session
-import com.ianarbuckle.gymplannerservice.model.Weight
-import com.ianarbuckle.gymplannerservice.model.Workout
+import com.ianarbuckle.gymplannerservice.clients.data.Client
+import com.ianarbuckle.gymplannerservice.clients.data.GymPlan
+import com.ianarbuckle.gymplannerservice.clients.data.PersonalTrainer
+import com.ianarbuckle.gymplannerservice.clients.data.Session
+import com.ianarbuckle.gymplannerservice.clients.data.Weight
+import com.ianarbuckle.gymplannerservice.clients.data.Workout
 import java.time.LocalDateTime
 
-object DataProvider {
+object ClientsDataProvider {
     fun createClient(
         id: String = "123456789",
         firstName: String = "John",

@@ -1,4 +1,4 @@
-package com.ianarbuckle.gymplannerservice.model
+package com.ianarbuckle.gymplannerservice.clients.data
 
 import FutureDate
 import jakarta.validation.Valid

@@ -4,6 +4,7 @@ import com.ianarbuckle.gymplannerservice.fitnessclass.data.Duration
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
 import java.time.DayOfWeek
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 object FitnessClassDataProvider {
 
@@ -14,14 +15,9 @@ object FitnessClassDataProvider {
     fun createClass(): FitnessClass {
         return FitnessClass(
             dayOfWeek = DayOfWeek.MONDAY,
-            startTime = LocalDateTime.of(
-                2024,
+            startTime = LocalTime.of(
+                10,
                 10 ,
-                1,
-                1 ,
-                0,
-                0,
-                0
             ),
             duration = Duration(
                 value = 1,
@@ -29,7 +25,11 @@ object FitnessClassDataProvider {
             ),
             description = "Pilates class",
             imageUrl = "",
-            name = "Pilates"
+            name = "Pilates",
+            endTime =  LocalTime.of(
+                10,
+                10 ,
+            ),
         )
     }
 }

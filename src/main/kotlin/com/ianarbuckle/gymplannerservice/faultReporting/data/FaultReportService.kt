@@ -2,7 +2,6 @@ package com.ianarbuckle.gymplannerservice.faultReporting.data
 
 import com.ianarbuckle.gymplannerservice.faultReporting.exception.ReportAlreadyExistsException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.springframework.stereotype.Service
 
 interface FaultReportService {

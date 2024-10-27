@@ -1,24 +1,39 @@
 package com.ianarbuckle.gymplannerservice.trainers.data
 
-import com.ianarbuckle.gymplannerservice.clients.data.PersonalTrainer
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 interface PersonalTrainersService {
-    fun findAllTrainers(): Flow<PersonalTrainer>
+    fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
 
     suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer
+
+    suspend fun updateTrainer(personalTrainer: PersonalTrainer)
 
     suspend fun deleteTrainerById(id: String)
 }
 
 @Service
 class DefaultPersonalTrainerService(
-    private val personalTrainerRepository: PersonalTrainerRepository,
+    private val repository: PersonalTrainerRepository,
 ) : PersonalTrainersService {
-    override fun findAllTrainers(): Flow<PersonalTrainer> = personalTrainerRepository.findAll()
 
-    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer = personalTrainerRepository.save(personalTrainer)
+    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer = repository.save(personalTrainer)
 
-    override suspend fun deleteTrainerById(id: String) = personalTrainerRepository.deleteById(id)
+    override suspend fun deleteTrainerById(id: String) = repository.deleteById(id)
+
+    override fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer> {
+        return when (gymLocation) {
+            GymLocation.CLONTARF,
+            GymLocation.ASTONQUAY,
+            GymLocation.DUNLOAGHAIRE,
+            GymLocation.WESTMANSTOWN,
+            GymLocation.SANDYMOUNT,
+            GymLocation.LEOPARDSTOWN -> repository.findAllByGymLocation(gymLocation)
+        }
+    }
+
+    override suspend fun updateTrainer(personalTrainer: PersonalTrainer) {
+        repository.save(personalTrainer).takeIf { repository.existsById(personalTrainer.id ?: "") }
+    }
 }

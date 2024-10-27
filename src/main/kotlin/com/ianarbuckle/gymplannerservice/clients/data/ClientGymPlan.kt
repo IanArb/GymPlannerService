@@ -1,6 +1,7 @@
 package com.ianarbuckle.gymplannerservice.clients.data
 
 import FutureDate
+import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -8,11 +9,12 @@ import jakarta.validation.constraints.Size
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
+import java.util.*
 
 @Document(collection = "ClientGymPlan")
 data class Client(
     @BsonId
-    val id: String? = null,
+    val id: String = UUID.randomUUID().toString(),
     @field:NotBlank(message = "First name is mandatory")
     val firstName: String,
     @field:NotBlank(message = "Last name is mandatory")
@@ -42,12 +44,15 @@ data class GymPlan(
 @Document
 data class PersonalTrainer(
     @BsonId
-    val id: String? = null,
+    val id: String = UUID.randomUUID().toString(),
     @field:Size(min = 2, message = "First name minimum 2 characters allowed")
     val firstName: String,
     @field:Size(min = 2, message = "Last name minimum 2 characters allowed")
-    val surname: String,
-    val socials: Map<String, String>? = emptyMap(),
+    val lastName: String,
+    val imageUrl: String,
+    val bio: String,
+    val socials: Map<String, String>,
+    val gymLocation: GymLocation,
 )
 
 @Document

@@ -6,11 +6,12 @@ import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.DayOfWeek
 import java.time.LocalTime
+import java.util.*
 
 @Document
 data class FitnessClass(
     @BsonId
-    val id: String? = null,
+    val id: String = UUID.randomUUID().toString(),
     val dayOfWeek: DayOfWeek,
     @field:NotNull(message = "Start time is mandatory")
     val startTime: LocalTime,

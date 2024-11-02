@@ -14,7 +14,7 @@ import java.util.*
 @Document(collection = "ClientGymPlan")
 data class Client(
     @BsonId
-    val id: String = UUID.randomUUID().toString(),
+    val id: String? = null,
     @field:NotBlank(message = "First name is mandatory")
     val firstName: String,
     @field:NotBlank(message = "Last name is mandatory")
@@ -48,10 +48,11 @@ data class PersonalTrainer(
     @field:Size(min = 2, message = "First name minimum 2 characters allowed")
     val firstName: String,
     @field:Size(min = 2, message = "Last name minimum 2 characters allowed")
-    val lastName: String,
+    val surname: String,
     val imageUrl: String,
     val bio: String,
     val socials: Map<String, String>,
+    val qualifications: List<String>,
     val gymLocation: GymLocation,
 )
 

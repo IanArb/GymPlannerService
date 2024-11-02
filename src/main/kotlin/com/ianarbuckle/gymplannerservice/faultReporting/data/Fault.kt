@@ -5,11 +5,10 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import org.bson.codecs.pojo.annotations.BsonId
 import java.time.LocalDateTime
-import java.util.*
 
 data class Fault(
     @BsonId
-    val id: String = UUID.randomUUID().toString(),
+    val id: String? = null,
     @field:Positive
     val machineNumber: Int,
     @field:NotEmpty(message = "Description is mandatory")

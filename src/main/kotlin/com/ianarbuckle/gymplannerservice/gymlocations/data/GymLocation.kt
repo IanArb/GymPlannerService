@@ -7,7 +7,7 @@ import java.util.*
 @Document
 data class GymLocation(
     @BsonId
-    val id: String = UUID.randomUUID().toString(),
+    val id: String? = null,
     val title: String,
     val subTitle: String,
     val description: String,

@@ -40,7 +40,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation("io.mockk:mockk:1.13.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.17.0")
+    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.18.0")
     testImplementation("org.mockito:mockito-core:3.12.4")
     testImplementation("org.mockito:mockito-inline:3.12.4") // The mockito-inline dependency
 }

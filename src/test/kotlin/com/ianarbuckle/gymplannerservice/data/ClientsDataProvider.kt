@@ -6,6 +6,7 @@ import com.ianarbuckle.gymplannerservice.clients.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.clients.data.Session
 import com.ianarbuckle.gymplannerservice.clients.data.Weight
 import com.ianarbuckle.gymplannerservice.clients.data.Workout
+import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
 import java.time.LocalDateTime
 
 object ClientsDataProvider {
@@ -26,8 +27,8 @@ object ClientsDataProvider {
 
     fun createGymPlan(
         name: String = "Basic",
-        startDate: LocalDateTime = LocalDateTime.of(2024, 1, 1, 0, 0),
-        endDate: LocalDateTime = LocalDateTime.of(2024, 2, 1, 0, 0),
+        startDate: LocalDateTime = LocalDateTime.of(2025, 1, 1, 0, 0),
+        endDate: LocalDateTime = LocalDateTime.of(2025, 2, 1, 0, 0),
         sessions: List<Session> = createSessions(),
         personalTrainer: PersonalTrainer = createPersonalTrainer(),
     ): GymPlan =
@@ -112,7 +113,11 @@ object ClientsDataProvider {
             id = id,
             firstName = firstName,
             surname = lastName,
+            imageUrl = "www.google.com",
+            bio = "Hello",
             socials = socials,
+            qualifications = emptyList(),
+            gymLocation = GymLocation.CLONTARF
         )
 
     fun createSocials(

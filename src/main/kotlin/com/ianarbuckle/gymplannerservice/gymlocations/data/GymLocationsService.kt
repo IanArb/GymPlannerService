@@ -22,7 +22,7 @@ class GymLocationsServiceImpl(private val repository: GymLocationsRepository) : 
     }
 
     override suspend fun updateGymLocation(gymLocation: GymLocation) {
-        repository.existsById(gymLocation.id).also { repository.save(gymLocation) }
+        repository.existsById(gymLocation.id ?: "").also { repository.save(gymLocation) }
     }
 
     override suspend fun deleteGymLocationById(id: String) {

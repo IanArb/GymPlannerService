@@ -3,6 +3,7 @@ package com.ianarbuckle.gymplannerservice.booking.data
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAccountRepository
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
@@ -21,7 +22,8 @@ class BookingServiceTests {
 
     private val bookingsRepository = mockk<BookingRepository>()
     private val personalTrainersRepository = mockk<PersonalTrainerRepository>()
-    private val bookingService = BookingServiceImpl(bookingsRepository, personalTrainersRepository)
+    private val userAccountRepository = mockk<UserAccountRepository>()
+    private val bookingService = BookingServiceImpl(bookingsRepository, personalTrainersRepository, userAccountRepository)
 
     @Test
     fun `fetchAllBookings should return all bookings`() = runTest {

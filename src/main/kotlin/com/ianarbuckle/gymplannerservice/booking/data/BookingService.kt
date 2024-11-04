@@ -1,8 +1,10 @@
 package com.ianarbuckle.gymplannerservice.booking.data
 
+import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAccountRepository
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
+import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.utils.isEmpty
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +24,7 @@ interface BookingService {
 class BookingServiceImpl(
     private val bookingsRepository: BookingRepository,
     private val personalTrainersRepository: PersonalTrainerRepository,
+    private val userAccountRepository: UserAccountRepository,
 ) : BookingService {
 
     override fun fetchAllBookings(): Flow<Booking> {
@@ -40,7 +43,8 @@ class BookingServiceImpl(
     }
 
     override suspend fun findBookingsByUserId(id: String): Flow<Booking> {
-        //TODO Validate user exists when authentication is implemented
+        userAccountRepository.findById(id) ?: throw UserNotFoundException()
+
         val bookings = bookingsRepository.findBookingsByClientUserId(id)
         validateBookings(bookings)
         return bookings

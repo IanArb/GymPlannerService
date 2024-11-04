@@ -14,3 +14,8 @@ class BookingsNotFoundException : Exception() {
     override val message: String
         get() = "Bookings not found"
 }
+
+class UserNotFoundException : RuntimeException() {
+    override val message: String
+        get() = "User not found"
+}

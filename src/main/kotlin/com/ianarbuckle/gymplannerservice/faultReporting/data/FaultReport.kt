@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive
 import org.bson.codecs.pojo.annotations.BsonId
 import java.time.LocalDateTime
 
-data class Fault(
+data class FaultReport(
     @BsonId
     val id: String? = null,
     @field:Positive

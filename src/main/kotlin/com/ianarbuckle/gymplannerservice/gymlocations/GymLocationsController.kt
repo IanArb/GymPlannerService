@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/gym-locations")
+@RequestMapping("/api/v1/gym_locations")
 class GymLocationsController(private val service: GymLocationsService) {
 
     @GetMapping

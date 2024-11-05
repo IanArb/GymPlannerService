@@ -1,32 +1,32 @@
 package com.ianarbuckle.gymplannerservice.faultReporting.data
 
-import com.ianarbuckle.gymplannerservice.faultReporting.exception.ReportAlreadyExistsException
+import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 interface FaultReportService {
-    fun reports(): Flow<Fault>
-    suspend fun save(fault: Fault): Fault
+    fun reports(): Flow<FaultReport>
+    suspend fun save(faultReport: FaultReport): FaultReport
     suspend fun deleteReportById(id: String)
 }
 
 @Service
 class FaultReportServiceImpl(private val repository: FaultReportRepository) : FaultReportService {
 
-    override fun reports(): Flow<Fault> {
+    override fun reports(): Flow<FaultReport> {
         return repository.findAll()
     }
 
-    override suspend fun save(fault: Fault): Fault {
+    override suspend fun save(faultReport: FaultReport): FaultReport {
         val reports = repository.findAll()
 
         reports.collect { report ->
-            if (report.machineNumber == fault.machineNumber) {
-                throw ReportAlreadyExistsException()
+            if (report.machineNumber == faultReport.machineNumber) {
+                throw FaultReportAlreadyExistsException()
             }
         }
 
-        return repository.save(fault)
+        return repository.save(faultReport)
     }
 
     override suspend fun deleteReportById(id: String) {

@@ -2,7 +2,6 @@ package com.ianarbuckle.gymplannerservice.gymlocations.data
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.*
 
 @Document
 data class GymLocation(

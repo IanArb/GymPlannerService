@@ -2,7 +2,7 @@ package com.ianarbuckle.gymplannerservice.booking
 
 import com.ianarbuckle.gymplannerservice.booking.data.BookingService
 import com.ianarbuckle.gymplannerservice.booking.data.BookingStatus
-import com.ianarbuckle.gymplannerservice.data.BookingDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test

@@ -1,8 +1,8 @@
 package com.ianarbuckle.gymplannerservice.faultReporting
 
-import com.ianarbuckle.gymplannerservice.faultReporting.data.Fault
+import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
 import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
-import com.ianarbuckle.gymplannerservice.faultReporting.exception.ReportAlreadyExistsException
+import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
@@ -14,14 +14,14 @@ import org.springframework.web.server.ResponseStatusException
 class FaultReportController(private val faultReportService: FaultReportService) {
 
     @GetMapping
-    fun reports(): Flow<Fault> = faultReportService.reports()
+    fun reports(): Flow<FaultReport> = faultReportService.reports()
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun saveFaultReport(@Valid @RequestBody fault: Fault): Fault {
+    suspend fun saveFaultReport(@Valid @RequestBody faultReport: FaultReport): FaultReport {
         try {
-            return faultReportService.save(fault)
-        } catch (ex: ReportAlreadyExistsException) {
+            return faultReportService.save(faultReport)
+        } catch (ex: FaultReportAlreadyExistsException) {
             throw ResponseStatusException(
                 HttpStatus.PRECONDITION_FAILED, "Report already exists", ex
             )

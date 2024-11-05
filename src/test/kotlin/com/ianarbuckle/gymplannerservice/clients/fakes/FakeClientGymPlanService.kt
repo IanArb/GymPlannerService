@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.clients.fakes
 
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
-import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.ClientsDataProvider
 import com.ianarbuckle.gymplannerservice.clients.data.Client
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

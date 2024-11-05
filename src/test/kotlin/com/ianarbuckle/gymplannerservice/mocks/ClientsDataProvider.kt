@@ -1,4 +1,4 @@
-package com.ianarbuckle.gymplannerservice.data
+package com.ianarbuckle.gymplannerservice.mocks
 
 import com.ianarbuckle.gymplannerservice.clients.data.Client
 import com.ianarbuckle.gymplannerservice.clients.data.GymPlan

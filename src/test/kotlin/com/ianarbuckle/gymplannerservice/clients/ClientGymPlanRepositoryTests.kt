@@ -3,7 +3,7 @@ package com.ianarbuckle.gymplannerservice.clients
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.clients.fakes.FakeClientGymPlanRepository
-import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.ClientsDataProvider
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.Test

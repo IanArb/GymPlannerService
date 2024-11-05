@@ -9,10 +9,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
-
-
 @RestController
-@RequestMapping("/api/v1/fitnessclass")
+@RequestMapping("/api/v1/fitness_class")
 class ClassesController(
     private val fitnessClassService: FitnessClassesService
 ) {

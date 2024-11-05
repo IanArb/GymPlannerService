@@ -1,5 +1,5 @@
 package com.ianarbuckle.gymplannerservice.faultReporting.exception
 
-class ReportAlreadyExistsException: Exception() {
+class FaultReportAlreadyExistsException: Exception() {
     override val message: String = "Report already exists"
 }

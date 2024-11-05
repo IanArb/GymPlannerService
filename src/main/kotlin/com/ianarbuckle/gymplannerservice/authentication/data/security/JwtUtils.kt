@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.security
 
+import com.ianarbuckle.gymplannerservice.authentication.data.exception.TokenExpiredException
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -37,7 +38,11 @@ class JwtUtils(
     }
 
     private fun isTokenExpired(token: String?): Boolean {
-        return extractExpiration(token).before(Date())
+        val expirationDate = extractExpiration(token)
+        if (expirationDate.before(Date())) {
+            throw TokenExpiredException()
+        }
+        return false
     }
 
     fun generateToken(username: String): String {
@@ -55,7 +60,12 @@ class JwtUtils(
     }
 
     fun validateToken(token: String?, username: String): Boolean {
-        val extractedUsername = extractUsername(token)
-        return (extractedUsername == username && !isTokenExpired(token))
+        return try {
+            (extractUsername(token) == username && !isTokenExpired(token))
+        } catch (e: TokenExpiredException) {
+            false
+        } catch (e: Exception) {
+            false
+        }
     }
 }

@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansServiceImpl
-import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.ClientsDataProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

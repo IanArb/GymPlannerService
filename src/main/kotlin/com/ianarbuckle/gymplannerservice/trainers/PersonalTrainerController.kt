@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/personaltrainers")
+@RequestMapping("/api/v1/personal_trainers")
 class PersonalTrainerController(private val service: PersonalTrainersService) {
 
     @GetMapping

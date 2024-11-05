@@ -7,7 +7,7 @@ import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAcco
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
-import com.ianarbuckle.gymplannerservice.data.BookingDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import io.mockk.coEvery

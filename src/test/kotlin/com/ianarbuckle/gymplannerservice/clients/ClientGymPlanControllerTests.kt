@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.clients
 
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
-import com.ianarbuckle.gymplannerservice.data.ClientsDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.ClientsDataProvider
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test

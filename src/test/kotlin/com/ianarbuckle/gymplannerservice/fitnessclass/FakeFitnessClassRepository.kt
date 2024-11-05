@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.fitnessclass
 
-import com.ianarbuckle.gymplannerservice.data.FitnessClassDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.FitnessClassDataProvider
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassRepository
 import kotlinx.coroutines.flow.Flow

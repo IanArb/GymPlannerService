@@ -40,12 +40,6 @@ class AuthenticationController(
         }
     }
 
-//    @PostMapping("/logout")
-//    suspend fun logoutUser(@RequestBody token: String): MessageResponse {
-//        authenticationService.logoutUser(token)
-//        return MessageResponse("User logged out successfully!")
-//    }
-
     @PostMapping("/register")
     suspend fun registerUser(@RequestBody @Valid signUpRequest: SignUpRequest): MessageResponse {
         return try {

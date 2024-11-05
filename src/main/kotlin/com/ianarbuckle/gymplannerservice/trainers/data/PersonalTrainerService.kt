@@ -14,7 +14,7 @@ interface PersonalTrainersService {
 }
 
 @Service
-class DefaultPersonalTrainerService(
+class PersonalTrainerServiceImpl(
     private val repository: PersonalTrainerRepository,
 ) : PersonalTrainersService {
 

@@ -1,9 +1,8 @@
-package com.ianarbuckle.gymplannerservice.data
+package com.ianarbuckle.gymplannerservice.mocks
 
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.Duration
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
 import java.time.DayOfWeek
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 object FitnessClassDataProvider {
@@ -24,7 +23,7 @@ object FitnessClassDataProvider {
                 unit = "SECONDS"
             ),
             description = "Pilates class",
-            imageUrl = "",
+            imageUrl = "www.google.com",
             name = "Pilates",
             endTime =  LocalTime.of(
                 10,

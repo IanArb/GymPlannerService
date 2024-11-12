@@ -16,13 +16,13 @@ import reactor.core.publisher.Mono
 
 @Configuration
 @EnableWebFluxSecurity
-class SecurityConfig(private val jwtAuthenticationManager: JWTAuthenticationManager) {
+open class SecurityConfig(private val jwtAuthenticationManager: JWTAuthenticationManager) {
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+    open fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    fun springSecurityFilter(
+    open fun springSecurityFilter(
         converter: JwtServerAuthenticationConverter,
         http: ServerHttpSecurity,
     ): SecurityWebFilterChain {
@@ -53,14 +53,6 @@ class SecurityConfig(private val jwtAuthenticationManager: JWTAuthenticationMana
             }
             .csrf {
                 it.disable()
-            }
-            .logout {
-                it.logoutUrl("/api/v1/auth/logout")
-                it.logoutSuccessHandler { exchange, _ ->
-                    Mono.fromRunnable {
-                        exchange?.exchange?.response?.statusCode = HttpStatus.OK
-                    }
-                }
             }
             .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authenticationManager(jwtAuthenticationManager)

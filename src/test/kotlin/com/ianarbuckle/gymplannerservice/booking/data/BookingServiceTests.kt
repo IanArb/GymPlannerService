@@ -3,11 +3,13 @@ package com.ianarbuckle.gymplannerservice.booking.data
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAccountRepository
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
+import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
+import com.ianarbuckle.gymplannerservice.mocks.UserProfileDataProvider
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import io.mockk.coEvery
@@ -17,13 +19,14 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.text.contains
 
 class BookingServiceTests {
 
     private val bookingsRepository = mockk<BookingRepository>()
     private val personalTrainersRepository = mockk<PersonalTrainerRepository>()
-    private val userAccountRepository = mockk<UserAccountRepository>()
-    private val bookingService = BookingServiceImpl(bookingsRepository, personalTrainersRepository, userAccountRepository)
+    private val userProfileRepository = mockk<UserProfileRepository>()
+    private val bookingService = BookingServiceImpl(bookingsRepository, personalTrainersRepository, userProfileRepository)
 
     @Test
     fun `fetchAllBookings should return all bookings`() = runTest {
@@ -127,5 +130,51 @@ class BookingServiceTests {
         val result = bookingService.saveBooking(booking)
 
         assertThat(result).isEqualTo(booking)
+    }
+
+    @Test
+    fun `findBookingsByUserId should return bookings`() = runTest {
+        val userId = "123456"
+        val booking = BookingDataProvider.createBooking(
+            status = BookingStatus.CONFIRMED,
+            client = BookingDataProvider.createClient(userId = userId)
+        )
+
+        coEvery { userProfileRepository.findByUserId(userId) } returns UserProfileDataProvider.createUserProfile()
+        coEvery { bookingsRepository.findBookingsByClientUserId(userId) } returns flowOf(booking)
+
+        bookingService.findBookingsByUserId(userId).test {
+            assertThat(awaitItem()).isEqualTo(booking)
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `findBookingsByUserId should throw UserNotFoundException when user profile not found`() = runTest {
+        val userId = "nonexistentUserId"
+        coEvery { userProfileRepository.findByUserId(userId) } returns null
+
+        val exception = assertThrows<UserNotFoundException> {
+            bookingService.findBookingsByUserId(userId)
+        }
+
+        assertThat(exception).isInstanceOf(UserNotFoundException::class.java)
+        assertWithMessage("Expected exception message")
+            .that(exception).hasMessageThat().contains("User not found")
+    }
+
+    @Test
+    fun `findBookingsByUserId should throw BookingsNotFoundException when bookings are empty`() = runTest {
+        val userId = "nonexistentUserId"
+        coEvery { userProfileRepository.findByUserId(userId) } returns UserProfileDataProvider.createUserProfile()
+        coEvery { bookingsRepository.findBookingsByClientUserId(userId) } returns flowOf()
+
+        val exception = assertThrows<BookingsNotFoundException> {
+            bookingService.findBookingsByUserId(userId)
+        }
+
+        assertThat(exception).isInstanceOf(BookingsNotFoundException::class.java)
+        assertWithMessage("Expected exception message")
+            .that(exception).hasMessageThat().contains("Bookings not found")
     }
 }

@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.model
 
-import com.ianarbuckle.gymplannerservice.booking.data.Booking
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.bson.codecs.pojo.annotations.BsonId
@@ -10,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 data class User(
     @BsonId
-    val id: String? = null,
+    val id: String,
     @NotBlank
     @Size(max = 20)
     val username: String,
@@ -38,10 +37,11 @@ enum class ERole {
 }
 
 @Document
-data class UserAccount(
-    val id: String,
+data class UserProfile(
+    @BsonId
+    val userId: String,
     val username: String,
     val firstName: String,
     val surname: String,
-    val bookings: List<Booking> = emptyList(),
+    val email: String,
 )

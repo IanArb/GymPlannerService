@@ -28,7 +28,7 @@ object BookingDataProvider {
         )
     }
 
-    private fun createClient(
+    fun createClient(
         userId: String = "1",
         firstName: String = "John",
         surname: String = "Doe",

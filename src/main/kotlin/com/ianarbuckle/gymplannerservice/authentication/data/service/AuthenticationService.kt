@@ -10,20 +10,16 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlrea
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
-import com.ianarbuckle.gymplannerservice.authentication.data.model.UserAccount
+import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.RoleRepository
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAccountRepository
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
-import org.springframework.security.authentication.AuthenticationManager
+import org.bson.types.ObjectId
 import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.function.Consumer
 
 
 interface AuthenticationService {
@@ -34,7 +30,7 @@ interface AuthenticationService {
 @Service
 class AuthenticationServiceImpl(
     private val userRepository: UserRepository,
-    private val userAccountRepository: UserAccountRepository,
+    private val userProfileRepository: UserProfileRepository,
     private val rolesRepository: RoleRepository,
     private val encoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
@@ -47,8 +43,12 @@ class AuthenticationServiceImpl(
         if (encoder.matches(loginRequest.password, user.password)) {
             val jwt: String = jwtUtils.generateToken(user.username)
 
+            val expiration = jwtUtils.extractExpiration(jwt).time
+
             return JwtResponse(
+                userId = user.id,
                 token = jwt,
+                expiration = expiration
             )
         } else {
             throw BadCredentialsException("Invalid username or password");
@@ -95,7 +95,10 @@ class AuthenticationServiceImpl(
             }
         }
 
+        val userId = ObjectId().toHexString()
+
         val user = User(
+            id = userId,
             username = signUpRequest.username,
             email = signUpRequest.email,
             password = encoder.encode(signUpRequest.password),
@@ -103,12 +106,13 @@ class AuthenticationServiceImpl(
         )
 
         userRepository.save(user)
-        userAccountRepository.save(
-            UserAccount(
-                id = user.id ?: "",
+        userProfileRepository.save(
+            UserProfile(
+                userId = userId,
                 username = signUpRequest.username,
                 firstName = signUpRequest.firstName,
-                surname = signUpRequest.surname
+                surname = signUpRequest.surname,
+                email = signUpRequest.email
             )
         )
 

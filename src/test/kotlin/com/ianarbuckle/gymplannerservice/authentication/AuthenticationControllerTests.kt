@@ -50,7 +50,9 @@ class AuthenticationControllerTests {
         """.trimIndent()
 
         whenever(authenticationService.authenticationUser(loginRequest)).thenReturn(JwtResponse(
-            token = "validToken"
+            token = "validToken",
+            expiration = 1000,
+            userId = "123456"
         ))
 
         webTestClient.post().uri("/api/v1/auth/login")

@@ -25,7 +25,7 @@ class JWTAuthenticationManagerTests {
     fun `authenticate with valid token`() = runTest {
         val token = "validToken"
         val username = "testuser"
-        val user = User(username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
+        val user = User(id = "123456", username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
 
         every { jwtUtils.extractUsername(token) } returns username
         coEvery { userRepository.findByUsername(username) } returns user
@@ -81,7 +81,7 @@ class JWTAuthenticationManagerTests {
     fun `authenticate with invalid token validation`() = runTest {
         val token = "validToken"
         val username = "testuser"
-        val user = User(username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
+        val user = User(id = "123456", username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
 
         every { jwtUtils.extractUsername(token) } returns username
         coEvery { userRepository.findByUsername(username) } returns user

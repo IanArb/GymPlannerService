@@ -10,7 +10,7 @@ import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.RoleRepository
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserAccountRepository
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
@@ -19,18 +19,19 @@ import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.sql.Date
 import kotlin.test.Test
 
 class AuthenticationServiceTests {
     private val userRepository: UserRepository = mockk()
-    private val userAccountRepository: UserAccountRepository = mockk()
+    private val userProfileRepository: UserProfileRepository = mockk()
     private val roleRepository: RoleRepository = mockk()
     private val passwordEncoder: PasswordEncoder = mockk()
     private val jwtUtils: JwtUtils = mockk()
 
     private val authenticationService: AuthenticationService = AuthenticationServiceImpl(
         userRepository,
-        userAccountRepository,
+        userProfileRepository,
         roleRepository,
         passwordEncoder,
         jwtUtils,
@@ -42,27 +43,33 @@ class AuthenticationServiceTests {
         val password = "password"
         val encodedPassword = "encodedPassword"
         val jwtToken = "jwtToken"
+        val expiration: Long = 1000
 
         val user = User(
+            id = "123456",
             username = username,
             password = encodedPassword,
             roles = setOf(Role(
                 id = "1",
                 ERole.ROLE_USER
             )),
-            email = "ian@mail.com")
+            email = "ian@mail.com"
+        )
 
         coEvery { userRepository.findByUsername(username) } returns user
         every { passwordEncoder.matches(password, encodedPassword) } returns true
         every { jwtUtils.generateToken(username) } returns jwtToken
+        every { jwtUtils.extractExpiration(jwtToken) } returns Date(expiration)
 
         val result = authenticationService.authenticationUser(LoginRequest(username, password))
 
         assertThat(jwtToken).isEqualTo(result.token)
+        assertThat(expiration).isEqualTo(result.expiration)
 
         coVerify { userRepository.findByUsername(username) }
         verify { passwordEncoder.matches(password, encodedPassword) }
         verify { jwtUtils.generateToken(username) }
+        verify { jwtUtils.extractExpiration(jwtToken) }
     }
 
 
@@ -81,7 +88,7 @@ class AuthenticationServiceTests {
         coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
         coEvery { roleRepository.findByName(ERole.ROLE_USER) } returns Role("1", ERole.ROLE_USER)
         coEvery { userRepository.save(any()) } returnsArgument 0
-        coEvery { userAccountRepository.save(any()) } returnsArgument 0
+        coEvery { userProfileRepository.save(any()) } returnsArgument 0
         every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
         val result = authenticationService.createUser(signUpRequest)
@@ -92,7 +99,7 @@ class AuthenticationServiceTests {
         coVerify { userRepository.existsByEmail(signUpRequest.email) }
         coVerify { roleRepository.findByName(ERole.ROLE_USER) }
         coVerify { userRepository.save(any()) }
-        coVerify { userAccountRepository.save(any()) }
+        coVerify { userProfileRepository.save(any()) }
         verify { passwordEncoder.encode(signUpRequest.password) }
     }
 

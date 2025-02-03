@@ -5,6 +5,7 @@ import com.ianarbuckle.gymplannerservice.availability.data.AvailabilityService
 import com.ianarbuckle.gymplannerservice.availability.data.CheckAvailability
 import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/availability")
+@Tag(name = "Availability", description = "Endpoints for availability")
 class AvailabilityController(
     private val availabilityService: AvailabilityService,
 ) {

@@ -3,6 +3,7 @@ package com.ianarbuckle.gymplannerservice.fitnessclass
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassesService
 import com.ianarbuckle.gymplannerservice.fitnessclass.exception.NoFitnessClassFoundException
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/fitness_class")
+@Tag(name = "Fitness Class", description = "Endpoints for fitness classes")
 class ClassesController(
     private val fitnessClassService: FitnessClassesService,
 ) {

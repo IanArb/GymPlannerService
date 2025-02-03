@@ -2,6 +2,7 @@ package com.ianarbuckle.gymplannerservice.gymlocations
 
 import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
 import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/gym_locations")
+@Tag(name = "Gym Locations", description = "Endpoints for gym locations")
 class GymLocationsController(
     private val service: GymLocationsService,
 ) {

@@ -3,6 +3,7 @@ package com.ianarbuckle.gymplannerservice.trainers
 import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/personal_trainers")
+@Tag(name = "Personal Trainers", description = "Endpoints for personal trainers")
 class PersonalTrainerController(
     private val service: PersonalTrainersService,
 ) {

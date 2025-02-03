@@ -139,7 +139,7 @@ class AvailabilityControllerTests {
 
             webTestClient
                 .get()
-                .uri("/api/v1/availability/check-availability?personalTrainerId=$personalTrainerId&month=$month&date=$date&time=$time")
+                .uri("/api/v1/availability/check_availability?personalTrainerId=$personalTrainerId&month=$month&date=$date&time=$time")
                 .exchange()
                 .expectStatus()
                 .isOk

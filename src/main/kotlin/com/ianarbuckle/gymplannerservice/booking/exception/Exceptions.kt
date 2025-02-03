@@ -1,16 +1,16 @@
 package com.ianarbuckle.gymplannerservice.booking.exception
 
-class PersonalTrainerAlreadyBookedException : Exception() {
+class PersonalTrainerAlreadyBookedException : RuntimeException() {
     override val message: String
         get() = "This personal trainer is already booked at the specified date and time"
 }
 
-class PersonalTrainerNotFoundException : Exception() {
+class PersonalTrainerNotFoundException : RuntimeException() {
     override val message: String
         get() = "Personal trainer not found"
 }
 
-class BookingsNotFoundException : Exception() {
+class BookingsNotFoundException : RuntimeException() {
     override val message: String
         get() = "Bookings not found"
 }

@@ -5,6 +5,7 @@ import com.ianarbuckle.gymplannerservice.booking.data.BookingService
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
+import io.swagger.v3.oas.annotations.tags.Tag
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/booking")
+@Tag(name = "Booking", description = "Endpoints for booking")
 class BookingController(
     private val service: BookingService,
 ) {

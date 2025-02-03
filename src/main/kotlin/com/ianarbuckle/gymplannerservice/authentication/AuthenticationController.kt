@@ -9,6 +9,7 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.RoleNotFo
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.BadCredentialsException
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication", description = "Endpoints for authentication")
 class AuthenticationController(
     private val authenticationService: AuthenticationService,
 ) {

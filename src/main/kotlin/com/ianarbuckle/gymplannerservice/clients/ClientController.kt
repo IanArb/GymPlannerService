@@ -2,6 +2,7 @@ package com.ianarbuckle.gymplannerservice.clients
 
 import com.ianarbuckle.gymplannerservice.clients.data.Client
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/clients")
+@Tag(name = "Clients", description = "Endpoints for clients")
 class ClientController(
     private val clientGymPlansService: ClientGymPlansService,
 ) {

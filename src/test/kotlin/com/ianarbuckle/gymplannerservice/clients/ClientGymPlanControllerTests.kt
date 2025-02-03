@@ -40,68 +40,60 @@ class ClientGymPlanControllerTests {
 
             val clientJson =
                 """
-                {
-                    "id": "${createClient.id}",
-                    "firstName": "${createClient.firstName}",
-                    "surname": "${createClient.surname}",
-                    "strengthLevel": "${createClient.strengthLevel}",
-                    "gymPlan": {
-                        "name": "${createClient.gymPlan?.name}",
-                        "personalTrainer": {
-                            "id": "${createClient.gymPlan?.personalTrainer?.id}",
-                        "firstName": "${createClient.gymPlan?.personalTrainer?.firstName}",
-                        "surname": "${createClient.gymPlan?.personalTrainer?.surname}",
-                        "imageUrl": "${createClient.gymPlan?.personalTrainer?.imageUrl}",
-                        "bio": "${createClient.gymPlan?.personalTrainer?.bio}",
-                        "socials": {
-                            "instagram": "https://www.instagram.com/vinicius.fedyna"
+{
+    "firstName": "Pablo",
+    "surname": "Escobar",
+    "strengthLevel": "advanced",
+    "gymPlan": {
+        "name": "Pablo's December plan",
+        "personalTrainer": {
+            "firstName": "Ben",
+            "surname": "Westwood",
+            "imageUrl": "//westwood.ie/img/asset/aW1hZ2VzL3N0YWZmL2Zlcm5hbmRhLWNhc3NpZHktYXEtbWluLmpwZw==/fernanda-cassidy-aq-min.jpg?fm=webp&q=90&fit=crop-50-50&w=723&h=542&s=e00fb71e2362262c4cffe6d7aaea4ee4",
+            "bio": "Hello",
+            "qualifications": [],
+            "gymLocation": "CLONTARF",
+            "socials": {}
+        },
+        "startDate": "2025-11-01T10:53:33.010",
+        "endDate": "2025-11-01T10:53:33.010",
+        "sessions": [
+            {
+                "name": "Chest",
+                "workouts": [
+                    {
+                        "name": "Chest press",
+                        "sets": 3,
+                        "repetitions": 10,
+                        "weight": {
+                            "value": 15,
+                            "unit": "kg"
                         },
-                        "qualifications": [
-                            "LesMillis BodyPump",
-                            "Strength Development",
-                            "Functional Strength"
-                        ],
-                        "gymLocation": "${createClient.gymPlan?.personalTrainer?.gymLocation?.name}"
-                        },
-                        "startDate": "${createClient.gymPlan?.startDate}",
-                        "endDate": "${createClient.gymPlan?.endDate}",
-                        "sessions": [
-                            {
-                                "name": "Chest",
-                                "workouts": [
-                                    {
-                                        "name": "Chest press",
-                                        "sets": 3,
-                                        "repetitions": 10,
-                                        "weight": {
-                                            "value": 15,
-                                            "unit": "kg"
-                                        },
-                                        "note": "Push heavy!"
-                                    },
-                                    {
-                                        "name": "Decline bench press",
-                                        "sets": 3,
-                                        "repetitions": 10,
-                                        "weight": {
-                                            "value": 15,
-                                            "unit": "kg"
-                                        }
-                                    },
-                                    {
-                                        "name": "Cable pull down",
-                                        "sets": 3,
-                                        "repetitions": 10,
-                                        "weight": {
-                                            "value": 45,
-                                            "unit": "lbs"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
+                        "note": "Push heavy!"
+                    },
+                    {
+                        "name": "Decline bench press",
+                        "sets": 3,
+                        "repetitions": 10,
+                        "weight": {
+                            "value": 15,
+                            "unit": "kg"
+                        }
+                    },
+                    {
+                        "name": "Cable pull down",
+                        "sets": 3,
+                        "repetitions": 10,
+                        "weight": {
+                            "value": 45,
+                            "unit": "lbs"
+                        }
                     }
-                }
+                ]
+            }
+        ]
+    }
+}
                 """.trimIndent()
 
             webTestClient

@@ -3,6 +3,7 @@ package com.ianarbuckle.gymplannerservice.userProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileService
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/user_profile")
+@Tag(name = "User Profile", description = "Endpoints for user profiles")
 class UserProfileController(
     private val userProfileService: UserProfileService,
 ) {

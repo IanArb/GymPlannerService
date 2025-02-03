@@ -117,7 +117,7 @@ object ClientsDataProvider {
             bio = "Hello",
             socials = socials,
             qualifications = emptyList(),
-            gymLocation = GymLocation.CLONTARF
+            gymLocation = GymLocation.CLONTARF,
         )
 
     fun createSocials(

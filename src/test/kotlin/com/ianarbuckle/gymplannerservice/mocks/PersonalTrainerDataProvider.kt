@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 object PersonalTrainerDataProvider {
-
     fun createPersonalTrainer(
         id: String = "1",
         firstName: String = "John",
@@ -15,8 +14,8 @@ object PersonalTrainerDataProvider {
         description: String = "John Doe Description",
         location: GymLocation = GymLocation.CLONTARF,
         qualifications: List<String> = "Qualification 1, Qualification 2, Qualification 3".split(", "),
-    ): PersonalTrainer {
-        return PersonalTrainer(
+    ): PersonalTrainer =
+        PersonalTrainer(
             id = id,
             firstName = firstName,
             lastName = lastName,
@@ -25,10 +24,9 @@ object PersonalTrainerDataProvider {
             gymLocation = location,
             qualifications = qualifications,
         )
-    }
 
-    fun personalTrainers(): Flow<PersonalTrainer> {
-        return flowOf(
+    fun personalTrainers(): Flow<PersonalTrainer> =
+        flowOf(
             createPersonalTrainer(),
             createPersonalTrainer(
                 id = "2",
@@ -40,5 +38,4 @@ object PersonalTrainerDataProvider {
                 qualifications = "Qualification 4, Qualification 5, Qualification 6".split(", "),
             ),
         )
-    }
 }

@@ -17,20 +17,22 @@ import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
-class BearerToken(val value: String) : AbstractAuthenticationToken(AuthorityUtils.NO_AUTHORITIES) {
+class BearerToken(
+    val value: String,
+) : AbstractAuthenticationToken(AuthorityUtils.NO_AUTHORITIES) {
     override fun getCredentials(): Any = value
+
     override fun getPrincipal(): Any = value
 }
 
 @Component
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
-
-    override fun convert(exchange: ServerWebExchange): Mono<Authentication> {
-        return Mono.justOrEmpty(exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
+    override fun convert(exchange: ServerWebExchange): Mono<Authentication> =
+        Mono
+            .justOrEmpty(exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
             .filter { it.startsWith("Bearer ") }
             .map { it.substring(7) }
             .map { BearerToken(it) }
-    }
 }
 
 @Component
@@ -38,11 +40,11 @@ class JWTAuthenticationManager(
     private val jwtUtil: JwtUtils,
     private val userRepository: UserRepository,
 ) : ReactiveAuthenticationManager {
-
     private val logger: Logger = LoggerFactory.getLogger(JWTAuthenticationManager::class.java)
 
-    override fun authenticate(authentication: Authentication): Mono<Authentication> {
-        return Mono.justOrEmpty(authentication)
+    override fun authenticate(authentication: Authentication): Mono<Authentication> =
+        Mono
+            .justOrEmpty(authentication)
             .filter { auth -> auth is BearerToken }
             .cast(BearerToken::class.java)
             .flatMap { jwt -> mono { validate(jwt) } }
@@ -50,7 +52,6 @@ class JWTAuthenticationManager(
                 logger.error("Authentication error: ${error.message}", error)
                 BadCredentialsException("Invalid token")
             }
-    }
 
     private suspend fun validate(token: BearerToken): Authentication {
         val username = jwtUtil.extractUsername(token.value)

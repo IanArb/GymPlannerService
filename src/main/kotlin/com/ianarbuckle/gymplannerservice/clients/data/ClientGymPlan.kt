@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 @Document(collection = "ClientGymPlan")
 data class Client(

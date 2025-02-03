@@ -27,9 +27,11 @@ class ClientController(
     @GetMapping("/{id}")
     suspend fun findClientById(
         @PathVariable id: String,
-    ): Client? = clientGymPlansService.findClientById(id) ?: throw ResponseStatusException(
-        HttpStatus.NOT_FOUND, "Client not found"
-    )
+    ): Client? =
+        clientGymPlansService.findClientById(id) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Client not found",
+        )
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

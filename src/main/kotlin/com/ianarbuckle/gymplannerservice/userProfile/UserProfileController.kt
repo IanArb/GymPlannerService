@@ -16,27 +16,34 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/api/v1/user_profile")
 class UserProfileController(
-    private val userProfileService: UserProfileService
+    private val userProfileService: UserProfileService,
 ) {
-
     @GetMapping("/{id}")
-    suspend fun userProfile(@PathVariable id: String): UserProfile? {
+    suspend fun userProfile(
+        @PathVariable id: String,
+    ): UserProfile? {
         try {
             return userProfileService.userProfile(id)
         } catch (ex: UserNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User not found", ex
+                HttpStatus.NOT_FOUND,
+                "User not found",
+                ex,
             )
         }
     }
 
     @PutMapping()
-    suspend fun updateUserProfile(@RequestBody @Valid userProfile: UserProfile) {
+    suspend fun updateUserProfile(
+        @RequestBody @Valid userProfile: UserProfile,
+    ) {
         try {
             userProfileService.updateUserProfile(userProfile)
         } catch (ex: UserNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User not found", ex
+                HttpStatus.NOT_FOUND,
+                "User not found",
+                ex,
             )
         }
     }

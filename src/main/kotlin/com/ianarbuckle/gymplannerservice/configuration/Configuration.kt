@@ -18,7 +18,5 @@ class Configuration {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
     @Bean
-    fun clock(): Clock {
-        return Clock.systemDefaultZone()
-    }
+    fun clock(): Clock = Clock.systemDefaultZone()
 }

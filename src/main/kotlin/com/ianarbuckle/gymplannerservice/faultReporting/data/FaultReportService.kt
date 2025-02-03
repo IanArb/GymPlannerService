@@ -6,16 +6,17 @@ import org.springframework.stereotype.Service
 
 interface FaultReportService {
     fun reports(): Flow<FaultReport>
+
     suspend fun save(faultReport: FaultReport): FaultReport
+
     suspend fun deleteReportById(id: String)
 }
 
 @Service
-class FaultReportServiceImpl(private val repository: FaultReportRepository) : FaultReportService {
-
-    override fun reports(): Flow<FaultReport> {
-        return repository.findAll()
-    }
+class FaultReportServiceImpl(
+    private val repository: FaultReportRepository,
+) : FaultReportService {
+    override fun reports(): Flow<FaultReport> = repository.findAll()
 
     override suspend fun save(faultReport: FaultReport): FaultReport {
         val reports = repository.findAll()

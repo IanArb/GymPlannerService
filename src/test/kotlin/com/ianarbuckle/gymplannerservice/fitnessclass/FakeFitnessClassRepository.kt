@@ -1,21 +1,17 @@
 package com.ianarbuckle.gymplannerservice.fitnessclass
 
-import com.ianarbuckle.gymplannerservice.mocks.FitnessClassDataProvider
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassRepository
+import com.ianarbuckle.gymplannerservice.mocks.FitnessClassDataProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import java.time.DayOfWeek
 
 class FakeFitnessClassRepository : FitnessClassRepository {
+    override suspend fun count(): Long = FitnessClassDataProvider.createFitnessClasses().size.toLong()
 
-    override suspend fun count(): Long {
-        return FitnessClassDataProvider.createFitnessClasses().size.toLong()
-    }
-
-    override suspend fun findFitnessClassesByDayOfWeek(dayOfWeek: DayOfWeek): Flow<FitnessClass> {
-        return FitnessClassDataProvider.createFitnessClasses().asFlow()
-    }
+    override suspend fun findFitnessClassesByDayOfWeek(dayOfWeek: DayOfWeek): Flow<FitnessClass> =
+        FitnessClassDataProvider.createFitnessClasses().asFlow()
 
     override suspend fun delete(entity: FitnessClass) {
         TODO("Not yet implemented")
@@ -61,9 +57,7 @@ class FakeFitnessClassRepository : FitnessClassRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun <S : FitnessClass> save(entity: S): FitnessClass {
-        return FitnessClassDataProvider.createClass()
-    }
+    override suspend fun <S : FitnessClass> save(entity: S): FitnessClass = FitnessClassDataProvider.createClass()
 
     override fun <S : FitnessClass> saveAll(entities: Iterable<S>): Flow<S> {
         TODO("Not yet implemented")

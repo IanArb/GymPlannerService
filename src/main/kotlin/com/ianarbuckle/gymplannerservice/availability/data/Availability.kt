@@ -5,7 +5,6 @@ import org.bson.types.ObjectId
 import java.time.LocalDate
 import java.time.LocalTime
 
-
 data class Availability(
     @BsonId val id: String? = null,
     val personalTrainerId: String,

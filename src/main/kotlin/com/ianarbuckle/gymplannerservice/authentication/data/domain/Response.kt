@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.domain
 
-
 data class JwtResponse(
     val userId: String,
     val token: String,
@@ -8,5 +7,5 @@ data class JwtResponse(
 )
 
 data class MessageResponse(
-    val message: String
+    val message: String,
 )

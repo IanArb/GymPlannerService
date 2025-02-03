@@ -18,44 +18,54 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
-
 @RestController
 @RequestMapping("/api/v1/auth")
 class AuthenticationController(
     private val authenticationService: AuthenticationService,
 ) {
-
     @PostMapping("/login")
-    suspend fun authenticateUser(@RequestBody @Valid loginRequest: LoginRequest): JwtResponse {
-        return try {
+    suspend fun authenticateUser(
+        @RequestBody @Valid loginRequest: LoginRequest,
+    ): JwtResponse =
+        try {
             authenticationService.authenticationUser(loginRequest)
         } catch (ex: UserNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.UNAUTHORIZED, "User not found", ex
+                HttpStatus.UNAUTHORIZED,
+                "User not found",
+                ex,
             )
         } catch (ex: BadCredentialsException) {
             throw ResponseStatusException(
-                HttpStatus.UNAUTHORIZED, "Invalid username or password", ex
+                HttpStatus.UNAUTHORIZED,
+                "Invalid username or password",
+                ex,
             )
         }
-    }
 
     @PostMapping("/register")
-    suspend fun registerUser(@RequestBody @Valid signUpRequest: SignUpRequest): MessageResponse {
-        return try {
+    suspend fun registerUser(
+        @RequestBody @Valid signUpRequest: SignUpRequest,
+    ): MessageResponse =
+        try {
             authenticationService.createUser(signUpRequest)
         } catch (ex: UserAlreadyExistsException) {
             throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "User already exists", ex
+                HttpStatus.BAD_REQUEST,
+                "User already exists",
+                ex,
             )
         } catch (ex: EmailAlreadyExistsException) {
             throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Email already exists", ex
+                HttpStatus.BAD_REQUEST,
+                "Email already exists",
+                ex,
             )
         } catch (ex: RoleNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Role already exists", ex
+                HttpStatus.BAD_REQUEST,
+                "Role already exists",
+                ex,
             )
         }
-    }
 }

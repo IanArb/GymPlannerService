@@ -9,7 +9,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 object BookingDataProvider {
-
     fun createBooking(
         id: String = "1",
         bookingDate: LocalDateTime = LocalDateTime.of(2021, 10, 10, 10, 0),
@@ -17,8 +16,8 @@ object BookingDataProvider {
         client: Client = createClient(),
         personalTrainer: PersonalTrainerBooking = createPersonalTrainer(),
         status: BookingStatus = BookingStatus.PENDING,
-    ): Booking {
-        return Booking(
+    ): Booking =
+        Booking(
             id = id,
             bookingDate = bookingDate,
             startTime = startTime,
@@ -26,7 +25,6 @@ object BookingDataProvider {
             personalTrainer = personalTrainer,
             status = status,
         )
-    }
 
     fun createClient(
         userId: String = "1",
@@ -34,29 +32,27 @@ object BookingDataProvider {
         surname: String = "Doe",
         email: String = "john.doe@mail.com",
         gymLocation: GymLocation = GymLocation.CLONTARF,
-    ): Client {
-        return Client(
+    ): Client =
+        Client(
             userId = userId,
             firstName = firstName,
             surname = surname,
             email = email,
             gymLocation = gymLocation,
         )
-    }
 
     private fun createPersonalTrainer(
         id: String = "1",
         firstName: String = "John",
         lastName: String = "Doe",
         imageUrl: String = "https://example.com",
-        gymLocation: GymLocation = GymLocation.CLONTARF
-    ): PersonalTrainerBooking {
-        return PersonalTrainerBooking(
+        gymLocation: GymLocation = GymLocation.CLONTARF,
+    ): PersonalTrainerBooking =
+        PersonalTrainerBooking(
             id = id,
             firstName = firstName,
             surname = lastName,
             imageUrl = imageUrl,
             gymLocation = gymLocation,
         )
-    }
 }

@@ -15,55 +15,58 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 class PersonalTrainerServiceTests {
-
     private val personalTrainerRepository: PersonalTrainerRepository = mockk()
 
     private val personalTrainerService = PersonalTrainerServiceImpl(personalTrainerRepository)
 
     @Test
-    fun `test find all personal trainers by gym location`() = runTest {
-        val personalTrainers = PersonalTrainerDataProvider.personalTrainers()
-        coEvery { personalTrainerRepository.findAllByGymLocation(GymLocation.CLONTARF) } returns personalTrainers
+    fun `test find all personal trainers by gym location`() =
+        runTest {
+            val personalTrainers = PersonalTrainerDataProvider.personalTrainers()
+            coEvery { personalTrainerRepository.findAllByGymLocation(GymLocation.CLONTARF) } returns personalTrainers
 
-        personalTrainerService.findTrainersByGymLocation(GymLocation.CLONTARF).test {
-            assertThat(awaitItem()).isEqualTo(personalTrainers.first())
-            assertThat(awaitItem()).isEqualTo(personalTrainers.last())
-            awaitComplete()
+            personalTrainerService.findTrainersByGymLocation(GymLocation.CLONTARF).test {
+                assertThat(awaitItem()).isEqualTo(personalTrainers.first())
+                assertThat(awaitItem()).isEqualTo(personalTrainers.last())
+                awaitComplete()
+            }
+
+            coVerify { personalTrainerRepository.findAllByGymLocation(GymLocation.CLONTARF) }
         }
 
-        coVerify { personalTrainerRepository.findAllByGymLocation(GymLocation.CLONTARF) }
-    }
+    @Test
+    fun `test save personal trainer`() =
+        runTest {
+            val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            coEvery { personalTrainerRepository.save(personalTrainer) } returns personalTrainer
+
+            val savedPersonalTrainer = personalTrainerService.createTrainer(personalTrainer)
+
+            assertThat(savedPersonalTrainer).isEqualTo(personalTrainer)
+
+            coVerify { personalTrainerRepository.save(personalTrainer) }
+        }
 
     @Test
-    fun `test save personal trainer`() = runTest {
-        val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
-        coEvery { personalTrainerRepository.save(personalTrainer) } returns personalTrainer
+    fun `test delete personal trainer by id`() =
+        runTest {
+            coEvery { personalTrainerRepository.deleteById("1") } returns Unit
 
-        val savedPersonalTrainer = personalTrainerService.createTrainer(personalTrainer)
+            personalTrainerService.deleteTrainerById("1")
 
-        assertThat(savedPersonalTrainer).isEqualTo(personalTrainer)
-
-        coVerify { personalTrainerRepository.save(personalTrainer) }
-    }
+            coVerify { personalTrainerRepository.deleteById("1") }
+        }
 
     @Test
-    fun `test delete personal trainer by id`() = runTest {
-        coEvery { personalTrainerRepository.deleteById("1") } returns Unit
+    fun `test update personal trainer`() =
+        runTest {
+            val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            val id = personalTrainer.id ?: ""
+            coEvery { personalTrainerRepository.existsById(id) } returns true
+            coEvery { personalTrainerRepository.save(personalTrainer) } returns personalTrainer
 
-        personalTrainerService.deleteTrainerById("1")
+            personalTrainerService.updateTrainer(personalTrainer)
 
-        coVerify { personalTrainerRepository.deleteById("1") }
-    }
-
-    @Test
-    fun `test update personal trainer`() = runTest {
-        val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
-        val id = personalTrainer.id ?: ""
-        coEvery { personalTrainerRepository.existsById(id) } returns true
-        coEvery { personalTrainerRepository.save(personalTrainer) } returns personalTrainer
-
-        personalTrainerService.updateTrainer(personalTrainer)
-
-        coVerify { personalTrainerRepository.save(personalTrainer) }
-    }
+            coVerify { personalTrainerRepository.save(personalTrainer) }
+        }
 }

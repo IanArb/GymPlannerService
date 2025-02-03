@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 
 object FaultReportDataProvider {
-
-    fun faultReports(): Flow<FaultReport> {
-        return flowOf(
+    fun faultReports(): Flow<FaultReport> =
+        flowOf(
             createFaultReport(),
             createFaultReport(
                 id = "2",
@@ -18,7 +17,6 @@ object FaultReportDataProvider {
                 date = LocalDateTime.of(2021, 10, 10, 10, 10),
             ),
         )
-    }
 
     fun createFaultReport(
         id: String = "1",
@@ -26,13 +24,12 @@ object FaultReportDataProvider {
         machineNumber: Int = 123,
         photoUri: String = "https://www.gym-a.com",
         date: LocalDateTime = LocalDateTime.of(2021, 10, 10, 10, 10),
-    ): FaultReport {
-        return FaultReport(
+    ): FaultReport =
+        FaultReport(
             id = id,
             description = description,
             machineNumber = machineNumber,
             photoUri = photoUri,
             date = date,
         )
-    }
 }

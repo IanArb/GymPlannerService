@@ -28,5 +28,5 @@ data class FitnessClass(
 
 data class Duration(
     val value: Long,
-    val unit: String
+    val unit: String,
 )

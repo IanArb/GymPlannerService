@@ -8,7 +8,11 @@ import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepo
 import com.ianarbuckle.gymplannerservice.authentication.data.security.BearerToken
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JWTAuthenticationManager
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.assertThrows
@@ -22,79 +26,100 @@ class JWTAuthenticationManagerTests {
     private val jwtAuthenticationManager: JWTAuthenticationManager = JWTAuthenticationManager(jwtUtils, userRepository)
 
     @Test
-    fun `authenticate with valid token`() = runTest {
-        val token = "validToken"
-        val username = "testuser"
-        val user = User(id = "123456", username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
+    fun `authenticate with valid token`() =
+        runTest {
+            val token = "validToken"
+            val username = "testuser"
+            val user =
+                User(
+                    id = "123456",
+                    username = username,
+                    password = "password",
+                    roles = setOf(Role("1", ERole.ROLE_USER)),
+                    email = "test@mail.com",
+                )
 
-        every { jwtUtils.extractUsername(token) } returns username
-        coEvery { userRepository.findByUsername(username) } returns user
-        every { jwtUtils.validateToken(token, username) } returns true
+            every { jwtUtils.extractUsername(token) } returns username
+            coEvery { userRepository.findByUsername(username) } returns user
+            every { jwtUtils.validateToken(token, username) } returns true
 
-        val authentication = jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+            val authentication = jwtAuthenticationManager.authenticate(BearerToken(token)).block()
 
-        assertThat(authentication).isNotNull()
-        assertThat(authentication?.name).isEqualTo(username)
-        assertThat(authentication?.authorities?.size).isEqualTo(1)
-        assertTrue(authentication?.authorities?.contains(SimpleGrantedAuthority(ERole.ROLE_USER.name)) == true)
+            assertThat(authentication).isNotNull()
+            assertThat(authentication?.name).isEqualTo(username)
+            assertThat(authentication?.authorities?.size).isEqualTo(1)
+            assertTrue(authentication?.authorities?.contains(SimpleGrantedAuthority(ERole.ROLE_USER.name)) == true)
 
-        verify { jwtUtils.extractUsername(token) }
-        coVerify { userRepository.findByUsername(username) }
-        verify { jwtUtils.validateToken(token, username) }
-    }
-
-    @Test
-    fun `authenticate with invalid token`() = runTest {
-        val token = "invalidToken"
-
-        every { jwtUtils.extractUsername(token) } throws BadCredentialsException("Invalid token")
-
-        val exception = assertThrows<BadCredentialsException> {
-            jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+            verify { jwtUtils.extractUsername(token) }
+            coVerify { userRepository.findByUsername(username) }
+            verify { jwtUtils.validateToken(token, username) }
         }
 
-        assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
-        assertThat(exception.message).isEqualTo("Invalid token")
-
-        verify { jwtUtils.extractUsername(token) }
-    }
-
     @Test
-    fun `authenticate with non-existent user`() = runTest {
-        val token = "validToken"
-        val username = "nonExistentUser"
+    fun `authenticate with invalid token`() =
+        runTest {
+            val token = "invalidToken"
 
-        every { jwtUtils.extractUsername(token) } returns username
-        coEvery { userRepository.findByUsername(username) } returns null
+            every { jwtUtils.extractUsername(token) } throws BadCredentialsException("Invalid token")
 
-        val exception = assertThrows<BadCredentialsException> {
-            jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+            val exception =
+                assertThrows<BadCredentialsException> {
+                    jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+                }
+
+            assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
+            assertThat(exception.message).isEqualTo("Invalid token")
+
+            verify { jwtUtils.extractUsername(token) }
         }
 
-        assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
-
-        verify { jwtUtils.extractUsername(token) }
-        coVerify { userRepository.findByUsername(username) }
-    }
-
     @Test
-    fun `authenticate with invalid token validation`() = runTest {
-        val token = "validToken"
-        val username = "testuser"
-        val user = User(id = "123456", username = username, password = "password", roles = setOf(Role("1", ERole.ROLE_USER)), email = "test@mail.com")
+    fun `authenticate with non-existent user`() =
+        runTest {
+            val token = "validToken"
+            val username = "nonExistentUser"
 
-        every { jwtUtils.extractUsername(token) } returns username
-        coEvery { userRepository.findByUsername(username) } returns user
-        every { jwtUtils.validateToken(token, username) } returns false
+            every { jwtUtils.extractUsername(token) } returns username
+            coEvery { userRepository.findByUsername(username) } returns null
 
-        val exception = assertThrows<BadCredentialsException> {
-            jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+            val exception =
+                assertThrows<BadCredentialsException> {
+                    jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+                }
+
+            assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
+
+            verify { jwtUtils.extractUsername(token) }
+            coVerify { userRepository.findByUsername(username) }
         }
 
-        assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
+    @Test
+    fun `authenticate with invalid token validation`() =
+        runTest {
+            val token = "validToken"
+            val username = "testuser"
+            val user =
+                User(
+                    id = "123456",
+                    username = username,
+                    password = "password",
+                    roles = setOf(Role("1", ERole.ROLE_USER)),
+                    email = "test@mail.com",
+                )
 
-        verify { jwtUtils.extractUsername(token) }
-        coVerify { userRepository.findByUsername(username) }
-        verify { jwtUtils.validateToken(token, username) }
-    }
+            every { jwtUtils.extractUsername(token) } returns username
+            coEvery { userRepository.findByUsername(username) } returns user
+            every { jwtUtils.validateToken(token, username) } returns false
+
+            val exception =
+                assertThrows<BadCredentialsException> {
+                    jwtAuthenticationManager.authenticate(BearerToken(token)).block()
+                }
+
+            assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
+
+            verify { jwtUtils.extractUsername(token) }
+            coVerify { userRepository.findByUsername(username) }
+            verify { jwtUtils.validateToken(token, username) }
+        }
 }

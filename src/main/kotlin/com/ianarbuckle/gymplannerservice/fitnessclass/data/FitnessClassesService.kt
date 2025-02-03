@@ -7,14 +7,20 @@ import java.time.DayOfWeek
 
 interface FitnessClassesService {
     suspend fun fitnessClasses(): Flow<FitnessClass>
+
     suspend fun fitnessClassesByDayOfWeek(dayOfWeek: String): Flow<FitnessClass>
+
     suspend fun createFitnessClass(fitnessClass: FitnessClass): FitnessClass
+
     suspend fun updateFitnessClass(fitnessClass: FitnessClass)
+
     suspend fun deleteFitnessClassById(id: String)
 }
 
 @Service
-class FitnessClassesServiceImpl(private val repository: FitnessClassRepository): FitnessClassesService {
+class FitnessClassesServiceImpl(
+    private val repository: FitnessClassRepository,
+) : FitnessClassesService {
     override suspend fun fitnessClasses(): Flow<FitnessClass> = repository.findAll()
 
     override suspend fun fitnessClassesByDayOfWeek(dayOfWeek: String): Flow<FitnessClass> {

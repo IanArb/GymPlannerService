@@ -6,28 +6,42 @@ import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlr
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/fault")
-class FaultReportController(private val faultReportService: FaultReportService) {
-
+class FaultReportController(
+    private val faultReportService: FaultReportService,
+) {
     @GetMapping
     fun reports(): Flow<FaultReport> = faultReportService.reports()
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun saveFaultReport(@Valid @RequestBody faultReport: FaultReport): FaultReport {
+    suspend fun saveFaultReport(
+        @Valid @RequestBody faultReport: FaultReport,
+    ): FaultReport {
         try {
             return faultReportService.save(faultReport)
         } catch (ex: FaultReportAlreadyExistsException) {
             throw ResponseStatusException(
-                HttpStatus.PRECONDITION_FAILED, "Report already exists", ex
+                HttpStatus.PRECONDITION_FAILED,
+                "Report already exists",
+                ex,
             )
         }
     }
 
     @DeleteMapping("/{id}")
-    suspend fun deleteReport(@PathVariable id: String) = faultReportService.deleteReportById(id)
+    suspend fun deleteReport(
+        @PathVariable id: String,
+    ) = faultReportService.deleteReportById(id)
 }

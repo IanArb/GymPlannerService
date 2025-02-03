@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.*
+import java.util.Locale
 
 @Document
 data class PersonalTrainer(
@@ -30,7 +30,10 @@ enum class GymLocation {
 }
 
 class GymLocationDeserializer : JsonDeserializer<GymLocation>() {
-    override fun deserialize(parser: JsonParser, ctxt: DeserializationContext): GymLocation {
+    override fun deserialize(
+        parser: JsonParser,
+        ctxt: DeserializationContext,
+    ): GymLocation {
         val value = parser.text.uppercase(Locale.getDefault())
         return GymLocation.valueOf(value)
     }

@@ -25,7 +25,6 @@ import org.mockito.Mockito.`when` as whenever
 @ActiveProfiles("test")
 @AutoConfigureDataMongo
 class ClientGymPlanControllerTests {
-
     @Autowired
     lateinit var webTestClient: WebTestClient
 
@@ -103,14 +102,18 @@ class ClientGymPlanControllerTests {
                         ]
                     }
                 }
-            """.trimIndent()
+                """.trimIndent()
 
-            webTestClient.post().uri("/api/v1/clients")
+            webTestClient
+                .post()
+                .uri("/api/v1/clients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(clientJson))
                 .exchange()
-                .expectStatus().isCreated
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isCreated
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
         }
     }
@@ -121,13 +124,18 @@ class ClientGymPlanControllerTests {
         runTest {
             whenever(clientService.findAllClients()).thenReturn(flowOf(client))
 
-            webTestClient.get().uri("/api/v1/clients")
+            webTestClient
+                .get()
+                .uri("/api/v1/clients")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$[0].id").isEqualTo(client.id ?: "")
+                .jsonPath("$[0].id")
+                .isEqualTo(client.id ?: "")
         }
     }
 

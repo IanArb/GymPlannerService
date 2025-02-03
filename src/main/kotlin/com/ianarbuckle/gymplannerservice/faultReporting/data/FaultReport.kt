@@ -16,5 +16,5 @@ data class FaultReport(
     @field:NotEmpty(message = "Photo is mandatory")
     val photoUri: String,
     @field:NotNull(message = "Date is mandatory")
-    val date: LocalDateTime
+    val date: LocalDateTime,
 )

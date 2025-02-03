@@ -28,7 +28,7 @@ data class Booking(
 enum class BookingStatus {
     PENDING,
     CONFIRMED,
-    CANCELLED
+    CANCELLED,
 }
 
 @Document
@@ -40,7 +40,7 @@ data class Client(
     val surname: String,
     @field:NotBlank(message = "Email is mandatory")
     val email: String,
-    val gymLocation: GymLocation
+    val gymLocation: GymLocation,
 )
 
 @Document
@@ -49,5 +49,5 @@ data class PersonalTrainerBooking(
     val firstName: String,
     val surname: String,
     val imageUrl: String,
-    val gymLocation: GymLocation
+    val gymLocation: GymLocation,
 )

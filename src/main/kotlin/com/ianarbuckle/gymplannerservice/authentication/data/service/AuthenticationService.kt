@@ -12,18 +12,18 @@ import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.RoleRepository
-import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import org.bson.types.ObjectId
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
-
 interface AuthenticationService {
     suspend fun authenticationUser(loginRequest: LoginRequest): JwtResponse
+
     suspend fun createUser(signUpRequest: SignUpRequest): MessageResponse
 }
 
@@ -35,10 +35,10 @@ class AuthenticationServiceImpl(
     private val encoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
 ) : AuthenticationService {
-
     override suspend fun authenticationUser(loginRequest: LoginRequest): JwtResponse {
-        val user = userRepository.findByUsername(loginRequest.username)
-            ?: throw UserNotFoundException()
+        val user =
+            userRepository.findByUsername(loginRequest.username)
+                ?: throw UserNotFoundException()
 
         if (encoder.matches(loginRequest.password, user.password)) {
             val jwt: String = jwtUtils.generateToken(user.username)
@@ -48,10 +48,10 @@ class AuthenticationServiceImpl(
             return JwtResponse(
                 userId = user.id,
                 token = jwt,
-                expiration = expiration
+                expiration = expiration,
             )
         } else {
-            throw BadCredentialsException("Invalid username or password");
+            throw BadCredentialsException("Invalid username or password")
         }
     }
 
@@ -68,27 +68,31 @@ class AuthenticationServiceImpl(
         val roles: MutableSet<Role> = HashSet()
 
         if (strRoles?.isEmpty() == true) {
-            val userRole: Role = rolesRepository.findByName(ERole.ROLE_USER)
-                ?: throw RoleNotFoundException()
+            val userRole: Role =
+                rolesRepository.findByName(ERole.ROLE_USER)
+                    ?: throw RoleNotFoundException()
             roles.add(userRole)
         } else {
             strRoles?.map { role ->
                 when (role) {
                     "admin" -> {
-                        val adminRole: Role = rolesRepository.findByName(ERole.ROLE_ADMIN)
-                            ?: throw RoleNotFoundException()
+                        val adminRole: Role =
+                            rolesRepository.findByName(ERole.ROLE_ADMIN)
+                                ?: throw RoleNotFoundException()
                         roles.add(adminRole)
                     }
 
                     "mod" -> {
-                        val modRole: Role = rolesRepository.findByName(ERole.ROLE_MODERATOR)
-                            ?: throw RoleNotFoundException()
+                        val modRole: Role =
+                            rolesRepository.findByName(ERole.ROLE_MODERATOR)
+                                ?: throw RoleNotFoundException()
                         roles.add(modRole)
                     }
 
                     else -> {
-                        val userRole: Role = rolesRepository.findByName(ERole.ROLE_USER)
-                            ?: throw RoleNotFoundException()
+                        val userRole: Role =
+                            rolesRepository.findByName(ERole.ROLE_USER)
+                                ?: throw RoleNotFoundException()
                         roles.add(userRole)
                     }
                 }
@@ -97,13 +101,14 @@ class AuthenticationServiceImpl(
 
         val userId = ObjectId().toHexString()
 
-        val user = User(
-            id = userId,
-            username = signUpRequest.username,
-            email = signUpRequest.email,
-            password = encoder.encode(signUpRequest.password),
-            roles = roles
-        )
+        val user =
+            User(
+                id = userId,
+                username = signUpRequest.username,
+                email = signUpRequest.email,
+                password = encoder.encode(signUpRequest.password),
+                roles = roles,
+            )
 
         userRepository.save(user)
         userProfileRepository.save(
@@ -112,8 +117,8 @@ class AuthenticationServiceImpl(
                 username = signUpRequest.username,
                 firstName = signUpRequest.firstName,
                 surname = signUpRequest.surname,
-                email = signUpRequest.email
-            )
+                email = signUpRequest.email,
+            ),
         )
 
         return MessageResponse("User registered successfully!")

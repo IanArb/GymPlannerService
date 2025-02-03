@@ -11,65 +11,71 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class UserProfileServiceTests {
-
     private val userProfileRepository = mockk<UserProfileRepository>()
     private val userProfileService: UserProfileService = UserProfileServiceImpl(userProfileRepository)
 
     @Test
-    fun `userProfile should return UserProfile when found`() = runTest {
-        val userId = "123456"
-        val userProfile = UserProfileDataProvider.createUserProfile(userId = userId)
-        coEvery { userProfileRepository.findByUserId(userId) } returns userProfile
+    fun `userProfile should return UserProfile when found`() =
+        runTest {
+            val userId = "123456"
+            val userProfile = UserProfileDataProvider.createUserProfile(userId = userId)
+            coEvery { userProfileRepository.findByUserId(userId) } returns userProfile
 
-        val result = userProfileService.userProfile(userId)
+            val result = userProfileService.userProfile(userId)
 
-        assertThat(result).isEqualTo(userProfile)
-    }
-
-    @Test
-    fun `userProfile should throw UserNotFoundException when not found`() = runTest {
-        val userId = "nonexistentUserId"
-        coEvery { userProfileRepository.findByUserId(userId) } returns null
-
-        val exception = assertThrows<UserNotFoundException> {
-            userProfileService.userProfile(userId)
+            assertThat(result).isEqualTo(userProfile)
         }
 
-        assertThat(exception).isInstanceOf(UserNotFoundException::class.java)
-        assertThat(exception).hasMessageThat().contains("User not found")
-    }
+    @Test
+    fun `userProfile should throw UserNotFoundException when not found`() =
+        runTest {
+            val userId = "nonexistentUserId"
+            coEvery { userProfileRepository.findByUserId(userId) } returns null
+
+            val exception =
+                assertThrows<UserNotFoundException> {
+                    userProfileService.userProfile(userId)
+                }
+
+            assertThat(exception).isInstanceOf(UserNotFoundException::class.java)
+            assertThat(exception).hasMessageThat().contains("User not found")
+        }
 
     @Test
-    fun `deleteUserProfile should delete UserProfile`() = runTest {
-        val userId = "123456"
-        coEvery { userProfileRepository.deleteById(userId) } returns Unit
+    fun `deleteUserProfile should delete UserProfile`() =
+        runTest {
+            val userId = "123456"
+            coEvery { userProfileRepository.deleteById(userId) } returns Unit
 
-        userProfileService.deleteUserProfile(userId)
+            userProfileService.deleteUserProfile(userId)
 
-        coVerify { userProfileRepository.deleteById(userId) }
-    }
-
-    @Test
-    fun `updateUserProfile should update UserProfile when exists`() = runTest {
-        val userProfile = UserProfileDataProvider.createUserProfile()
-        coEvery { userProfileRepository.existsByUserId(userProfile.userId) } returns true
-        coEvery { userProfileRepository.save(userProfile) } returns userProfile
-
-        userProfileService.updateUserProfile(userProfile)
-
-        coVerify { userProfileRepository.save(userProfile) }
-    }
+            coVerify { userProfileRepository.deleteById(userId) }
+        }
 
     @Test
-    fun `updateUserProfile should throw UserNotFoundException when not exists`() = runTest {
-        val userProfile = UserProfileDataProvider.createUserProfile()
-        coEvery { userProfileRepository.existsByUserId(userProfile.userId) } returns false
+    fun `updateUserProfile should update UserProfile when exists`() =
+        runTest {
+            val userProfile = UserProfileDataProvider.createUserProfile()
+            coEvery { userProfileRepository.existsByUserId(userProfile.userId) } returns true
+            coEvery { userProfileRepository.save(userProfile) } returns userProfile
 
-        val exception = assertThrows<UserNotFoundException> {
             userProfileService.updateUserProfile(userProfile)
+
+            coVerify { userProfileRepository.save(userProfile) }
         }
 
-        assertThat(exception).isInstanceOf(UserNotFoundException::class.java)
-        assertThat(exception).hasMessageThat().contains("User not found")
-    }
+    @Test
+    fun `updateUserProfile should throw UserNotFoundException when not exists`() =
+        runTest {
+            val userProfile = UserProfileDataProvider.createUserProfile()
+            coEvery { userProfileRepository.existsByUserId(userProfile.userId) } returns false
+
+            val exception =
+                assertThrows<UserNotFoundException> {
+                    userProfileService.updateUserProfile(userProfile)
+                }
+
+            assertThat(exception).isInstanceOf(UserNotFoundException::class.java)
+            assertThat(exception).hasMessageThat().contains("User not found")
+        }
 }

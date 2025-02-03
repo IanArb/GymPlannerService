@@ -23,8 +23,8 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
-import org.mockito.Mockito.`when` as whenever
 import kotlin.test.Test
+import org.mockito.Mockito.`when` as whenever
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(controllers = [AuthenticationController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
@@ -32,7 +32,6 @@ import kotlin.test.Test
 @ActiveProfiles("test")
 @AutoConfigureDataMongo
 class AuthenticationControllerTests {
-
     @Autowired
     lateinit var webTestClient: WebTestClient
 
@@ -40,192 +39,244 @@ class AuthenticationControllerTests {
     private lateinit var authenticationService: AuthenticationService
 
     @Test
-    fun `test login with valid credentials`() = runTest {
-        val loginRequest = LoginRequest(username = "testuser", password = "password")
-        val loginRequestJson = """
-            {
-                "username": "${loginRequest.username}",
-                "password": "${loginRequest.password}"
-            }
-        """.trimIndent()
+    fun `test login with valid credentials`() =
+        runTest {
+            val loginRequest = LoginRequest(username = "testuser", password = "password")
+            val loginRequestJson =
+                """
+                {
+                    "username": "${loginRequest.username}",
+                    "password": "${loginRequest.password}"
+                }
+                """.trimIndent()
 
-        whenever(authenticationService.authenticationUser(loginRequest)).thenReturn(JwtResponse(
-            token = "validToken",
-            expiration = 1000,
-            userId = "123456"
-        ))
+            whenever(authenticationService.authenticationUser(loginRequest))
+                .thenReturn(
+                    JwtResponse(
+                        token = "validToken",
+                        expiration = 1000,
+                        userId = "123456",
+                    ),
+                )
 
-        webTestClient.post().uri("/api/v1/auth/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(loginRequestJson))
-            .exchange()
-            .expectStatus().isOk
-            .expectBody()
-            .jsonPath("$.token").isNotEmpty
-    }
-
-    @Test
-    fun `test login with invalid credentials`() = runTest {
-        val loginRequest = LoginRequest(username = "testuser", password = "wrongpassword")
-        val loginRequestJson = """
-            {
-                "username": "${loginRequest.username}",
-                "password": "${loginRequest.password}"
-            }
-        """.trimIndent()
-
-        whenever(authenticationService.authenticationUser(loginRequest)).thenThrow(BadCredentialsException("Invalid username or password"))
-
-        webTestClient.post().uri("/api/v1/auth/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(loginRequestJson))
-            .exchange()
-            .expectStatus().isUnauthorized
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(loginRequestJson))
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .jsonPath("$.token")
+                .isNotEmpty
+        }
 
     @Test
-    fun `test login with invalid user`() = runTest {
-        val loginRequest = LoginRequest(username = "testuser", password = "wrongpassword")
-        val loginRequestJson = """
-            {
-                "username": "${loginRequest.username}",
-                "password": "${loginRequest.password}"
-            }
-        """.trimIndent()
+    fun `test login with invalid credentials`() =
+        runTest {
+            val loginRequest = LoginRequest(username = "testuser", password = "wrongpassword")
+            val loginRequestJson =
+                """
+                {
+                    "username": "${loginRequest.username}",
+                    "password": "${loginRequest.password}"
+                }
+                """.trimIndent()
 
-        whenever(authenticationService.authenticationUser(loginRequest)).thenThrow(UserNotFoundException())
+            whenever(authenticationService.authenticationUser(loginRequest))
+                .thenThrow(BadCredentialsException("Invalid username or password"))
 
-        webTestClient.post().uri("/api/v1/auth/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(loginRequestJson))
-            .exchange()
-            .expectStatus().isUnauthorized
-    }
-
-    @Test
-    fun `test register with valid data`() = runTest {
-        val signUpRequest = SignUpRequest(
-            username = "newuser",
-            email = "newuser@mail.com",
-            password = "password",
-            roles = setOf("user"),
-            firstName = "New",
-            surname = "User"
-        )
-        val signUpRequestJson = """
-            {
-                "username": "${signUpRequest.username}",
-                "email": "${signUpRequest.email}",
-                "password": "${signUpRequest.password}",
-                "roles": ["user"],
-                "firstName": "${signUpRequest.firstName}",
-                "surname": "${signUpRequest.surname}"
-            }
-        """.trimIndent()
-
-        whenever(authenticationService.createUser(signUpRequest)).thenReturn(MessageResponse(
-            message = "User registered successfully!"
-        ))
-
-        webTestClient.post().uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(signUpRequestJson))
-            .exchange()
-            .expectStatus().isOk
-            .expectBody()
-            .jsonPath("$.message").isEqualTo("User registered successfully!")
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(loginRequestJson))
+                .exchange()
+                .expectStatus()
+                .isUnauthorized
+        }
 
     @Test
-    fun `test register with existing username`() = runTest {
-        val signUpRequest = SignUpRequest(
-            username = "existinguser",
-            email = "newuser@mail.com",
-            password = "password",
-            roles = setOf("user"),
-            firstName = "New",
-            surname = "User"
-        )
-        val signUpRequestJson = """
-            {
-                "username": "${signUpRequest.username}",
-                "email": "${signUpRequest.email}",
-                "password": "${signUpRequest.password}",
-                "roles": ["user"],
-                "firstName": "${signUpRequest.firstName}",
-                "surname": "${signUpRequest.surname}"
-            }
-        """.trimIndent()
+    fun `test login with invalid user`() =
+        runTest {
+            val loginRequest = LoginRequest(username = "testuser", password = "wrongpassword")
+            val loginRequestJson =
+                """
+                {
+                    "username": "${loginRequest.username}",
+                    "password": "${loginRequest.password}"
+                }
+                """.trimIndent()
 
-        whenever(authenticationService.createUser(signUpRequest)).thenThrow(UserAlreadyExistsException())
+            whenever(authenticationService.authenticationUser(loginRequest))
+                .thenThrow(UserNotFoundException())
 
-        webTestClient.post().uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(signUpRequestJson))
-            .exchange()
-            .expectStatus().isBadRequest
-            .expectBody()
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(loginRequestJson))
+                .exchange()
+                .expectStatus()
+                .isUnauthorized
+        }
 
     @Test
-    fun `test register with existing email`() = runTest {
-        val signUpRequest = SignUpRequest(
-            username = "existinguser",
-            email = "newuser@mail.com",
-            password = "password",
-            roles = setOf("user"),
-            firstName = "New",
-            surname = "User"
-        )
-        val signUpRequestJson = """
-            {
-                "username": "${signUpRequest.username}",
-                "email": "${signUpRequest.email}",
-                "password": "${signUpRequest.password}",
-                "roles": ["user"],
-                "firstName": "${signUpRequest.firstName}",
-                "surname": "${signUpRequest.surname}"
-            }
-        """.trimIndent()
+    fun `test register with valid data`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
+            val signUpRequestJson =
+                """
+                {
+                    "username": "${signUpRequest.username}",
+                    "email": "${signUpRequest.email}",
+                    "password": "${signUpRequest.password}",
+                    "roles": ["user"],
+                    "firstName": "${signUpRequest.firstName}",
+                    "surname": "${signUpRequest.surname}"
+                }
+                """.trimIndent()
 
-        whenever(authenticationService.createUser(signUpRequest)).thenThrow(EmailAlreadyExistsException())
+            whenever(authenticationService.createUser(signUpRequest))
+                .thenReturn(
+                    MessageResponse(
+                        message = "User registered successfully!",
+                    ),
+                )
 
-        webTestClient.post().uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(signUpRequestJson))
-            .exchange()
-            .expectStatus().isBadRequest
-            .expectBody()
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(signUpRequestJson))
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .jsonPath("$.message")
+                .isEqualTo("User registered successfully!")
+        }
 
     @Test
-    fun `test register with invalid role`() = runTest {
-        val signUpRequest = SignUpRequest(
-            username = "existinguser",
-            email = "newuser@mail.com",
-            password = "password",
-            roles = setOf("invalid"),
-            firstName = "New",
-            surname = "User"
-        )
-        val signUpRequestJson = """
-            {
-                "username": "${signUpRequest.username}",
-                "email": "${signUpRequest.email}",
-                "password": "${signUpRequest.password}",
-                "roles": ["invalid"],
-                "firstName": "${signUpRequest.firstName}",
-                "surname": "${signUpRequest.surname}"
-            }
-        """.trimIndent()
+    fun `test register with existing username`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "existinguser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
+            val signUpRequestJson =
+                """
+                {
+                    "username": "${signUpRequest.username}",
+                    "email": "${signUpRequest.email}",
+                    "password": "${signUpRequest.password}",
+                    "roles": ["user"],
+                    "firstName": "${signUpRequest.firstName}",
+                    "surname": "${signUpRequest.surname}"
+                }
+                """.trimIndent()
 
-        whenever(authenticationService.createUser(signUpRequest)).thenThrow(RoleNotFoundException())
+            whenever(authenticationService.createUser(signUpRequest))
+                .thenThrow(UserAlreadyExistsException())
 
-        webTestClient.post().uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(signUpRequestJson))
-            .exchange()
-            .expectStatus().isBadRequest
-            .expectBody()
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(signUpRequestJson))
+                .exchange()
+                .expectStatus()
+                .isBadRequest
+                .expectBody()
+        }
+
+    @Test
+    fun `test register with existing email`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "existinguser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
+            val signUpRequestJson =
+                """
+                {
+                    "username": "${signUpRequest.username}",
+                    "email": "${signUpRequest.email}",
+                    "password": "${signUpRequest.password}",
+                    "roles": ["user"],
+                    "firstName": "${signUpRequest.firstName}",
+                    "surname": "${signUpRequest.surname}"
+                }
+                """.trimIndent()
+
+            whenever(authenticationService.createUser(signUpRequest))
+                .thenThrow(EmailAlreadyExistsException())
+
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(signUpRequestJson))
+                .exchange()
+                .expectStatus()
+                .isBadRequest
+                .expectBody()
+        }
+
+    @Test
+    fun `test register with invalid role`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "existinguser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("invalid"),
+                    firstName = "New",
+                    surname = "User",
+                )
+            val signUpRequestJson =
+                """
+                {
+                    "username": "${signUpRequest.username}",
+                    "email": "${signUpRequest.email}",
+                    "password": "${signUpRequest.password}",
+                    "roles": ["invalid"],
+                    "firstName": "${signUpRequest.firstName}",
+                    "surname": "${signUpRequest.surname}"
+                }
+                """.trimIndent()
+
+            whenever(authenticationService.createUser(signUpRequest))
+                .thenThrow(RoleNotFoundException())
+
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(signUpRequestJson))
+                .exchange()
+                .expectStatus()
+                .isBadRequest
+                .expectBody()
+        }
 }

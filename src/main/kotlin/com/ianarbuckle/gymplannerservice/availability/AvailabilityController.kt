@@ -21,44 +21,47 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/api/v1/availability")
 class AvailabilityController(
-    private val availabilityService: AvailabilityService
+    private val availabilityService: AvailabilityService,
 ) {
-
     @GetMapping("/{personalTrainerId}/{month}")
     suspend fun getAvailability(
         @PathVariable personalTrainerId: String,
         @PathVariable month: String,
-    ): Availability {
-        return try {
+    ): Availability =
+        try {
             availabilityService.getAvailability(personalTrainerId, month)
         } catch (ex: AvailabilityNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Availability not found", ex
+                HttpStatus.NOT_FOUND,
+                "Availability not found",
+                ex,
             )
         } catch (ex: PersonalTrainerNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Personal trainer not found", ex
+                HttpStatus.NOT_FOUND,
+                "Personal trainer not found",
+                ex,
             )
         }
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun saveAvailability(
-        @RequestBody availability: Availability
-    ): Availability {
-        return try {
+        @RequestBody availability: Availability,
+    ): Availability =
+        try {
             availabilityService.saveAvailability(availability)
         } catch (ex: PersonalTrainerNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Personal trainer not found", ex
+                HttpStatus.NOT_FOUND,
+                "Personal trainer not found",
+                ex,
             )
         }
-    }
 
     @PutMapping
     suspend fun updateAvailability(
-        @RequestBody availability: Availability
+        @RequestBody availability: Availability,
     ) {
         availabilityService.updateAvailability(availability)
     }
@@ -74,17 +77,20 @@ class AvailabilityController(
     suspend fun isAvailable(
         @RequestParam personalTrainerId: String,
         @RequestParam month: String,
-    ): CheckAvailability {
-        return try {
+    ): CheckAvailability =
+        try {
             availabilityService.isAvailable(personalTrainerId, month)
         } catch (ex: AvailabilityNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Availability not found", ex
+                HttpStatus.NOT_FOUND,
+                "Availability not found",
+                ex,
             )
         } catch (ex: PersonalTrainerNotFoundException) {
             throw ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Personal trainer not found", ex
+                HttpStatus.NOT_FOUND,
+                "Personal trainer not found",
+                ex,
             )
         }
-    }
 }

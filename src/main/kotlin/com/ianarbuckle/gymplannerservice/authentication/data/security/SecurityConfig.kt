@@ -16,13 +16,14 @@ import reactor.core.publisher.Mono
 
 @Configuration
 @EnableWebFluxSecurity
-open class SecurityConfig(private val jwtAuthenticationManager: JWTAuthenticationManager) {
+class SecurityConfig(
+    private val jwtAuthenticationManager: JWTAuthenticationManager,
+) {
+    @Bean
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    open fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
-    @Bean
-    open fun springSecurityFilter(
+    fun springSecurityFilter(
         converter: JwtServerAuthenticationConverter,
         http: ServerHttpSecurity,
     ): SecurityWebFilterChain {
@@ -37,24 +38,21 @@ open class SecurityConfig(private val jwtAuthenticationManager: JWTAuthenticatio
                         exchange.response.headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer")
                     }
                 }
-            }
-            .authorizeExchange {
-                it.pathMatchers(
-                    HttpMethod.POST,
-                    "/api/v1/auth/**"
-                ).permitAll()
-                    .anyExchange().authenticated()
-            }
-            .httpBasic {
+            }.authorizeExchange {
+                it
+                    .pathMatchers(
+                        HttpMethod.POST,
+                        "/api/v1/auth/**",
+                    ).permitAll()
+                    .anyExchange()
+                    .authenticated()
+            }.httpBasic {
                 it.disable()
-            }
-            .formLogin {
+            }.formLogin {
                 it.disable()
-            }
-            .csrf {
+            }.csrf {
                 it.disable()
-            }
-            .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+            }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authenticationManager(jwtAuthenticationManager)
 
         return http.build()

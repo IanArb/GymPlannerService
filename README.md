@@ -1,6 +1,8 @@
-# Spring Boot Playground
+# Gym Planner playground project
 
 A playground project to experiment with Spring Boot using REST and WebSockets. This project leverages reactive programming and modern Kotlin features to create an efficient and scalable backend.
+
+This service provides a scalable and reactive backend for managing gym operations, including personal training bookings, fitness class management, and reporting faulty gym equipment.
 
 ## Technologies Used
 
@@ -51,6 +53,20 @@ Run tests using:
 ```sh
 ./gradlew test
 ```
+
+### OpenAPI Endpoints
+
+This project automatically generates OpenAPI 3.0 documentation using Springdoc OpenAPI.
+
+Swagger UI: http://localhost:8080/webjars/swagger-ui/index.html
+
+Swagger UI provides an interactive interface to view and test your API endpoints.
+
+OpenAPI JSON Spec: http://localhost:8080/v3/api-docs
+
+This endpoint serves the raw OpenAPI documentation in JSON format.
+
+These endpoints are available once the application is running. You can explore the API, try requests directly from Swagger UI, and see the API documentation in real-time.
 
 ## Contributing
 

@@ -48,7 +48,8 @@ class ClientGymPlanServiceTest {
         runTest {
             coEvery { mockClientGymPlanRepository.save(any()) } returns ClientsDataProvider.createClient()
 
-            assertThat(service.createClient(ClientsDataProvider.createClient())).isEqualTo(ClientsDataProvider.createClient())
+            assertThat(service.createClient(ClientsDataProvider.createClient()))
+                .isEqualTo(ClientsDataProvider.createClient())
         }
 
     @Test

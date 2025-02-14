@@ -197,6 +197,7 @@ class AvailabilityServiceTests {
             assertTrue(result.isAvailable)
         }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `test isAvailable should return false when personal trainer is not available`() =
         runTest {

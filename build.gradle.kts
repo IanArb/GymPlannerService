@@ -1,9 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
-    id("org.springframework.boot") version "3.3.3"
-    id("io.spring.dependency-management") version "1.1.6"
-    id("com.diffplug.spotless") version "6.25.0"
+    kotlin("jvm") version libs.versions.kotlin.get()
+    kotlin("plugin.spring") version libs.versions.kotlin.get()
+    id("org.springframework.boot") version libs.versions.spring.boot.get()
+    id("io.spring.dependency-management") version libs.versions.spring.dependency.management.get()
+    id("com.diffplug.spotless") version libs.versions.spotless.get()
+    id("io.gitlab.arturbosch.detekt") version libs.versions.detekt.get()
 }
 
 group = "com.ianarbuckle"
@@ -19,39 +20,57 @@ repositories {
     mavenCentral()
 }
 
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    config = files("detekt.yml")
+    buildUponDefaultConfig = true
+    allRules = false
+    source = files("src/main/kotlin", "src/test/kotlin")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        txt.required.set(false)
+    }
+
+    baseline = file("$rootDir/detekt-baseline.xml") // Optional: Suppress existing issues
+}
+
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.boot:spring-boot-starter-hateoas")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation(libs.spring.boot.starter.data.mongodb)
+    implementation(libs.spring.boot.starter.data.mongodb.reactive)
+    implementation(libs.spring.boot.starter.hateoas)
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.webflux)
+    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.spring.boot.starter.security)
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.reactor.kotlin)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.reactor)
 
-    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6") // or 'io.jsonwebtoken:jjwt-gson:0.11.5' if you prefer Gson
+    implementation(libs.jjwt.api)
+    runtimeOnly(libs.jjwt.impl)
+    runtimeOnly(libs.jjwt.jackson)
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    developmentOnly(libs.spring.boot.devtools)
 
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
+    implementation(libs.springdoc.openapi.webflux.ui)
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("app.cash.turbine:turbine:1.1.0")
-    testImplementation("com.google.truth:truth:1.4.4")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-    testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.reactor.test)
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.turbine.test)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockk)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.18.0")
-    testImplementation("org.mockito:mockito-core:3.12.4")
-    testImplementation("org.mockito:mockito-inline:3.12.4") // The mockito-inline dependency
+    testImplementation(libs.flapdoodle.mongo)
+
+    detektPlugins(libs.detekt.formatting)
 }
 
 kotlin {
@@ -68,5 +87,15 @@ spotless {
     kotlin {
         target("**/*.kt")
         ktlint("1.3.1")
+    }
+}
+
+dependencyManagement {
+    configurations.matching { it.name == "detekt" }.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+            }
+        }
     }
 }

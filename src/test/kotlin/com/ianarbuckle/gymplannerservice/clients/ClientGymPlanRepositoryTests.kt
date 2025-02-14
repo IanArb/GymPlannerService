@@ -25,6 +25,7 @@ class ClientGymPlanRepositoryTests {
     @Test
     fun `verify save creates the client`() =
         runTest {
-            assertThat(gymPlanRepository.save(ClientsDataProvider.createClient())).isEqualTo(ClientsDataProvider.createClient())
+            assertThat(gymPlanRepository.save(ClientsDataProvider.createClient()))
+                .isEqualTo(ClientsDataProvider.createClient())
         }
 }

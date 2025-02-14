@@ -44,9 +44,10 @@ class SecurityConfig(
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
-                        "/webjars/swagger-ui/**"
+                        "/webjars/swagger-ui/**",
                     ).permitAll()
-                    .pathMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+                    .pathMatchers(HttpMethod.POST, "/api/v1/auth/**")
+                    .permitAll()
                     .anyExchange()
                     .authenticated()
             }.httpBasic {

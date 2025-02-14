@@ -21,7 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @ExtendWith(SpringExtension::class)
-@WebFluxTest(controllers = [UserProfileController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
+@WebFluxTest(
+    controllers = [UserProfileController::class],
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
+)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 @AutoConfigureDataMongo

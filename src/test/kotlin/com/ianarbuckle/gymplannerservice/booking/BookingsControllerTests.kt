@@ -21,7 +21,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 
 @ExtendWith(SpringExtension::class)
-@WebFluxTest(controllers = [BookingController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
+@WebFluxTest(
+    controllers = [BookingController::class],
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
+)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 @AutoConfigureDataMongo

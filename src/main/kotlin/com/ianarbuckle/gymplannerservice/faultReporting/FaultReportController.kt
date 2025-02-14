@@ -3,6 +3,11 @@ package com.ianarbuckle.gymplannerservice.faultReporting
 import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
 import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
 import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
@@ -19,17 +24,54 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/fault")
-@Tag(name = "Fault Reporting", description = "Endpoints for fault reporting")
+@Tag(
+    name = "Fault Reporting",
+    description = "Endpoints for fault reporting",
+)
 class FaultReportController(
     private val faultReportService: FaultReportService,
 ) {
+    @Operation(
+        summary = "Get all fault reports",
+        description = "Retrieve all fault reports",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Successful retrieval of fault reports",
+            ),
+        ],
+    )
     @GetMapping
     fun reports(): Flow<FaultReport> = faultReportService.reports()
 
+    @Operation(
+        summary = "Save a fault report",
+        description = "Save a new fault report",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "201",
+                description = "Fault report created successfully",
+            ),
+            ApiResponse(
+                responseCode = "412",
+                description = "Precondition failed - Report already exists",
+            ),
+        ],
+    )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun saveFaultReport(
-        @Valid @RequestBody faultReport: FaultReport,
+        @Parameter(
+            description = "Fault report details to be saved",
+            required = true,
+            schema = Schema(implementation = FaultReport::class),
+        )
+        @Valid
+        @RequestBody faultReport: FaultReport,
     ): FaultReport {
         try {
             return faultReportService.save(faultReport)
@@ -42,8 +84,26 @@ class FaultReportController(
         }
     }
 
+    @Operation(summary = "Delete a fault report", description = "Delete a fault report by its ID")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Fault report deleted successfully",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Fault report not found",
+            ),
+        ],
+    )
     @DeleteMapping("/{id}")
     suspend fun deleteReport(
+        @Parameter(
+            description = "ID of the fault report to be deleted",
+            required = true,
+            schema = Schema(type = "string"),
+        )
         @PathVariable id: String,
     ) = faultReportService.deleteReportById(id)
 }

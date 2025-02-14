@@ -19,7 +19,10 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/clients")
-@Tag(name = "Clients", description = "Endpoints for clients")
+@Tag(
+    name = "Clients",
+    description = "Endpoints for clients",
+)
 class ClientController(
     private val clientGymPlansService: ClientGymPlansService,
 ) {

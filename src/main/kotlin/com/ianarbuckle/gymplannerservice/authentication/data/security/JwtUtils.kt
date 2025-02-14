@@ -4,6 +4,8 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.TokenExpi
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -18,6 +20,8 @@ class JwtUtils(
     private val jwtSecret: String,
 ) {
     private val key = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
+
+    private val logger: Logger = LoggerFactory.getLogger(JwtUtils::class.java)
 
     fun extractUsername(token: String?): String = extractClaim(token) { claims -> claims.subject }
 
@@ -72,8 +76,17 @@ class JwtUtils(
         try {
             (extractUsername(token) == username && !isTokenExpired(token))
         } catch (e: TokenExpiredException) {
+            logger.warn(
+                "TokenExpiredException: Token has expired. Details: {}",
+                e.message,
+            )
             false
         } catch (e: Exception) {
+            logger.error(
+                "Exception during token validation. Details: {}",
+                e.message,
+                e,
+            )
             false
         }
 }

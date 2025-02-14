@@ -9,6 +9,9 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.RoleNotFo
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -21,10 +24,33 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "Endpoints for authentication")
+@Tag(
+    name = "Authentication",
+    description = "Endpoints for authentication",
+)
 class AuthenticationController(
     private val authenticationService: AuthenticationService,
 ) {
+    @Operation(
+        summary = "Authenticate user",
+        description = "Authenticate user with username and password",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Successful authentication",
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized - Invalid username or password",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "User not found",
+            ),
+        ],
+    )
     @PostMapping("/login")
     suspend fun authenticateUser(
         @RequestBody @Valid loginRequest: LoginRequest,
@@ -45,6 +71,18 @@ class AuthenticationController(
             )
         }
 
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "User registered successfully",
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request - User already exists or invalid role",
+            ),
+        ],
+    )
     @PostMapping("/register")
     suspend fun registerUser(
         @RequestBody @Valid signUpRequest: SignUpRequest,

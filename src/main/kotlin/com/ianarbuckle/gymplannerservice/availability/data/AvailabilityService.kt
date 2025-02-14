@@ -38,7 +38,8 @@ class AvailabilityServiceImpl(
         personalTrainerRepository.findById(personalTrainerId) ?: throw PersonalTrainerNotFoundException()
 
         val availability =
-            availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) ?: throw AvailabilityNotFoundException()
+            availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
+                ?: throw AvailabilityNotFoundException()
 
         val currentDate = LocalDate.now(clock)
         val updatedSlots =

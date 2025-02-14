@@ -45,13 +45,14 @@ class AvailabilityServiceImpl(
         val updatedSlots =
             availability.slots.map { slot ->
                 slot.copy(
-                    times = slot.times.map { time ->
-                        if (slot.date.isBefore(currentDate)) {
-                            time.copy(status = Status.UNAVAILABLE)
-                        } else {
-                            time
-                        }
-                    },
+                    times =
+                        slot.times.map { time ->
+                            if (slot.date.isBefore(currentDate)) {
+                                time.copy(status = Status.UNAVAILABLE)
+                            } else {
+                                time
+                            }
+                        },
                 )
             }
 

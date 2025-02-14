@@ -28,24 +28,24 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/availability")
 @Tag(
     name = "Availability",
-    description = "Endpoints for availability"
+    description = "Endpoints for availability",
 )
 class AvailabilityController(
     private val availabilityService: AvailabilityService,
 ) {
     @Operation(
         summary = "Get availability",
-        description = "Get availability for a personal trainer by month"
+        description = "Get availability for a personal trainer by month",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of availability"
+                description = "Successful retrieval of availability",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Availability or personal trainer not found"
+                description = "Availability or personal trainer not found",
             ),
         ],
     )
@@ -54,13 +54,13 @@ class AvailabilityController(
         @Parameter(
             description = "Personal trainer id",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable personalTrainerId: String,
         @Parameter(
             description = "Month of the year",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable month: String,
     ): Availability =
@@ -74,17 +74,17 @@ class AvailabilityController(
 
     @Operation(
         summary = "Save availability",
-        description = "Save availability for a personal trainer"
+        description = "Save availability for a personal trainer",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "201",
-                description = "Availability created successfully"
+                description = "Availability created successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Personal trainer not found"
+                description = "Personal trainer not found",
             ),
         ],
     )
@@ -94,7 +94,7 @@ class AvailabilityController(
         @Parameter(
             description = "Availability details to be saved",
             required = true,
-            schema = Schema(implementation = Availability::class)
+            schema = Schema(implementation = Availability::class),
         )
         @RequestBody availability: Availability,
     ): Availability =
@@ -106,17 +106,17 @@ class AvailabilityController(
 
     @Operation(
         summary = "Update availability",
-        description = "Update availability for a personal trainer"
+        description = "Update availability for a personal trainer",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Availability updated successfully"
+                description = "Availability updated successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Personal trainer not found"
+                description = "Personal trainer not found",
             ),
         ],
     )
@@ -134,17 +134,17 @@ class AvailabilityController(
 
     @Operation(
         summary = "Delete availability",
-        description = "Delete availability by id"
+        description = "Delete availability by id",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Availability deleted successfully"
+                description = "Availability deleted successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Availability not found"
+                description = "Availability not found",
             ),
         ],
     )
@@ -153,7 +153,7 @@ class AvailabilityController(
         @Parameter(
             description = "Availability id",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ) {
@@ -162,17 +162,17 @@ class AvailabilityController(
 
     @Operation(
         summary = "Check availability",
-        description = "Check availability for a personal trainer by month"
+        description = "Check availability for a personal trainer by month",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful check of availability"
+                description = "Successful check of availability",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Availability or personal trainer not found"
+                description = "Availability or personal trainer not found",
             ),
         ],
     )
@@ -181,13 +181,13 @@ class AvailabilityController(
         @Parameter(
             description = "Personal trainer id",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @RequestParam personalTrainerId: String,
         @Parameter(
             description = "Month of the year",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @RequestParam month: String,
     ): CheckAvailability =

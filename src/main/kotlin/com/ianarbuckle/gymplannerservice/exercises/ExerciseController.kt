@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/exercises")
 @Tag(
     name = "Exercises",
-    description = "Endpoints for exercises"
+    description = "Endpoints for exercises",
 )
 class ExerciseController {
     @Autowired

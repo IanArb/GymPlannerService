@@ -26,28 +26,28 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/auth")
 @Tag(
     name = "Authentication",
-    description = "Endpoints for authentication"
+    description = "Endpoints for authentication",
 )
 class AuthenticationController(
     private val authenticationService: AuthenticationService,
 ) {
     @Operation(
         summary = "Authenticate user",
-        description = "Authenticate user with username and password"
+        description = "Authenticate user with username and password",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful authentication"
+                description = "Successful authentication",
             ),
             ApiResponse(
                 responseCode = "401",
-                description = "Unauthorized - Invalid username or password"
+                description = "Unauthorized - Invalid username or password",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "User not found"
+                description = "User not found",
             ),
         ],
     )
@@ -75,11 +75,11 @@ class AuthenticationController(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "User registered successfully"
+                description = "User registered successfully",
             ),
             ApiResponse(
                 responseCode = "400",
-                description = "Bad request - User already exists or invalid role"
+                description = "Bad request - User already exists or invalid role",
             ),
         ],
     )

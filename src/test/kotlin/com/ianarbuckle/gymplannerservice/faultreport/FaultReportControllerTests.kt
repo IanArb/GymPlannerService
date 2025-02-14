@@ -22,7 +22,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [FaultReportController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")

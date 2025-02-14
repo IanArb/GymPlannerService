@@ -23,24 +23,24 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/user_profile")
 @Tag(
     name = "User Profile",
-    description = "Endpoints for user profiles"
+    description = "Endpoints for user profiles",
 )
 class UserProfileController(
     private val userProfileService: UserProfileService,
 ) {
     @Operation(
         summary = "Get user profile",
-        description = "Retrieve a user profile by ID"
+        description = "Retrieve a user profile by ID",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of user profile"
+                description = "Successful retrieval of user profile",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "User not found"
+                description = "User not found",
             ),
         ],
     )
@@ -49,7 +49,7 @@ class UserProfileController(
         @Parameter(
             description = "ID of the user",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ): UserProfile? {
@@ -66,17 +66,17 @@ class UserProfileController(
 
     @Operation(
         summary = "Update user profile",
-        description = "Update an existing user profile"
+        description = "Update an existing user profile",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "User profile updated successfully"
+                description = "User profile updated successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "User not found"
+                description = "User not found",
             ),
         ],
     )

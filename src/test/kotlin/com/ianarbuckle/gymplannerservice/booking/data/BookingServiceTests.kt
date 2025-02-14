@@ -24,11 +24,12 @@ class BookingServiceTests {
     private val bookingsRepository = mockk<BookingRepository>()
     private val personalTrainersRepository = mockk<PersonalTrainerRepository>()
     private val userProfileRepository = mockk<UserProfileRepository>()
-    private val bookingService = BookingServiceImpl(
-        bookingsRepository = bookingsRepository,
-        personalTrainersRepository = personalTrainersRepository,
-        userProfileRepository = userProfileRepository,
-    )
+    private val bookingService =
+        BookingServiceImpl(
+            bookingsRepository = bookingsRepository,
+            personalTrainersRepository = personalTrainersRepository,
+            userProfileRepository = userProfileRepository,
+        )
 
     @Test
     fun `fetchAllBookings should return all bookings`() =

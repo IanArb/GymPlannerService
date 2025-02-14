@@ -29,13 +29,13 @@ class GymLocationsController(
 ) {
     @Operation(
         summary = "Get all gym locations",
-        description = "Retrieve all gym locations"
+        description = "Retrieve all gym locations",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of gym locations"
+                description = "Successful retrieval of gym locations",
             ),
         ],
     )
@@ -44,13 +44,13 @@ class GymLocationsController(
 
     @Operation(
         summary = "Create a gym location",
-        description = "Create a new gym location"
+        description = "Create a new gym location",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "201",
-                description = "Gym location created successfully"
+                description = "Gym location created successfully",
             ),
         ],
     )
@@ -68,13 +68,13 @@ class GymLocationsController(
 
     @Operation(
         summary = "Update a gym location",
-        description = "Update an existing gym location"
+        description = "Update an existing gym location",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Gym location updated successfully"
+                description = "Gym location updated successfully",
             ),
         ],
     )
@@ -96,11 +96,11 @@ class GymLocationsController(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Gym location deleted successfully"
+                description = "Gym location deleted successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Gym location not found"
+                description = "Gym location not found",
             ),
         ],
     )
@@ -109,7 +109,7 @@ class GymLocationsController(
         @Parameter(
             description = "ID of the gym location to be deleted",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ) {

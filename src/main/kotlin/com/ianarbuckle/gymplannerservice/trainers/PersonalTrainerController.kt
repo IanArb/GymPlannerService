@@ -27,20 +27,20 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/personal_trainers")
 @Tag(
     name = "Personal Trainers",
-    description = "Endpoints for personal trainers"
+    description = "Endpoints for personal trainers",
 )
 class PersonalTrainerController(
     private val service: PersonalTrainersService,
 ) {
     @Operation(
         summary = "Get personal trainers by gym location",
-        description = "Retrieve all personal trainers by gym location"
+        description = "Retrieve all personal trainers by gym location",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of personal trainers"
+                description = "Successful retrieval of personal trainers",
             ),
         ],
     )
@@ -49,7 +49,7 @@ class PersonalTrainerController(
         @Parameter(
             description = "Gym location",
             required = true,
-            schema = Schema(implementation = GymLocation::class)
+            schema = Schema(implementation = GymLocation::class),
         )
         @RequestParam gymLocation: GymLocation,
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
@@ -59,7 +59,7 @@ class PersonalTrainerController(
         value = [
             ApiResponse(
                 responseCode = "201",
-                description = "Personal trainer created successfully"
+                description = "Personal trainer created successfully",
             ),
         ],
     )
@@ -77,13 +77,13 @@ class PersonalTrainerController(
 
     @Operation(
         summary = "Update a personal trainer",
-        description = "Update an existing personal trainer"
+        description = "Update an existing personal trainer",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Personal trainer updated successfully"
+                description = "Personal trainer updated successfully",
             ),
         ],
     )
@@ -100,17 +100,17 @@ class PersonalTrainerController(
 
     @Operation(
         summary = "Delete a personal trainer by ID",
-        description = "Delete a personal trainer by its ID"
+        description = "Delete a personal trainer by its ID",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Personal trainer deleted successfully"
+                description = "Personal trainer deleted successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Personal trainer not found"
+                description = "Personal trainer not found",
             ),
         ],
     )
@@ -119,7 +119,7 @@ class PersonalTrainerController(
         @Parameter(
             description = "ID of the personal trainer to be deleted",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ) = service.deleteTrainerById(id)

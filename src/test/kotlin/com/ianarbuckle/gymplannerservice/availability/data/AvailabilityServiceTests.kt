@@ -60,14 +60,16 @@ class AvailabilityServiceTests {
         runTest {
             val availability =
                 AvailabilityDataProvider.createAvailability(
-                    slots = AvailabilityDataProvider.createAppointmentSlots(
-                        date = LocalDate.of(2021, 10, 10),
-                        times = listOf(
-                            AvailabilityDataProvider.createTime(
-                                status = Status.UNAVAILABLE,
-                            ),
+                    slots =
+                        AvailabilityDataProvider.createAppointmentSlots(
+                            date = LocalDate.of(2021, 10, 10),
+                            times =
+                                listOf(
+                                    AvailabilityDataProvider.createTime(
+                                        status = Status.UNAVAILABLE,
+                                    ),
+                                ),
                         ),
-                    ),
                 )
             val personalTrainer =
                 PersonalTrainerDataProvider.createPersonalTrainer(
@@ -168,16 +170,18 @@ class AvailabilityServiceTests {
                 AvailabilityDataProvider.createAvailability(
                     personalTrainerId = personalTrainerId,
                     month = month,
-                    slots = AvailabilityDataProvider.createAppointmentSlots(
-                        date = LocalDate.parse(date),
-                        times = listOf(
-                            AvailabilityDataProvider.createTime(
-                                startTime = LocalTime.parse(time),
-                                endTime = LocalTime.parse(endTime),
-                                status = Status.AVAILABLE,
-                            ),
+                    slots =
+                        AvailabilityDataProvider.createAppointmentSlots(
+                            date = LocalDate.parse(date),
+                            times =
+                                listOf(
+                                    AvailabilityDataProvider.createTime(
+                                        startTime = LocalTime.parse(time),
+                                        endTime = LocalTime.parse(endTime),
+                                        status = Status.AVAILABLE,
+                                    ),
+                                ),
                         ),
-                    ),
                 )
             val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer(id = personalTrainerId)
 
@@ -207,16 +211,18 @@ class AvailabilityServiceTests {
                 AvailabilityDataProvider.createAvailability(
                     personalTrainerId = personalTrainerId,
                     month = month,
-                    slots = AvailabilityDataProvider.createAppointmentSlots(
-                        date = LocalDate.parse(date),
-                        times = listOf(
-                            AvailabilityDataProvider.createTime(
-                                startTime = LocalTime.parse(time),
-                                endTime = LocalTime.parse(endTime),
-                                status = Status.UNAVAILABLE,
-                            ),
+                    slots =
+                        AvailabilityDataProvider.createAppointmentSlots(
+                            date = LocalDate.parse(date),
+                            times =
+                                listOf(
+                                    AvailabilityDataProvider.createTime(
+                                        startTime = LocalTime.parse(time),
+                                        endTime = LocalTime.parse(endTime),
+                                        status = Status.UNAVAILABLE,
+                                    ),
+                                ),
                         ),
-                    ),
                 )
 
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()

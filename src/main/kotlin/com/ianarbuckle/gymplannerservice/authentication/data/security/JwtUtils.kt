@@ -78,14 +78,14 @@ class JwtUtils(
         } catch (e: TokenExpiredException) {
             logger.warn(
                 "TokenExpiredException: Token has expired. Details: {}",
-                e.message
+                e.message,
             )
             false
         } catch (e: Exception) {
             logger.error(
                 "Exception during token validation. Details: {}",
                 e.message,
-                e
+                e,
             )
             false
         }

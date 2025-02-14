@@ -23,7 +23,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [AvailabilityController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -149,9 +149,8 @@ class AvailabilityControllerTests {
                         .plus("?personalTrainerId=$personalTrainerId")
                         .plus("&month=$month")
                         .plus("&date=$date")
-                        .plus("&time=$time")
-                )
-                .exchange()
+                        .plus("&time=$time"),
+                ).exchange()
                 .expectStatus()
                 .isOk
                 .expectBody()

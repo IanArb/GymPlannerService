@@ -29,7 +29,7 @@ import org.mockito.Mockito.`when` as whenever
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [AuthenticationController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")

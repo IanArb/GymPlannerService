@@ -32,17 +32,17 @@ class ClassesController(
 ) {
     @Operation(
         summary = "Get fitness classes by day of week",
-        description = "Retrieve all fitness classes by day of the week"
+        description = "Retrieve all fitness classes by day of the week",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of fitness classes"
+                description = "Successful retrieval of fitness classes",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Class not found"
+                description = "Class not found",
             ),
         ],
     )
@@ -51,7 +51,7 @@ class ClassesController(
         @Parameter(
             description = "Day of the week",
             required = false,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @RequestParam dayOfWeek: String? = null,
     ): Flow<FitnessClass> =
@@ -70,7 +70,7 @@ class ClassesController(
         value = [
             ApiResponse(
                 responseCode = "201",
-                description = "Fitness class created successfully"
+                description = "Fitness class created successfully",
             ),
         ],
     )
@@ -91,7 +91,7 @@ class ClassesController(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Fitness class updated successfully"
+                description = "Fitness class updated successfully",
             ),
         ],
     )
@@ -108,17 +108,17 @@ class ClassesController(
 
     @Operation(
         summary = "Delete a fitness class by ID",
-        description = "Delete a fitness class by its ID"
+        description = "Delete a fitness class by its ID",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Fitness class deleted successfully"
+                description = "Fitness class deleted successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Class not found"
+                description = "Class not found",
             ),
         ],
     )
@@ -127,7 +127,7 @@ class ClassesController(
         @Parameter(
             description = "ID of the fitness class to be deleted",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ) = fitnessClassService.deleteFitnessClassById(id)

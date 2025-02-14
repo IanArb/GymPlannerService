@@ -26,20 +26,20 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/fault")
 @Tag(
     name = "Fault Reporting",
-    description = "Endpoints for fault reporting"
+    description = "Endpoints for fault reporting",
 )
 class FaultReportController(
     private val faultReportService: FaultReportService,
 ) {
     @Operation(
         summary = "Get all fault reports",
-        description = "Retrieve all fault reports"
+        description = "Retrieve all fault reports",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Successful retrieval of fault reports"
+                description = "Successful retrieval of fault reports",
             ),
         ],
     )
@@ -48,17 +48,17 @@ class FaultReportController(
 
     @Operation(
         summary = "Save a fault report",
-        description = "Save a new fault report"
+        description = "Save a new fault report",
     )
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "201",
-                description = "Fault report created successfully"
+                description = "Fault report created successfully",
             ),
             ApiResponse(
                 responseCode = "412",
-                description = "Precondition failed - Report already exists"
+                description = "Precondition failed - Report already exists",
             ),
         ],
     )
@@ -68,7 +68,7 @@ class FaultReportController(
         @Parameter(
             description = "Fault report details to be saved",
             required = true,
-            schema = Schema(implementation = FaultReport::class)
+            schema = Schema(implementation = FaultReport::class),
         )
         @Valid
         @RequestBody faultReport: FaultReport,
@@ -89,11 +89,11 @@ class FaultReportController(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Fault report deleted successfully"
+                description = "Fault report deleted successfully",
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Fault report not found"
+                description = "Fault report not found",
             ),
         ],
     )
@@ -102,7 +102,7 @@ class FaultReportController(
         @Parameter(
             description = "ID of the fault report to be deleted",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable id: String,
     ) = faultReportService.deleteReportById(id)

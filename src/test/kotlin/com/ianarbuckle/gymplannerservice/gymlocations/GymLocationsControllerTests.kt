@@ -22,7 +22,7 @@ import kotlin.test.Test
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [GymLocationsController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")

@@ -17,11 +17,9 @@ interface PersonalTrainersService {
 class PersonalTrainerServiceImpl(
     private val repository: PersonalTrainerRepository,
 ) : PersonalTrainersService {
-    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer =
-        repository.save(personalTrainer)
+    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer = repository.save(personalTrainer)
 
-    override suspend fun deleteTrainerById(id: String) =
-        repository.deleteById(id)
+    override suspend fun deleteTrainerById(id: String) = repository.deleteById(id)
 
     override fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer> =
         when (gymLocation) {

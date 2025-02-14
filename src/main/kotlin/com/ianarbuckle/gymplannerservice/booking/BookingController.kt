@@ -26,7 +26,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/booking")
 @Tag(
     name = "Booking",
-    description = "Endpoints for booking"
+    description = "Endpoints for booking",
 )
 class BookingController(
     private val service: BookingService,

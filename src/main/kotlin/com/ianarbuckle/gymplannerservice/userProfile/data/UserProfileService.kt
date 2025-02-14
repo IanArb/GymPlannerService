@@ -16,11 +16,9 @@ interface UserProfileService {
 class UserProfileServiceImpl(
     private val userProfileRepository: UserProfileRepository,
 ) : UserProfileService {
-    override suspend fun userProfile(id: String): UserProfile? =
-        userProfileRepository.findByUserId(id) ?: throw UserNotFoundException()
+    override suspend fun userProfile(id: String): UserProfile? = userProfileRepository.findByUserId(id) ?: throw UserNotFoundException()
 
-    override suspend fun deleteUserProfile(id: String) =
-        userProfileRepository.deleteById(id)
+    override suspend fun deleteUserProfile(id: String) = userProfileRepository.deleteById(id)
 
     override suspend fun updateUserProfile(userProfile: UserProfile) {
         if (userProfileRepository.existsByUserId(userProfile.userId)) {

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.ianarbuckle"
-version = "0.0.1-SNAPSHOT1"
+version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {

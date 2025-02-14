@@ -25,13 +25,15 @@ class BearerToken(
     override fun getPrincipal(): Any = value
 }
 
+private const val SUBSTRING_LENGTH = 7
+
 @Component
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> =
         Mono
             .justOrEmpty(exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
             .filter { it.startsWith("Bearer ") }
-            .map { it.substring(7) }
+            .map { it.substring(SUBSTRING_LENGTH) }
             .map { BearerToken(it) }
 }
 

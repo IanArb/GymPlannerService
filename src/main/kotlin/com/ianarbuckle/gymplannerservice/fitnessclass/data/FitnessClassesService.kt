@@ -50,9 +50,11 @@ class FitnessClassesServiceImpl(
         throw NoFitnessClassFoundException()
     }
 
-    private suspend fun fetchClassesByDayOfWeek(dayOfWeek: DayOfWeek) = repository.findFitnessClassesByDayOfWeek(dayOfWeek)
+    private suspend fun fetchClassesByDayOfWeek(dayOfWeek: DayOfWeek) =
+        repository.findFitnessClassesByDayOfWeek(dayOfWeek)
 
-    override suspend fun createFitnessClass(fitnessClass: FitnessClass): FitnessClass = repository.save(fitnessClass)
+    override suspend fun createFitnessClass(fitnessClass: FitnessClass): FitnessClass =
+        repository.save(fitnessClass)
 
     override suspend fun updateFitnessClass(fitnessClass: FitnessClass) {
         repository.save(fitnessClass).takeIf { repository.existsById(fitnessClass.id ?: "") }

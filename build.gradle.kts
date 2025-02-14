@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
     id("com.diffplug.spotless") version "6.25.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.7"
 }
 
 group = "com.ianarbuckle"
@@ -18,6 +19,21 @@ java {
 repositories {
     mavenCentral()
 }
+
+detekt {
+    toolVersion = "1.23.7"
+    config = files("detekt.yml") // Optional: Path to configuration file
+    buildUponDefaultConfig = true // Use Detekt's default rules, then add customizations.
+    allRules = false // Activate all rules (useful for debugging)
+    source = files("src/main/kotlin", "src/test/kotlin") // Source directories
+
+    reports {
+        xml.required.set(true) // Create XML report
+        html.required.set(true) // Create HTML report
+        txt.required.set(false) // Disable plain text report
+    }
+}
+
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -51,7 +67,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.18.0")
     testImplementation("org.mockito:mockito-core:3.12.4")
-    testImplementation("org.mockito:mockito-inline:3.12.4") // The mockito-inline dependency
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
+
 }
 
 kotlin {
@@ -68,5 +87,15 @@ spotless {
     kotlin {
         target("**/*.kt")
         ktlint("1.3.1")
+    }
+}
+
+dependencyManagement {
+    configurations.matching { it.name == "detekt" }.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+            }
+        }
     }
 }

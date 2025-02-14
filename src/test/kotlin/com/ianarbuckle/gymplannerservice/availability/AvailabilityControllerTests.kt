@@ -21,7 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @ExtendWith(SpringExtension::class)
-@WebFluxTest(controllers = [AvailabilityController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
+@WebFluxTest(
+    controllers = [AvailabilityController::class],
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 @AutoConfigureDataMongo
@@ -137,9 +140,17 @@ class AvailabilityControllerTests {
             given(availabilityService.isAvailable(personalTrainerId, month))
                 .willReturn(checkAvailability)
 
+            val uri = "/api/v1/availability/check_availability"
+
             webTestClient
                 .get()
-                .uri("/api/v1/availability/check_availability?personalTrainerId=$personalTrainerId&month=$month&date=$date&time=$time")
+                .uri(
+                    uri
+                        .plus("?personalTrainerId=$personalTrainerId")
+                        .plus("&month=$month")
+                        .plus("&date=$date")
+                        .plus("&time=$time")
+                )
                 .exchange()
                 .expectStatus()
                 .isOk

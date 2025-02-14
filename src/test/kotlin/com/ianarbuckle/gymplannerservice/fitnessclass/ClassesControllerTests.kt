@@ -19,7 +19,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import kotlin.test.Test
 
 @ExtendWith(SpringExtension::class)
-@WebFluxTest(controllers = [ClassesController::class], excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class])
+@WebFluxTest(
+    controllers = [ClassesController::class],
+    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class]
+)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 class ClassesControllerTests {

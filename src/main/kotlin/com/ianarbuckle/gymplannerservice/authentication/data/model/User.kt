@@ -1,11 +1,13 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.model
 
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 
+@Schema(description = "User information")
 @Document
 data class User(
     @BsonId
@@ -23,6 +25,7 @@ data class User(
     val roles: Set<Role> = emptySet(),
 )
 
+@Schema(description = "Role information")
 @Document(collection = "roles")
 data class Role(
     @BsonId
@@ -36,6 +39,7 @@ enum class ERole {
     ROLE_ADMIN,
 }
 
+@Schema(description = "User profile information")
 @Document
 data class UserProfile(
     @BsonId

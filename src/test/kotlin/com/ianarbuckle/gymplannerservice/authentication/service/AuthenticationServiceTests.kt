@@ -51,20 +51,18 @@ class AuthenticationServiceTests {
             val jwtToken = "jwtToken"
             val expiration: Long = 1000
 
-            val user =
-                User(
-                    id = "123456",
-                    username = username,
-                    password = encodedPassword,
-                    roles =
-                        setOf(
-                            Role(
-                                id = "1",
-                                ERole.ROLE_USER,
-                            ),
-                        ),
-                    email = "ian@mail.com",
-                )
+            val user = User(
+                id = "123456",
+                username = username,
+                password = encodedPassword,
+                roles = setOf(
+                    Role(
+                        id = "1",
+                        ERole.ROLE_USER,
+                    ),
+                ),
+                email = "ian@mail.com",
+            )
 
             coEvery { userRepository.findByUsername(username) } returns user
             every { passwordEncoder.matches(password, encodedPassword) } returns true

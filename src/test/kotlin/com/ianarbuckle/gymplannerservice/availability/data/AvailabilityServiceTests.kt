@@ -193,6 +193,7 @@ class AvailabilityServiceTests {
             assertTrue(result.isAvailable)
         }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `test isAvailable should return false when personal trainer is not available`() =
         runTest {
@@ -218,12 +219,9 @@ class AvailabilityServiceTests {
                     ),
                 )
 
-            val findByPersonalTrainerIdAndMonth =
-                availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
-
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
             coEvery { availabilityRepository.save(availability) } returns availability
-            coEvery { findByPersonalTrainerIdAndMonth } returns availability
+            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) } returns availability
 
             val result = availabilityService.isAvailable(personalTrainerId, month)
             assertFalse(result.isAvailable)

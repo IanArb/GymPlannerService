@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version libs.versions.kotlin.get()
-    kotlin("plugin.spring") version libs.versions.kotlin.get()
-    id("org.springframework.boot") version libs.versions.spring.boot.get()
-    id("io.spring.dependency-management") version libs.versions.spring.dependency.management.get()
-    id("com.diffplug.spotless") version libs.versions.spotless.get()
-    id("io.gitlab.arturbosch.detekt") version libs.versions.detekt.get()
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.detekt)
 }
 
 group = "com.ianarbuckle"

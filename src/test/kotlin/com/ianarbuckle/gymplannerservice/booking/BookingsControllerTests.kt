@@ -18,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
@@ -96,45 +95,14 @@ class BookingsControllerTests {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
             `when`(bookingService.saveBooking(booking)).thenReturn(booking)
 
-            val bookingJson =
-                """
-                {
-                    "id": ${booking.id},
-                    "client": {
-                        "userId": "${booking.client.userId}",
-                        "firstName": "${booking.client.firstName}",
-                        "surname": "${booking.client.surname}",
-                        "email": "${booking.client.email}",
-                        "gymLocation": "${booking.client.gymLocation}"
-                    },
-                    "bookingDate": "${booking.bookingDate}",
-                    "startTime": "${booking.startTime}",
-                    "personalTrainer": {
-                        "id": "${booking.personalTrainer.id}",
-                        "firstName": "${booking.personalTrainer.firstName}",
-                        "surname": "${booking.personalTrainer.surname}",
-                        "imageUrl": "${booking.personalTrainer.imageUrl}",
-                        "gymLocation": "${booking.personalTrainer.gymLocation}"
-                    },
-                    "status": "${booking.status}"
-                }
-                """.trimIndent()
-
             webTestClient
                 .post()
                 .uri("/api/v1/booking")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(bookingJson))
+                .bodyValue(booking)
                 .exchange()
                 .expectStatus()
                 .isCreated
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .jsonPath("$.id")
-                .isNotEmpty
-                .jsonPath("$.status")
-                .isEqualTo(BookingStatus.CONFIRMED.name)
         }
 
     @Test

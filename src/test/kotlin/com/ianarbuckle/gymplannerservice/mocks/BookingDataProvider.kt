@@ -2,56 +2,40 @@ package com.ianarbuckle.gymplannerservice.mocks
 
 import com.ianarbuckle.gymplannerservice.booking.data.Booking
 import com.ianarbuckle.gymplannerservice.booking.data.BookingStatus
-import com.ianarbuckle.gymplannerservice.booking.data.Client
 import com.ianarbuckle.gymplannerservice.booking.data.PersonalTrainerBooking
 import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.LocalTime
 
 object BookingDataProvider {
     fun createBooking(
         id: String = "1",
-        bookingDate: LocalDateTime = LocalDateTime.of(2021, 10, 10, 10, 0),
+        timeSlotId: String = "1",
+        userId: String = "1",
+        bookingDate: LocalDate = LocalDate.of(2025, 5, 10),
         startTime: LocalTime = LocalTime.of(10, 0),
-        client: Client = createClient(),
         personalTrainer: PersonalTrainerBooking = createPersonalTrainer(),
         status: BookingStatus = BookingStatus.PENDING,
     ): Booking =
         Booking(
             id = id,
+            timeSlotId = timeSlotId,
             bookingDate = bookingDate,
             startTime = startTime,
-            client = client,
+            userId = userId,
             personalTrainer = personalTrainer,
             status = status,
         )
 
-    fun createClient(
-        userId: String = "1",
-        firstName: String = "John",
-        surname: String = "Doe",
-        email: String = "john.doe@mail.com",
-        gymLocation: GymLocation = GymLocation.CLONTARF,
-    ): Client =
-        Client(
-            userId = userId,
-            firstName = firstName,
-            surname = surname,
-            email = email,
-            gymLocation = gymLocation,
-        )
-
     private fun createPersonalTrainer(
         id: String = "1",
-        firstName: String = "John",
-        lastName: String = "Doe",
+        name: String = "John Doe",
         imageUrl: String = "https://example.com",
         gymLocation: GymLocation = GymLocation.CLONTARF,
     ): PersonalTrainerBooking =
         PersonalTrainerBooking(
             id = id,
-            firstName = firstName,
-            surname = lastName,
+            name = name,
             imageUrl = imageUrl,
             gymLocation = gymLocation,
         )

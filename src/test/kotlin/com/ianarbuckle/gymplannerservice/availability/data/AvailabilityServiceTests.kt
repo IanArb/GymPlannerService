@@ -238,8 +238,6 @@ class AvailabilityServiceTests {
         runTest {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
-            val date = "2023-12-01"
-            val time = "08:00"
 
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
             coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) } returns null
@@ -254,12 +252,37 @@ class AvailabilityServiceTests {
         runTest {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
-            val date = "2023-12-01"
 
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns null
 
             assertFailsWith<PersonalTrainerNotFoundException> {
                 availabilityService.isAvailable(personalTrainerId, month)
+            }
+        }
+
+    @Test
+    fun `test findByTimeId should return availability by time slot id`() =
+        runTest {
+            val timeSlotId = "1"
+
+            coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns AvailabilityDataProvider.createAvailability()
+
+            val result = availabilityService.findByTimeId(timeSlotId)
+
+            assertEquals(AvailabilityDataProvider.createAvailability(), result)
+
+            coVerify { availabilityRepository.findByTimeId(timeSlotId) }
+        }
+
+    @Test
+    fun `test findByTimeId should return throw exception when not found`() =
+        runTest {
+            val timeSlotId = "1"
+
+            coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns null
+
+            assertFailsWith<AvailabilityNotFoundException> {
+                availabilityService.findByTimeId(timeSlotId)
             }
         }
 }

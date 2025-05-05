@@ -3,16 +3,20 @@ package com.ianarbuckle.gymplannerservice.booking.data
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import com.ianarbuckle.gymplannerservice.availability.data.AvailabilityRepository
+import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.mocks.AvailabilityDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.UserProfileDataProvider
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -24,11 +28,14 @@ class BookingServiceTests {
     private val bookingsRepository = mockk<BookingRepository>()
     private val personalTrainersRepository = mockk<PersonalTrainerRepository>()
     private val userProfileRepository = mockk<UserProfileRepository>()
+    private val availabilityRepository = mockk<AvailabilityRepository>()
+
     private val bookingService =
         BookingServiceImpl(
             bookingsRepository = bookingsRepository,
             personalTrainersRepository = personalTrainersRepository,
             userProfileRepository = userProfileRepository,
+            availabilityRepository = availabilityRepository,
         )
 
     @Test
@@ -106,8 +113,8 @@ class BookingServiceTests {
             val personalTrainer =
                 PersonalTrainer(
                     id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.firstName,
-                    lastName = booking.personalTrainer.surname,
+                    firstName = booking.personalTrainer.name,
+                    lastName = booking.personalTrainer.name,
                     bio = "",
                     imageUrl = booking.personalTrainer.imageUrl,
                     gymLocation = booking.personalTrainer.gymLocation,
@@ -129,15 +136,15 @@ class BookingServiceTests {
         }
 
     @Test
-    fun `saveBooking should save booking when valid`() =
+    fun `saveBooking should save booking and update availability time slot`() =
         runTest {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
 
             coEvery { personalTrainersRepository.findById(any()) } returns
                 PersonalTrainer(
                     id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.firstName,
-                    lastName = booking.personalTrainer.surname,
+                    firstName = booking.personalTrainer.name,
+                    lastName = booking.personalTrainer.name,
                     bio = "",
                     imageUrl = booking.personalTrainer.imageUrl,
                     gymLocation = booking.personalTrainer.gymLocation,
@@ -146,9 +153,81 @@ class BookingServiceTests {
             coEvery { bookingsRepository.findAll() } returns flowOf()
             coEvery { bookingsRepository.save(booking) } returns booking
 
+            coEvery { availabilityRepository.save(any()) } returns AvailabilityDataProvider.createAvailability()
+            coEvery { availabilityRepository.findByTimeId(any()) } returns
+                AvailabilityDataProvider.createAvailability(
+                    timeSlotId = "1",
+                )
+
             val result = bookingService.saveBooking(booking)
 
+            coVerify(exactly = 1) { availabilityRepository.save(any()) }
+
             assertThat(result).isEqualTo(booking)
+        }
+
+    @Test
+    fun `saveBooking should save booking and not update availability time slot`() =
+        runTest {
+            val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
+
+            coEvery { personalTrainersRepository.findById(any()) } returns
+                PersonalTrainer(
+                    id = booking.personalTrainer.id,
+                    firstName = booking.personalTrainer.name,
+                    lastName = booking.personalTrainer.name,
+                    bio = "",
+                    imageUrl = booking.personalTrainer.imageUrl,
+                    gymLocation = booking.personalTrainer.gymLocation,
+                    qualifications = emptyList(),
+                )
+            coEvery { bookingsRepository.findAll() } returns flowOf()
+            coEvery { bookingsRepository.save(booking) } returns booking
+
+            coEvery { availabilityRepository.save(any()) } returns AvailabilityDataProvider.createAvailability()
+            coEvery { availabilityRepository.findByTimeId(any()) } returns
+                AvailabilityDataProvider.createAvailability(
+                    timeSlotId = "2",
+                )
+
+            val result = bookingService.saveBooking(booking)
+
+            coVerify(exactly = 0) { availabilityRepository.save(any()) }
+
+            assertThat(result).isEqualTo(booking)
+        }
+
+    @Test
+    fun `saveBooking should throw AvailabilityNotFound exception when availability is not found`() =
+        runTest {
+            val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
+
+            coEvery { personalTrainersRepository.findById(any()) } returns
+                PersonalTrainer(
+                    id = booking.personalTrainer.id,
+                    firstName = booking.personalTrainer.name,
+                    lastName = booking.personalTrainer.name,
+                    bio = "",
+                    imageUrl = booking.personalTrainer.imageUrl,
+                    gymLocation = booking.personalTrainer.gymLocation,
+                    qualifications = emptyList(),
+                )
+            coEvery { bookingsRepository.findAll() } returns flowOf()
+            coEvery { bookingsRepository.save(booking) } returns booking
+
+            coEvery { availabilityRepository.save(any()) } returns AvailabilityDataProvider.createAvailability()
+            coEvery { availabilityRepository.findByTimeId(any()) } returns null
+
+            val exception =
+                assertThrows<AvailabilityNotFoundException> {
+                    bookingService.saveBooking(booking)
+                }
+
+            assertThat(exception).isInstanceOf(AvailabilityNotFoundException::class.java)
+            assertWithMessage("Expected exception message")
+                .that(exception)
+                .hasMessageThat()
+                .contains("Availability not found")
         }
 
     @Test
@@ -158,11 +237,10 @@ class BookingServiceTests {
             val booking =
                 BookingDataProvider.createBooking(
                     status = BookingStatus.CONFIRMED,
-                    client = BookingDataProvider.createClient(userId = userId),
                 )
 
             coEvery { userProfileRepository.findByUserId(userId) } returns UserProfileDataProvider.createUserProfile()
-            coEvery { bookingsRepository.findBookingsByClientUserId(userId) } returns flowOf(booking)
+            coEvery { bookingsRepository.findBookingsByUserId(userId) } returns flowOf(booking)
 
             bookingService.findBookingsByUserId(userId).test {
                 assertThat(awaitItem()).isEqualTo(booking)
@@ -193,7 +271,7 @@ class BookingServiceTests {
         runTest {
             val userId = "nonexistentUserId"
             coEvery { userProfileRepository.findByUserId(userId) } returns UserProfileDataProvider.createUserProfile()
-            coEvery { bookingsRepository.findBookingsByClientUserId(userId) } returns flowOf()
+            coEvery { bookingsRepository.findBookingsByUserId(userId) } returns flowOf()
 
             val exception =
                 assertThrows<BookingsNotFoundException> {

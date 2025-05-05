@@ -23,6 +23,8 @@ interface AvailabilityService {
         personalTrainerId: String,
         month: String,
     ): CheckAvailability
+
+    suspend fun findByTimeId(timeId: String): Availability
 }
 
 @Service
@@ -98,4 +100,8 @@ class AvailabilityServiceImpl(
             isAvailable = isAvailable,
         )
     }
+
+    override suspend fun findByTimeId(timeId: String): Availability =
+        availabilityRepository.findByTimeId(timeId)
+            ?: throw AvailabilityNotFoundException()
 }

@@ -11,7 +11,11 @@ object AvailabilityDataProvider {
     fun createAvailability(
         personalTrainerId: String = "trainer1",
         month: String = "January",
-        slots: List<AppointmentSlots> = createAppointmentSlots(),
+        timeSlotId: String = "1",
+        slots: List<AppointmentSlots> =
+            createAppointmentSlots(
+                timeSlotId = timeSlotId,
+            ),
     ): Availability =
         Availability(
             personalTrainerId = personalTrainerId,
@@ -20,11 +24,13 @@ object AvailabilityDataProvider {
         )
 
     fun createAppointmentSlots(
+        timeSlotId: String = "1",
         slotId: String = "1",
         date: LocalDate = LocalDate.of(2025, 12, 10),
         times: List<Time> =
             listOf<Time>(
                 createTime(
+                    id = timeSlotId,
                     status = Status.AVAILABLE,
                 ),
             ),
@@ -38,11 +44,13 @@ object AvailabilityDataProvider {
         )
 
     fun createTime(
+        id: String = "1",
         startTime: LocalTime = LocalTime.of(8, 0),
         endTime: LocalTime = LocalTime.of(9, 0),
         status: Status = Status.AVAILABLE,
     ): Time =
         Time(
+            id = id,
             startTime = startTime,
             endTime = endTime,
             status = status,

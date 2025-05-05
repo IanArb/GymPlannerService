@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 interface BookingRepository : CoroutineCrudRepository<Booking, String> {
     suspend fun findBookingsByPersonalTrainerId(id: String): Flow<Booking>
 
-    suspend fun findBookingsByClientUserId(id: String): Flow<Booking>
+    suspend fun findBookingsByUserId(id: String): Flow<Booking>
 }

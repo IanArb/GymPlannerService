@@ -11,6 +11,8 @@ interface PersonalTrainersService {
     suspend fun updateTrainer(personalTrainer: PersonalTrainer)
 
     suspend fun deleteTrainerById(id: String)
+
+    suspend fun findById(id: String): PersonalTrainer?
 }
 
 @Service
@@ -35,4 +37,6 @@ class PersonalTrainerServiceImpl(
     override suspend fun updateTrainer(personalTrainer: PersonalTrainer) {
         repository.save(personalTrainer).takeIf { repository.existsById(personalTrainer.id ?: "") }
     }
+
+    override suspend fun findById(id: String): PersonalTrainer? = repository.findById(id)
 }

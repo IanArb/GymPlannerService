@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/personal_trainers")
@@ -53,6 +54,26 @@ class PersonalTrainerController(
         )
         @RequestParam gymLocation: GymLocation,
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
+
+    @Operation(summary = "Find a personal trainer", description = "Find a new personal trainer")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Personal trainer is found",
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Personal trainer is not found",
+            ),
+        ],
+    )
+    @GetMapping("{id}")
+    suspend fun findTrainerById(
+        @PathVariable id: String,
+    ) {
+        service.findById(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer not found")
+    }
 
     @Operation(summary = "Create a personal trainer", description = "Create a new personal trainer")
     @ApiResponses(

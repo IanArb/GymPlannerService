@@ -3,7 +3,6 @@ package com.ianarbuckle.gymplannerservice.authentication.data.security
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -45,19 +44,18 @@ class SecurityConfig(
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/webjars/swagger-ui/**",
+                        "/api/v1/auth/**",
                     ).permitAll()
-                    .pathMatchers(HttpMethod.POST, "/api/v1/auth/**")
-                    .permitAll()
                     .anyExchange()
                     .authenticated()
-            }.httpBasic {
+            }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .httpBasic {
                 it.disable()
             }.formLogin {
                 it.disable()
             }.csrf {
                 it.disable()
-            }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
-            .authenticationManager(jwtAuthenticationManager)
+            }
 
         return http.build()
     }

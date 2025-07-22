@@ -1,5 +1,7 @@
 package com.ianarbuckle.gymplannerservice.gymlocations
 
+import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
+import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 
 @RestController
 @RequestMapping("/api/v1/gym_locations")

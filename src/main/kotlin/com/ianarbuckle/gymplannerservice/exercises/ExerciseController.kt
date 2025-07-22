@@ -1,5 +1,7 @@
 package com.ianarbuckle.gymplannerservice.exercises
 
+import com.ianarbuckle.gymplannerservice.exercises.data.Exercise
+import com.ianarbuckle.gymplannerservice.exercises.data.ExerciseService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import com.ianarbuckle.gymplannerservice.exercises.data.Exercise
-import com.ianarbuckle.gymplannerservice.exercises.data.ExerciseService
 
 @RestController
 @RequestMapping("/api/v1/exercises")

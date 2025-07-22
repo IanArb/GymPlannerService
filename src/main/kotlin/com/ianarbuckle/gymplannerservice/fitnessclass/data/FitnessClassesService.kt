@@ -1,9 +1,9 @@
 package com.ianarbuckle.gymplannerservice.fitnessclass.data
 
+import com.ianarbuckle.gymplannerservice.fitnessclass.exception.NoFitnessClassFoundException
 import java.time.DayOfWeek
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
-import com.ianarbuckle.gymplannerservice.fitnessclass.exception.NoFitnessClassFoundException
 
 interface FitnessClassesService {
     suspend fun fitnessClasses(): Flow<FitnessClass>

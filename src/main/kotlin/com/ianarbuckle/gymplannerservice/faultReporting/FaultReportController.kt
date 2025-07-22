@@ -1,5 +1,8 @@
 package com.ianarbuckle.gymplannerservice.faultReporting
 
+import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
+import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
+import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -18,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
-import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 
 @RestController
 @RequestMapping("/api/v1/fault")

@@ -1,5 +1,8 @@
 package com.ianarbuckle.gymplannerservice.userProfile
 
+import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
+import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -15,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
-import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileService
 
 @RestController
 @RequestMapping("/api/v1/user_profile")

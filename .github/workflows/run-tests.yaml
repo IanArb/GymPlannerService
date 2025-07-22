@@ -1,4 +1,4 @@
-name: Test Workflow
+name: Run unit and integration tests
 
 on:
   pull_request:

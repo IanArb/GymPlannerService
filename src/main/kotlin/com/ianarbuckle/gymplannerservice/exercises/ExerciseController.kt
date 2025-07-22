@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.RestController
     description = "Endpoints for exercises",
 )
 class ExerciseController {
-    @Autowired
-    private lateinit var exerciseService: ExerciseService
+    @Autowired private lateinit var exerciseService: ExerciseService
 
-    @GetMapping
-    fun findExercises(): Flow<Exercise> = exerciseService.findAllExercises()
+    @GetMapping fun findExercises(): Flow<Exercise> = exerciseService.findAllExercises()
 
     @GetMapping("/{id}")
     suspend fun findExerciseById(

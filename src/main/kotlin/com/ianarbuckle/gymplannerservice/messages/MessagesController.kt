@@ -24,12 +24,13 @@ class MessagesController(
         description = "Retrieve all messages from the system",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Messages retrieved successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Messages retrieved successfully",
+                ),
+            ],
     )
     @GetMapping
     fun getMessages(): Flow<Message> = messagesService.findAlMessages()
@@ -39,12 +40,13 @@ class MessagesController(
         description = "Add a new message to the system",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Message created successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Message created successfully",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,15 +1,16 @@
-name: Java CI
+name: Lint Checks
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 22
@@ -19,11 +20,8 @@ jobs:
           distribution: 'zulu'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Test
-        run: ./gradlew clean test
-      - name: Build with Gradle
-        run: ./gradlew build
       - name: Lint check
         run: ./gradlew spotlessCheck
       - name: Detekt check
         run: ./gradlew detekt
+

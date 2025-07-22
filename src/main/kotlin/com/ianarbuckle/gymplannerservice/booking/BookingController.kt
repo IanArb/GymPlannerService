@@ -58,12 +58,14 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Booking? =
-        service.fetchBookingById(id) ?: throw ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "Booking not found",
-        )
+        service.fetchBookingById(id)
+            ?: throw ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Booking not found",
+            )
 
     @Operation(
         summary = "Fetch all bookings by personal trainer",
@@ -76,7 +78,8 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Flow<Booking> =
         try {
             service.findBookingsByPersonalTrainerId(id)
@@ -99,7 +102,8 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Flow<Booking> =
         try {
             service.findBookingsByUserId(id)
@@ -156,6 +160,7 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) = service.deleteBookingById(id)
 }

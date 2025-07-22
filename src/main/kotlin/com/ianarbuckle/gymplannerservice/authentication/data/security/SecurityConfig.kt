@@ -18,8 +18,7 @@ import reactor.core.publisher.Mono
 class SecurityConfig(
     private val jwtAuthenticationManager: JWTAuthenticationManager,
 ) {
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+    @Bean fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun springSecurityFilter(
@@ -37,25 +36,23 @@ class SecurityConfig(
                         exchange.response.headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer")
                     }
                 }
-            }.authorizeExchange {
-                it
-                    .pathMatchers(
+            }
+            .authorizeExchange {
+                it.pathMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/webjars/swagger-ui/**",
                         "/api/v1/auth/**",
-                    ).permitAll()
+                    )
+                    .permitAll()
                     .anyExchange()
                     .authenticated()
-            }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
-            .httpBasic {
-                it.disable()
-            }.formLogin {
-                it.disable()
-            }.csrf {
-                it.disable()
             }
+            .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .csrf { it.disable() }
 
         return http.build()
     }

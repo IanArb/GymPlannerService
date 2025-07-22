@@ -35,16 +35,17 @@ class ClassesController(
         description = "Retrieve all fitness classes by day of the week",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful retrieval of fitness classes",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Class not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of fitness classes",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Class not found",
+                ),
+            ],
     )
     @GetMapping
     suspend fun findAllFitnessClassesByDayOfWeek(
@@ -53,7 +54,8 @@ class ClassesController(
             required = false,
             schema = Schema(type = "string"),
         )
-        @RequestParam dayOfWeek: String? = null,
+        @RequestParam
+        dayOfWeek: String? = null,
     ): Flow<FitnessClass> =
         try {
             fitnessClassService.fitnessClassesByDayOfWeek(dayOfWeek ?: "")
@@ -67,12 +69,13 @@ class ClassesController(
 
     @Operation(summary = "Save a fitness class", description = "Save a new fitness class")
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Fitness class created successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Fitness class created successfully",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -83,17 +86,19 @@ class ClassesController(
             schema = Schema(implementation = FitnessClass::class),
         )
         @Valid
-        @RequestBody fitnessClass: FitnessClass,
+        @RequestBody
+        fitnessClass: FitnessClass,
     ) = fitnessClassService.createFitnessClass(fitnessClass)
 
     @Operation(summary = "Update a fitness class", description = "Update an existing fitness class")
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Fitness class updated successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Fitness class updated successfully",
+                ),
+            ],
     )
     @PutMapping
     suspend fun updateFitnessClass(
@@ -103,7 +108,8 @@ class ClassesController(
             schema = Schema(implementation = FitnessClass::class),
         )
         @Valid
-        @RequestBody fitnessClass: FitnessClass,
+        @RequestBody
+        fitnessClass: FitnessClass,
     ) = fitnessClassService.updateFitnessClass(fitnessClass)
 
     @Operation(
@@ -111,16 +117,17 @@ class ClassesController(
         description = "Delete a fitness class by its ID",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Fitness class deleted successfully",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Class not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Fitness class deleted successfully",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Class not found",
+                ),
+            ],
     )
     @DeleteMapping("/{id}")
     suspend fun deleteFitnessClassById(
@@ -129,6 +136,7 @@ class ClassesController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) = fitnessClassService.deleteFitnessClassById(id)
 }

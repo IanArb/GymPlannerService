@@ -36,12 +36,13 @@ class FaultReportController(
         description = "Retrieve all fault reports",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful retrieval of fault reports",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of fault reports",
+                ),
+            ],
     )
     @GetMapping
     fun reports(): Flow<FaultReport> = faultReportService.reports()
@@ -51,16 +52,17 @@ class FaultReportController(
         description = "Save a new fault report",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Fault report created successfully",
-            ),
-            ApiResponse(
-                responseCode = "412",
-                description = "Precondition failed - Report already exists",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Fault report created successfully",
+                ),
+                ApiResponse(
+                    responseCode = "412",
+                    description = "Precondition failed - Report already exists",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -71,7 +73,8 @@ class FaultReportController(
             schema = Schema(implementation = FaultReport::class),
         )
         @Valid
-        @RequestBody faultReport: FaultReport,
+        @RequestBody
+        faultReport: FaultReport,
     ): FaultReport {
         try {
             return faultReportService.save(faultReport)
@@ -86,16 +89,17 @@ class FaultReportController(
 
     @Operation(summary = "Delete a fault report", description = "Delete a fault report by its ID")
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Fault report deleted successfully",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Fault report not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Fault report deleted successfully",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Fault report not found",
+                ),
+            ],
     )
     @DeleteMapping("/{id}")
     suspend fun deleteReport(
@@ -104,6 +108,7 @@ class FaultReportController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) = faultReportService.deleteReportById(id)
 }

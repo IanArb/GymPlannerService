@@ -1,22 +1,19 @@
 package com.ianarbuckle.gymplannerservice.availability.data
 
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDate
+import java.time.LocalTime
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.LocalDate
-import java.time.LocalTime
 
 @Schema(description = "Availability information")
 @Document
 data class Availability(
     @BsonId val id: String? = null,
-    @Schema(description = "Personal trainer id")
-    val personalTrainerId: String,
-    @Schema(description = "Month")
-    val month: String,
-    @Schema(description = "Appointment Slots")
-    val slots: List<AppointmentSlots>,
+    @Schema(description = "Personal trainer id") val personalTrainerId: String,
+    @Schema(description = "Month") val month: String,
+    @Schema(description = "Appointment Slots") val slots: List<AppointmentSlots>,
 )
 
 @Schema(description = "Appointment Slots")

@@ -19,7 +19,8 @@ class GymLocationsServiceImpl(
 ) : GymLocationsService {
     override suspend fun findAllGymLocations(): Flow<GymLocation> = repository.findAll()
 
-    override suspend fun saveGymLocation(gymLocation: GymLocation): GymLocation = repository.save(gymLocation)
+    override suspend fun saveGymLocation(gymLocation: GymLocation): GymLocation =
+        repository.save(gymLocation)
 
     override suspend fun updateGymLocation(gymLocation: GymLocation) {
         repository.existsById(gymLocation.id ?: "").also { repository.save(gymLocation) }

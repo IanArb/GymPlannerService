@@ -37,8 +37,7 @@ class AuthenticationServiceImpl(
 ) : AuthenticationService {
     override suspend fun authenticationUser(loginRequest: LoginRequest): JwtResponse {
         val user =
-            userRepository.findByUsername(loginRequest.username)
-                ?: throw UserNotFoundException()
+            userRepository.findByUsername(loginRequest.username) ?: throw UserNotFoundException()
 
         if (encoder.matches(loginRequest.password, user.password)) {
             val jwt: String = jwtUtils.generateToken(user.username)
@@ -69,8 +68,7 @@ class AuthenticationServiceImpl(
 
         if (strRoles?.isEmpty() == true) {
             val userRole: Role =
-                rolesRepository.findByName(ERole.ROLE_USER)
-                    ?: throw RoleNotFoundException()
+                rolesRepository.findByName(ERole.ROLE_USER) ?: throw RoleNotFoundException()
             roles.add(userRole)
         } else {
             strRoles?.map { role ->
@@ -81,14 +79,12 @@ class AuthenticationServiceImpl(
                                 ?: throw RoleNotFoundException()
                         roles.add(adminRole)
                     }
-
                     "mod" -> {
                         val modRole: Role =
                             rolesRepository.findByName(ERole.ROLE_MODERATOR)
                                 ?: throw RoleNotFoundException()
                         roles.add(modRole)
                     }
-
                     else -> {
                         val userRole: Role =
                             rolesRepository.findByName(ERole.ROLE_USER)

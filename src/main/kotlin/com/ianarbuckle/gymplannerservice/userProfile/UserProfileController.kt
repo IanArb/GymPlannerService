@@ -33,16 +33,17 @@ class UserProfileController(
         description = "Retrieve a user profile by ID",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful retrieval of user profile",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of user profile",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                ),
+            ],
     )
     @GetMapping("/{id}")
     suspend fun userProfile(
@@ -51,7 +52,8 @@ class UserProfileController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): UserProfile? {
         try {
             return userProfileService.userProfile(id)
@@ -69,16 +71,17 @@ class UserProfileController(
         description = "Update an existing user profile",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "User profile updated successfully",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "User profile updated successfully",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                ),
+            ],
     )
     @PutMapping
     suspend fun updateUserProfile(
@@ -88,7 +91,8 @@ class UserProfileController(
             schema = Schema(implementation = UserProfile::class),
         )
         @RequestBody
-        @Valid userProfile: UserProfile,
+        @Valid
+        userProfile: UserProfile,
     ) {
         try {
             userProfileService.updateUserProfile(userProfile)

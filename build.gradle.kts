@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
@@ -8,17 +10,12 @@ plugins {
 }
 
 group = "com.ianarbuckle"
+
 version = "0.0.1-SNAPSHOT"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
-    }
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(22) } }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 detekt {
     toolVersion = libs.versions.detekt.get()
@@ -73,29 +70,35 @@ dependencies {
     detektPlugins(libs.detekt.formatting)
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
-}
+kotlin { compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict") } }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
 spotless {
     kotlin {
         target("**/*.kt")
-        ktlint("1.3.1")
+        ktfmt().kotlinlangStyle()
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktfmt().kotlinlangStyle()
     }
 }
 
 dependencyManagement {
-    configurations.matching { it.name == "detekt" }.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.jetbrains.kotlin") {
-                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+    configurations
+        .matching { it.name == "detekt" }
+        .all {
+            resolutionStrategy.eachDependency {
+                if (requested.group == "org.jetbrains.kotlin") {
+                    useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+                }
             }
         }
-    }
+}
+
+val compileKotlin: KotlinCompile by tasks
+
+compileKotlin.compilerOptions {
+    freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
 }

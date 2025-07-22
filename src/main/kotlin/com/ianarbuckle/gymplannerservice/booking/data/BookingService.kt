@@ -68,9 +68,10 @@ class BookingServiceImpl(
         validatePersonalTrainer(booking.personalTrainer.id)
 
         bookingsRepository.findAll().collect {
-            if (it.personalTrainer.id == booking.personalTrainer.id &&
-                it.bookingDate == booking.bookingDate &&
-                it.startTime == booking.startTime
+            if (
+                it.personalTrainer.id == booking.personalTrainer.id &&
+                    it.bookingDate == booking.bookingDate &&
+                    it.startTime == booking.startTime
             ) {
                 throw PersonalTrainerAlreadyBookedException()
             }
@@ -80,15 +81,14 @@ class BookingServiceImpl(
 
         val updatedSlots = availability?.slots ?: throw AvailabilityNotFoundException()
         updatedSlots.map { slot ->
-            val time =
-                slot.times.find {
-                    it.id == booking.timeSlotId
-                }
+            val time = slot.times.find { it.id == booking.timeSlotId }
 
             if (time != null && time.status == Status.AVAILABLE) {
                 val updatedTime = time.copy(status = Status.BOOKED)
                 val updatedSlot = slot.copy(times = slot.times - time + updatedTime)
-                availabilityRepository.save(availability.copy(slots = availability.slots - slot + updatedSlot))
+                availabilityRepository.save(
+                    availability.copy(slots = availability.slots - slot + updatedSlot)
+                )
             }
         }
 

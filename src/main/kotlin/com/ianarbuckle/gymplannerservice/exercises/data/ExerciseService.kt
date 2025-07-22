@@ -19,11 +19,9 @@ interface ExerciseService {
 class ExerciseServiceImpl(
     private val repository: ExercisesRepository,
 ) : ExerciseService {
-    @Override
-    override fun findAllExercises(): Flow<Exercise> = repository.findAll()
+    @Override override fun findAllExercises(): Flow<Exercise> = repository.findAll()
 
-    @Override
-    override suspend fun findExerciseById(id: String): Exercise? = repository.findById(id)
+    @Override override suspend fun findExerciseById(id: String): Exercise? = repository.findById(id)
 
     override suspend fun createExercise(exercise: Exercise): Exercise = repository.save(exercise)
 

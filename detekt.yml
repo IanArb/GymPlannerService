@@ -789,7 +789,7 @@ formatting:
   android: false
   autoCorrect: true
   AnnotationOnSeparateLine:
-    active: true
+    active: false
     autoCorrect: true
     indentSize: 4
   AnnotationSpacing:
@@ -868,7 +868,7 @@ formatting:
     autoCorrect: true
     indentSize: 4
   ImportOrdering:
-    active: true
+    active: false
     autoCorrect: true
     layout: '*,java.**,javax.**,kotlin.**,^'
   Indentation:

@@ -1,9 +1,9 @@
 package com.ianarbuckle.gymplannerservice.mocks
 
 import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
+import java.time.LocalDateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import java.time.LocalDateTime
 
 object FaultReportDataProvider {
     fun faultReports(): Flow<FaultReport> =

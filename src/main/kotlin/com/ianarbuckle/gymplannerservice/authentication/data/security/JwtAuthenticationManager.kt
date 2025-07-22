@@ -30,8 +30,7 @@ private const val SUBSTRING_LENGTH = 7
 @Component
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> =
-        Mono
-            .justOrEmpty(exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
+        Mono.justOrEmpty(exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
             .filter { it.startsWith("Bearer ") }
             .map { it.substring(SUBSTRING_LENGTH) }
             .map { BearerToken(it) }
@@ -45,8 +44,7 @@ class JWTAuthenticationManager(
     private val logger: Logger = LoggerFactory.getLogger(JWTAuthenticationManager::class.java)
 
     override fun authenticate(authentication: Authentication): Mono<Authentication> =
-        Mono
-            .justOrEmpty(authentication)
+        Mono.justOrEmpty(authentication)
             .filter { auth -> auth is BearerToken }
             .cast(BearerToken::class.java)
             .flatMap { jwt -> mono { validate(jwt) } }
@@ -57,7 +55,9 @@ class JWTAuthenticationManager(
 
     private suspend fun validate(token: BearerToken): Authentication {
         val username = jwtUtil.extractUsername(token.value)
-        val user = userRepository.findByUsername(username) ?: throw BadCredentialsException("No User found")
+        val user =
+            userRepository.findByUsername(username)
+                ?: throw BadCredentialsException("No User found")
 
         val authorities = user.roles.map { SimpleGrantedAuthority(it.name.name) }
 

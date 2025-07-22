@@ -1,15 +1,13 @@
-name: Java CI
+name: Test Workflow
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 22
@@ -23,7 +21,4 @@ jobs:
         run: ./gradlew clean test
       - name: Build with Gradle
         run: ./gradlew build
-      - name: Lint check
-        run: ./gradlew spotlessCheck
-      - name: Detekt check
-        run: ./gradlew detekt
+

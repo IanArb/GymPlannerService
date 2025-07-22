@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito.`when` as whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
@@ -17,7 +18,6 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
-import org.mockito.Mockito.`when` as whenever
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
@@ -28,11 +28,9 @@ import org.mockito.Mockito.`when` as whenever
 @ActiveProfiles("test")
 @AutoConfigureDataMongo
 class ClientGymPlanControllerTests {
-    @Autowired
-    lateinit var webTestClient: WebTestClient
+    @Autowired lateinit var webTestClient: WebTestClient
 
-    @MockBean
-    private lateinit var clientService: ClientGymPlansService
+    @MockBean private lateinit var clientService: ClientGymPlansService
 
     @Test
     fun `saveClient should return created client`() {
@@ -97,7 +95,8 @@ class ClientGymPlanControllerTests {
         ]
     }
 }
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             webTestClient
                 .post()
@@ -135,14 +134,13 @@ class ClientGymPlanControllerTests {
     }
 
     @Test
-    fun `test delete endpoint returns 200`() =
-        runTest {
-            webTestClient
-                .delete()
-                .uri("/api/v1/clients/1")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isOk
-        }
+    fun `test delete endpoint returns 200`() = runTest {
+        webTestClient
+            .delete()
+            .uri("/api/v1/clients/1")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk
+    }
 }

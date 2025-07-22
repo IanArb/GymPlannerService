@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.gymlocations
 
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -20,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
+import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 
 @RestController
 @RequestMapping("/api/v1/gym_locations")
@@ -32,12 +32,13 @@ class GymLocationsController(
         description = "Retrieve all gym locations",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful retrieval of gym locations",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of gym locations",
+                ),
+            ],
     )
     @GetMapping
     suspend fun getAllGymLocations(): Flow<GymLocation> = service.findAllGymLocations()
@@ -47,12 +48,13 @@ class GymLocationsController(
         description = "Create a new gym location",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Gym location created successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Gym location created successfully",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,7 +65,8 @@ class GymLocationsController(
             schema = Schema(implementation = GymLocation::class),
         )
         @RequestBody
-        @Valid gymLocation: GymLocation,
+        @Valid
+        gymLocation: GymLocation,
     ): GymLocation = service.saveGymLocation(gymLocation)
 
     @Operation(
@@ -71,12 +74,13 @@ class GymLocationsController(
         description = "Update an existing gym location",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Gym location updated successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Gym location updated successfully",
+                ),
+            ],
     )
     @PutMapping
     suspend fun updateGymLocation(
@@ -86,23 +90,28 @@ class GymLocationsController(
             schema = Schema(implementation = GymLocation::class),
         )
         @RequestBody
-        @Valid gymLocation: GymLocation,
+        @Valid
+        gymLocation: GymLocation,
     ) {
         service.updateGymLocation(gymLocation)
     }
 
-    @Operation(summary = "Delete a gym location by ID", description = "Delete a gym location by its ID")
+    @Operation(
+        summary = "Delete a gym location by ID",
+        description = "Delete a gym location by its ID"
+    )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Gym location deleted successfully",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Gym location not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Gym location deleted successfully",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Gym location not found",
+                ),
+            ],
     )
     @DeleteMapping("{id}")
     suspend fun deleteGymLocation(
@@ -111,7 +120,8 @@ class GymLocationsController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) {
         service.deleteGymLocationById(id)
     }

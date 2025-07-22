@@ -3,9 +3,9 @@ package com.ianarbuckle.gymplannerservice.clients.fakes
 import com.ianarbuckle.gymplannerservice.clients.data.Client
 import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansRepository
 import com.ianarbuckle.gymplannerservice.mocks.ClientsDataProvider
+import kotlin.random.Random
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlin.random.Random
 
 class FakeClientGymPlanRepository : ClientGymPlansRepository {
     override suspend fun count(): Long = 2L

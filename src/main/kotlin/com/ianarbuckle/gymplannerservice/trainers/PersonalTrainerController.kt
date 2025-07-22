@@ -1,8 +1,5 @@
 package com.ianarbuckle.gymplannerservice.trainers
 
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -23,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
+import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
+import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
 
 @RestController
 @RequestMapping("/api/v1/personal_trainers")
@@ -38,12 +38,13 @@ class PersonalTrainerController(
         description = "Retrieve all personal trainers by gym location",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful retrieval of personal trainers",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of personal trainers",
+                ),
+            ],
     )
     @GetMapping
     fun findTrainersByGymLocation(
@@ -52,37 +53,41 @@ class PersonalTrainerController(
             required = true,
             schema = Schema(implementation = GymLocation::class),
         )
-        @RequestParam gymLocation: GymLocation,
+        @RequestParam
+        gymLocation: GymLocation,
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
 
     @Operation(summary = "Find a personal trainer", description = "Find a new personal trainer")
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Personal trainer is found",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Personal trainer is not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Personal trainer is found",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Personal trainer is not found",
+                ),
+            ],
     )
     @GetMapping("{id}")
     suspend fun findTrainerById(
         @PathVariable id: String,
     ) {
-        service.findById(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer not found")
+        service.findById(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer not found")
     }
 
     @Operation(summary = "Create a personal trainer", description = "Create a new personal trainer")
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Personal trainer created successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Personal trainer created successfully",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -93,7 +98,8 @@ class PersonalTrainerController(
             schema = Schema(implementation = PersonalTrainer::class),
         )
         @Valid
-        @RequestBody personalTrainer: PersonalTrainer,
+        @RequestBody
+        personalTrainer: PersonalTrainer,
     ) = service.createTrainer(personalTrainer)
 
     @Operation(
@@ -101,12 +107,13 @@ class PersonalTrainerController(
         description = "Update an existing personal trainer",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Personal trainer updated successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Personal trainer updated successfully",
+                ),
+            ],
     )
     @PutMapping
     suspend fun updateTrainer(
@@ -116,7 +123,8 @@ class PersonalTrainerController(
             schema = Schema(implementation = PersonalTrainer::class),
         )
         @Valid
-        @RequestBody personalTrainer: PersonalTrainer,
+        @RequestBody
+        personalTrainer: PersonalTrainer,
     ) = service.updateTrainer(personalTrainer)
 
     @Operation(
@@ -124,16 +132,17 @@ class PersonalTrainerController(
         description = "Delete a personal trainer by its ID",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Personal trainer deleted successfully",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Personal trainer not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Personal trainer deleted successfully",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "Personal trainer not found",
+                ),
+            ],
     )
     @DeleteMapping("{id}")
     suspend fun deleteTrainerById(
@@ -142,6 +151,7 @@ class PersonalTrainerController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) = service.deleteTrainerById(id)
 }

@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.clients
 
-import com.ianarbuckle.gymplannerservice.clients.data.Client
-import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import com.ianarbuckle.gymplannerservice.clients.data.Client
+import com.ianarbuckle.gymplannerservice.clients.data.ClientGymPlansService
 
 @RestController
 @RequestMapping("/api/v1/clients")
@@ -26,17 +26,17 @@ import org.springframework.web.server.ResponseStatusException
 class ClientController(
     private val clientGymPlansService: ClientGymPlansService,
 ) {
-    @GetMapping
-    suspend fun findAllClients(): Flow<Client> = clientGymPlansService.findAllClients()
+    @GetMapping suspend fun findAllClients(): Flow<Client> = clientGymPlansService.findAllClients()
 
     @GetMapping("/{id}")
     suspend fun findClientById(
         @PathVariable id: String,
     ): Client? =
-        clientGymPlansService.findClientById(id) ?: throw ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "Client not found",
-        )
+        clientGymPlansService.findClientById(id)
+            ?: throw ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Client not found",
+            )
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

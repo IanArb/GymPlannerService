@@ -3,14 +3,13 @@ package com.ianarbuckle.gymplannerservice.trainers.data
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
+import java.util.Locale
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.Locale
 
 @Document
 data class PersonalTrainer(
-    @BsonId
-    val id: String? = null,
+    @BsonId val id: String? = null,
     val firstName: String,
     val lastName: String,
     val imageUrl: String,

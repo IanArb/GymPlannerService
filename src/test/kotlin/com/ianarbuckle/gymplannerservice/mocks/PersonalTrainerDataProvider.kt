@@ -13,7 +13,8 @@ object PersonalTrainerDataProvider {
         imageUrl: String = "https://www.johndoe.com",
         description: String = "John Doe Description",
         location: GymLocation = GymLocation.CLONTARF,
-        qualifications: List<String> = "Qualification 1, Qualification 2, Qualification 3".split(", "),
+        qualifications: List<String> =
+            "Qualification 1, Qualification 2, Qualification 3".split(", "),
     ): PersonalTrainer =
         PersonalTrainer(
             id = id,

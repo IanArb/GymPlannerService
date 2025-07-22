@@ -5,8 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class GymLocation(
-    @BsonId
-    val id: String? = null,
+    @BsonId val id: String? = null,
     val title: String,
     val subTitle: String,
     val description: String,

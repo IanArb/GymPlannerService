@@ -8,7 +8,6 @@ import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.test.runTest
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -19,6 +18,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 
 class AvailabilityServiceTests {
     private val availabilityRepository = mockk<AvailabilityRepository>()
@@ -34,26 +34,26 @@ class AvailabilityServiceTests {
         )
 
     @Test
-    fun `should return availability when found`() =
-        runTest {
-            val availability = AvailabilityDataProvider.createAvailability()
-            val personalTrainer =
-                PersonalTrainerDataProvider.createPersonalTrainer(
-                    id = availability.personalTrainerId,
-                )
+    fun `should return availability when found`() = runTest {
+        val availability = AvailabilityDataProvider.createAvailability()
+        val personalTrainer =
+            PersonalTrainerDataProvider.createPersonalTrainer(
+                id = availability.personalTrainerId,
+            )
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns availability
-            coEvery { availabilityRepository.save(availability) } returns availability
+        coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+        coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
+            availability
+        coEvery { availabilityRepository.save(availability) } returns availability
 
-            val result =
-                availabilityService.getAvailability(
-                    personalTrainerId = availability.personalTrainerId,
-                    month = availability.month,
-                )
-            coVerify(exactly = 0) { availabilityRepository.save(availability) }
-            assertEquals(availability, result)
-        }
+        val result =
+            availabilityService.getAvailability(
+                personalTrainerId = availability.personalTrainerId,
+                month = availability.month,
+            )
+        coVerify(exactly = 0) { availabilityRepository.save(availability) }
+        assertEquals(availability, result)
+    }
 
     @Test
     fun `should return availability AND update the availability when date is before current date`() =
@@ -77,7 +77,8 @@ class AvailabilityServiceTests {
                 )
 
             coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns availability
+            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
+                availability
             coEvery { availabilityRepository.save(availability) } returns availability
 
             val result =
@@ -96,7 +97,9 @@ class AvailabilityServiceTests {
             val month = "2023-12"
 
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) } returns null
+            coEvery {
+                availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
+            } returns null
 
             assertFailsWith<AvailabilityNotFoundException> {
                 availabilityService.getAvailability(personalTrainerId, month)
@@ -117,121 +120,120 @@ class AvailabilityServiceTests {
         }
 
     @Test
-    fun `should save availability`() =
-        runTest {
-            val availability = AvailabilityDataProvider.createAvailability()
-            val personalTrainer =
-                PersonalTrainerDataProvider.createPersonalTrainer(
-                    id = availability.personalTrainerId,
-                )
+    fun `should save availability`() = runTest {
+        val availability = AvailabilityDataProvider.createAvailability()
+        val personalTrainer =
+            PersonalTrainerDataProvider.createPersonalTrainer(
+                id = availability.personalTrainerId,
+            )
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
-            coEvery { availabilityRepository.save(any()) } returns availability
+        coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+        coEvery { availabilityRepository.save(any()) } returns availability
 
-            val result = availabilityService.saveAvailability(availability)
-            assertEquals(availability, result)
-        }
-
-    @Test
-    fun `should update availability`() =
-        runTest {
-            val availability = AvailabilityDataProvider.createAvailability()
-
-            coEvery { availabilityRepository.save(any()) } returns availability
-            coEvery { availabilityRepository.existsByPersonalTrainerId(any()) } returns true
-
-            availabilityService.updateAvailability(availability)
-
-            coVerify { availabilityRepository.save(availability) }
-        }
+        val result = availabilityService.saveAvailability(availability)
+        assertEquals(availability, result)
+    }
 
     @Test
-    fun `test isAvailable should delete availability`() =
-        runTest {
-            val personalTrainerId = "trainer1"
+    fun `should update availability`() = runTest {
+        val availability = AvailabilityDataProvider.createAvailability()
 
-            coEvery { availabilityRepository.deleteById(personalTrainerId) } returns Unit
+        coEvery { availabilityRepository.save(any()) } returns availability
+        coEvery { availabilityRepository.existsByPersonalTrainerId(any()) } returns true
 
-            availabilityService.deleteAvailability(personalTrainerId)
+        availabilityService.updateAvailability(availability)
 
-            coVerify { availabilityRepository.deleteById(personalTrainerId) }
-        }
+        coVerify { availabilityRepository.save(availability) }
+    }
 
     @Test
-    fun `test isAvailable should return true when personal trainer is available`() =
-        runTest {
-            val personalTrainerId = "trainer1"
-            val month = "2025-12"
-            val date = "2025-12-01"
-            val time = "08:00"
-            val endTime = "09:00"
+    fun `test isAvailable should delete availability`() = runTest {
+        val personalTrainerId = "trainer1"
 
-            val availability =
-                AvailabilityDataProvider.createAvailability(
-                    personalTrainerId = personalTrainerId,
-                    month = month,
-                    slots =
-                        AvailabilityDataProvider.createAppointmentSlots(
-                            date = LocalDate.parse(date),
-                            times =
-                                listOf(
-                                    AvailabilityDataProvider.createTime(
-                                        startTime = LocalTime.parse(time),
-                                        endTime = LocalTime.parse(endTime),
-                                        status = Status.AVAILABLE,
-                                    ),
+        coEvery { availabilityRepository.deleteById(personalTrainerId) } returns Unit
+
+        availabilityService.deleteAvailability(personalTrainerId)
+
+        coVerify { availabilityRepository.deleteById(personalTrainerId) }
+    }
+
+    @Test
+    fun `test isAvailable should return true when personal trainer is available`() = runTest {
+        val personalTrainerId = "trainer1"
+        val month = "2025-12"
+        val date = "2025-12-01"
+        val time = "08:00"
+        val endTime = "09:00"
+
+        val availability =
+            AvailabilityDataProvider.createAvailability(
+                personalTrainerId = personalTrainerId,
+                month = month,
+                slots =
+                    AvailabilityDataProvider.createAppointmentSlots(
+                        date = LocalDate.parse(date),
+                        times =
+                            listOf(
+                                AvailabilityDataProvider.createTime(
+                                    startTime = LocalTime.parse(time),
+                                    endTime = LocalTime.parse(endTime),
+                                    status = Status.AVAILABLE,
                                 ),
-                        ),
-                )
-            val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer(id = personalTrainerId)
+                            ),
+                    ),
+            )
+        val personalTrainer =
+            PersonalTrainerDataProvider.createPersonalTrainer(id = personalTrainerId)
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
-            coEvery { availabilityRepository.save(availability) } returns availability
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns availability
+        coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+        coEvery { availabilityRepository.save(availability) } returns availability
+        coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
+            availability
 
-            val result =
-                availabilityService.isAvailable(
-                    personalTrainerId = availability.personalTrainerId,
-                    month = month,
-                )
-            assertTrue(result.isAvailable)
-        }
+        val result =
+            availabilityService.isAvailable(
+                personalTrainerId = availability.personalTrainerId,
+                month = month,
+            )
+        assertTrue(result.isAvailable)
+    }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `test isAvailable should return false when personal trainer is not available`() =
-        runTest {
-            val personalTrainerId = "trainer1"
-            val month = "2023-12"
-            val date = "2023-12-01"
-            val time = "08:00"
-            val endTime = "09:00"
+    fun `test isAvailable should return false when personal trainer is not available`() = runTest {
+        val personalTrainerId = "trainer1"
+        val month = "2023-12"
+        val date = "2023-12-01"
+        val time = "08:00"
+        val endTime = "09:00"
 
-            val availability =
-                AvailabilityDataProvider.createAvailability(
-                    personalTrainerId = personalTrainerId,
-                    month = month,
-                    slots =
-                        AvailabilityDataProvider.createAppointmentSlots(
-                            date = LocalDate.parse(date),
-                            times =
-                                listOf(
-                                    AvailabilityDataProvider.createTime(
-                                        startTime = LocalTime.parse(time),
-                                        endTime = LocalTime.parse(endTime),
-                                        status = Status.UNAVAILABLE,
-                                    ),
+        val availability =
+            AvailabilityDataProvider.createAvailability(
+                personalTrainerId = personalTrainerId,
+                month = month,
+                slots =
+                    AvailabilityDataProvider.createAppointmentSlots(
+                        date = LocalDate.parse(date),
+                        times =
+                            listOf(
+                                AvailabilityDataProvider.createTime(
+                                    startTime = LocalTime.parse(time),
+                                    endTime = LocalTime.parse(endTime),
+                                    status = Status.UNAVAILABLE,
                                 ),
-                        ),
-                )
+                            ),
+                    ),
+            )
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
-            coEvery { availabilityRepository.save(availability) } returns availability
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) } returns availability
+        coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
+        coEvery { availabilityRepository.save(availability) } returns availability
+        coEvery {
+            availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
+        } returns availability
 
-            val result = availabilityService.isAvailable(personalTrainerId, month)
-            assertFalse(result.isAvailable)
-        }
+        val result = availabilityService.isAvailable(personalTrainerId, month)
+        assertFalse(result.isAvailable)
+    }
 
     @Test
     fun `test isAvailable should throw AvailabilityNotFoundException when availability is not found`() =
@@ -240,7 +242,9 @@ class AvailabilityServiceTests {
             val month = "2023-12"
 
             coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
-            coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month) } returns null
+            coEvery {
+                availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
+            } returns null
 
             assertFailsWith<AvailabilityNotFoundException> {
                 availabilityService.isAvailable(personalTrainerId, month)
@@ -261,28 +265,27 @@ class AvailabilityServiceTests {
         }
 
     @Test
-    fun `test findByTimeId should return availability by time slot id`() =
-        runTest {
-            val timeSlotId = "1"
+    fun `test findByTimeId should return availability by time slot id`() = runTest {
+        val timeSlotId = "1"
 
-            coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns AvailabilityDataProvider.createAvailability()
+        coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns
+            AvailabilityDataProvider.createAvailability()
 
-            val result = availabilityService.findByTimeId(timeSlotId)
+        val result = availabilityService.findByTimeId(timeSlotId)
 
-            assertEquals(AvailabilityDataProvider.createAvailability(), result)
+        assertEquals(AvailabilityDataProvider.createAvailability(), result)
 
-            coVerify { availabilityRepository.findByTimeId(timeSlotId) }
-        }
+        coVerify { availabilityRepository.findByTimeId(timeSlotId) }
+    }
 
     @Test
-    fun `test findByTimeId should return throw exception when not found`() =
-        runTest {
-            val timeSlotId = "1"
+    fun `test findByTimeId should return throw exception when not found`() = runTest {
+        val timeSlotId = "1"
 
-            coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns null
+        coEvery { availabilityRepository.findByTimeId(timeSlotId) } returns null
 
-            assertFailsWith<AvailabilityNotFoundException> {
-                availabilityService.findByTimeId(timeSlotId)
-            }
+        assertFailsWith<AvailabilityNotFoundException> {
+            availabilityService.findByTimeId(timeSlotId)
         }
+    }
 }

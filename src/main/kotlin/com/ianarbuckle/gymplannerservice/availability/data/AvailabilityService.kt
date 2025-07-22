@@ -3,9 +3,9 @@ package com.ianarbuckle.gymplannerservice.availability.data
 import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
-import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDate
+import org.springframework.stereotype.Service
 
 interface AvailabilityService {
     suspend fun getAvailability(
@@ -37,7 +37,8 @@ class AvailabilityServiceImpl(
         personalTrainerId: String,
         month: String,
     ): Availability {
-        personalTrainerRepository.findById(personalTrainerId) ?: throw PersonalTrainerNotFoundException()
+        personalTrainerRepository.findById(personalTrainerId)
+            ?: throw PersonalTrainerNotFoundException()
 
         val availability =
             availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
@@ -67,7 +68,8 @@ class AvailabilityServiceImpl(
     }
 
     override suspend fun saveAvailability(availability: Availability): Availability {
-        personalTrainerRepository.findById(availability.personalTrainerId) ?: throw PersonalTrainerNotFoundException()
+        personalTrainerRepository.findById(availability.personalTrainerId)
+            ?: throw PersonalTrainerNotFoundException()
 
         return availabilityRepository.save(availability)
     }
@@ -76,7 +78,10 @@ class AvailabilityServiceImpl(
         availabilityRepository
             .save(
                 availability,
-            ).takeIf { availabilityRepository.existsByPersonalTrainerId(availability.personalTrainerId) }
+            )
+            .takeIf {
+                availabilityRepository.existsByPersonalTrainerId(availability.personalTrainerId)
+            }
     }
 
     override suspend fun deleteAvailability(id: String) {
@@ -90,9 +95,7 @@ class AvailabilityServiceImpl(
         val availability = getAvailability(personalTrainerId, month)
         val isAvailable =
             availability.slots.any { slot ->
-                slot.times.any { time ->
-                    time.status == Status.AVAILABLE
-                }
+                slot.times.any { time -> time.status == Status.AVAILABLE }
             }
 
         return CheckAvailability(
@@ -102,6 +105,5 @@ class AvailabilityServiceImpl(
     }
 
     override suspend fun findByTimeId(timeId: String): Availability =
-        availabilityRepository.findByTimeId(timeId)
-            ?: throw AvailabilityNotFoundException()
+        availabilityRepository.findByTimeId(timeId) ?: throw AvailabilityNotFoundException()
 }

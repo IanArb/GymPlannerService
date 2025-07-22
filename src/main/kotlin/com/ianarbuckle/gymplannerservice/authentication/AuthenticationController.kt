@@ -36,20 +36,21 @@ class AuthenticationController(
         description = "Authenticate user with username and password",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Successful authentication",
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized - Invalid username or password",
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful authentication",
+                ),
+                ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - Invalid username or password",
+                ),
+                ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                ),
+            ],
     )
     @PostMapping("/login")
     suspend fun authenticateUser(
@@ -72,16 +73,17 @@ class AuthenticationController(
         }
 
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "User registered successfully",
-            ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request - User already exists or invalid role",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "User registered successfully",
+                ),
+                ApiResponse(
+                    responseCode = "400",
+                    description = "Bad request - User already exists or invalid role",
+                ),
+            ],
     )
     @PostMapping("/register")
     suspend fun registerUser(

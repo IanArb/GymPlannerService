@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.messages
 
-import com.ianarbuckle.gymplannerservice.messages.data.Message
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import com.ianarbuckle.gymplannerservice.messages.data.Message
 
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -24,12 +24,13 @@ class MessagesController(
         description = "Retrieve all messages from the system",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Messages retrieved successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Messages retrieved successfully",
+                ),
+            ],
     )
     @GetMapping
     fun getMessages(): Flow<Message> = messagesService.findAlMessages()
@@ -39,12 +40,13 @@ class MessagesController(
         description = "Add a new message to the system",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "201",
-                description = "Message created successfully",
-            ),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "201",
+                    description = "Message created successfully",
+                ),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

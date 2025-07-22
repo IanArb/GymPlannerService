@@ -10,26 +10,17 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Schema(description = "User information")
 @Document
 data class User(
-    @BsonId
-    val id: String,
-    @NotBlank
-    @Size(max = 20)
-    val username: String,
-    @NotBlank
-    @Size(max = 120)
-    val password: String,
-    @NotBlank
-    @Size(max = 50)
-    val email: String,
-    @DBRef
-    val roles: Set<Role> = emptySet(),
+    @BsonId val id: String,
+    @NotBlank @Size(max = 20) val username: String,
+    @NotBlank @Size(max = 120) val password: String,
+    @NotBlank @Size(max = 50) val email: String,
+    @DBRef val roles: Set<Role> = emptySet(),
 )
 
 @Schema(description = "Role information")
 @Document(collection = "roles")
 data class Role(
-    @BsonId
-    val id: String? = null,
+    @BsonId val id: String? = null,
     val name: ERole,
 )
 
@@ -42,8 +33,7 @@ enum class ERole {
 @Schema(description = "User profile information")
 @Document
 data class UserProfile(
-    @BsonId
-    val userId: String,
+    @BsonId val userId: String,
     val username: String,
     val firstName: String,
     val surname: String,

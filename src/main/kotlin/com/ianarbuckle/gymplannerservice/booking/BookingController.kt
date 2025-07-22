@@ -1,10 +1,5 @@
 package com.ianarbuckle.gymplannerservice.booking
 
-import com.ianarbuckle.gymplannerservice.booking.data.Booking
-import com.ianarbuckle.gymplannerservice.booking.data.BookingService
-import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
-import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
-import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
@@ -21,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import com.ianarbuckle.gymplannerservice.booking.data.Booking
+import com.ianarbuckle.gymplannerservice.booking.data.BookingService
+import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
+import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
+import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
 
 @RestController
 @RequestMapping("/api/v1/booking")
@@ -58,12 +58,14 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Booking? =
-        service.fetchBookingById(id) ?: throw ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "Booking not found",
-        )
+        service.fetchBookingById(id)
+            ?: throw ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Booking not found",
+            )
 
     @Operation(
         summary = "Fetch all bookings by personal trainer",
@@ -76,7 +78,8 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Flow<Booking> =
         try {
             service.findBookingsByPersonalTrainerId(id)
@@ -99,7 +102,8 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ): Flow<Booking> =
         try {
             service.findBookingsByUserId(id)
@@ -156,6 +160,7 @@ class BookingController(
             required = true,
             schema = Schema(type = "string"),
         )
-        @PathVariable id: String,
+        @PathVariable
+        id: String,
     ) = service.deleteBookingById(id)
 }

@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -30,7 +30,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class PersonalTrainerControllerTests {
     @Autowired private lateinit var webTestClient: WebTestClient
 
-    @MockBean private lateinit var personalTrainersService: PersonalTrainersService
+    @MockitoBean private lateinit var personalTrainersService: PersonalTrainersService
 
     @Test
     fun `should return all personal trainers by gym location`() = runTest {

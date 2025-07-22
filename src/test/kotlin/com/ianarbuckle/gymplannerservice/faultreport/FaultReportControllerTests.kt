@@ -12,10 +12,10 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -29,7 +29,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class FaultReportControllerTests {
     @Autowired private lateinit var webTestClient: WebTestClient
 
-    @MockBean private lateinit var faultReportService: FaultReportService
+    @MockitoBean private lateinit var faultReportService: FaultReportService
 
     @Test
     fun `should return all fault reports`() = runTest {

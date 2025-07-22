@@ -11,10 +11,10 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -28,7 +28,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class ClassesControllerTests {
     @Autowired private lateinit var webTestClient: WebTestClient
 
-    @MockBean private lateinit var fitnessClassesService: FitnessClassesService
+    @MockitoBean private lateinit var fitnessClassesService: FitnessClassesService
 
     @Test
     fun `should return all fitness classes by day of week`() = runTest {

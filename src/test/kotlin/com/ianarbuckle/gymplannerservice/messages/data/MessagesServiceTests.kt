@@ -8,6 +8,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import java.time.LocalDateTime
 import kotlin.test.Test
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -25,14 +26,14 @@ class MessagesServiceTests {
                     username = "Bob",
                     userId = "user1",
                     content = "Hello, world!",
-                    timestamp = 1000L,
+                    timestamp = LocalDateTime.now()
                 ),
                 Message(
                     id = "1",
                     username = "Lisa",
                     userId = "user2",
                     content = "Hello, world!",
-                    timestamp = 1000L,
+                    timestamp = LocalDateTime.now()
                 ),
             )
         every { repository.findAll() } returns flowOf(*messages.toTypedArray())
@@ -54,7 +55,7 @@ class MessagesServiceTests {
                 username = "Bob",
                 userId = "user1",
                 content = "Hello, world!",
-                timestamp = 1000L,
+                timestamp = LocalDateTime.now()
             )
 
         coEvery { repository.save(message) } returns message

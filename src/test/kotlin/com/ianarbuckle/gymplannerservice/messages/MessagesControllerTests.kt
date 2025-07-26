@@ -88,4 +88,27 @@ class MessagesControllerTests {
             .expectStatus()
             .isCreated
     }
+
+    @Test
+    fun `should save message returns 400 bad request when timestamp not in the future`() = runTest {
+        val message =
+            Message(
+                id = "1",
+                username = "Bob",
+                userId = "user1",
+                content = "Hello, world!",
+                timestamp = LocalDateTime.now()
+            )
+
+        `when`(messagesService.insertMessage(message)).thenReturn(Unit)
+
+        webTestClient
+            .post()
+            .uri("/api/v1/messages")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(message)
+            .exchange()
+            .expectStatus()
+            .isBadRequest
+    }
 }

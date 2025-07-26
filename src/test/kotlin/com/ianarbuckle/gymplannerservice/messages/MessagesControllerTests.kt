@@ -1,6 +1,7 @@
 package com.ianarbuckle.gymplannerservice.messages
 
 import com.ianarbuckle.gymplannerservice.messages.data.Message
+import java.time.LocalDateTime
 import kotlin.test.Test
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -16,8 +17,6 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(

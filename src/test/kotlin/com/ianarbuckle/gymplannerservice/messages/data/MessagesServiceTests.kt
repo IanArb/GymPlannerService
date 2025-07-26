@@ -11,6 +11,8 @@ import io.mockk.verify
 import kotlin.test.Test
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import net.bytebuddy.asm.Advice
+import java.time.LocalDateTime
 
 class MessagesServiceTests {
     private val repository: MessagesRepository = mockk()
@@ -25,14 +27,14 @@ class MessagesServiceTests {
                     username = "Bob",
                     userId = "user1",
                     content = "Hello, world!",
-                    timestamp = 1000L,
+                    timestamp = LocalDateTime.now()
                 ),
                 Message(
                     id = "1",
                     username = "Lisa",
                     userId = "user2",
                     content = "Hello, world!",
-                    timestamp = 1000L,
+                    timestamp = LocalDateTime.now()
                 ),
             )
         every { repository.findAll() } returns flowOf(*messages.toTypedArray())
@@ -54,7 +56,7 @@ class MessagesServiceTests {
                 username = "Bob",
                 userId = "user1",
                 content = "Hello, world!",
-                timestamp = 1000L,
+                timestamp = LocalDateTime.now()
             )
 
         coEvery { repository.save(message) } returns message

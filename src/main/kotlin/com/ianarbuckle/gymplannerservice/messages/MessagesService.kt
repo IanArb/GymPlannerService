@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 interface MessagesService {
     fun findAlMessages(): Flow<Message>
 
-    suspend fun insertMessage(message: Message)
+    suspend fun insertMessage(message: Message): Message
 }
 
 @Service
@@ -17,7 +17,7 @@ class MessagesServiceImpl(
 ) : MessagesService {
     override fun findAlMessages(): Flow<Message> = repository.findAll()
 
-    override suspend fun insertMessage(message: Message) {
-        repository.save(message)
+    override suspend fun insertMessage(message: Message): Message {
+        return repository.save(message)
     }
 }

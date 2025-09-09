@@ -52,7 +52,7 @@ class MessagesController(
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun insertMessage(
         @RequestBody @Valid message: Message,
-    ) {
-        messagesService.insertMessage(message)
+    ): Message {
+        return messagesService.insertMessage(message)
     }
 }

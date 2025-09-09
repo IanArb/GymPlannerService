@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.messages
 
 import com.ianarbuckle.gymplannerservice.messages.data.Message
-import java.time.LocalDateTime
+import java.time.Instant
 import kotlin.test.Test
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -40,14 +40,14 @@ class MessagesControllerTests {
                     username = "Bob",
                     userId = "user1",
                     content = "Hello, world!",
-                    timestamp = LocalDateTime.now()
+                    timestamp = Instant.now()
                 ),
                 Message(
                     id = "2",
                     username = "Lisa",
                     userId = "user2",
                     content = "Hi there!",
-                    timestamp = LocalDateTime.now()
+                    timestamp = Instant.now()
                 ),
             )
         `when`(messagesService.findAlMessages()).thenReturn(flowOf(*messages.toTypedArray()))
@@ -74,10 +74,10 @@ class MessagesControllerTests {
                 username = "Bob",
                 userId = "user1",
                 content = "Hello, world!",
-                timestamp = LocalDateTime.now().plusMinutes(1)
+                timestamp = Instant.now().plusSeconds(1)
             )
 
-        `when`(messagesService.insertMessage(message)).thenReturn(Unit)
+        `when`(messagesService.insertMessage(message)).thenReturn(message)
 
         webTestClient
             .post()
@@ -97,10 +97,10 @@ class MessagesControllerTests {
                 username = "Bob",
                 userId = "user1",
                 content = "Hello, world!",
-                timestamp = LocalDateTime.now()
+                timestamp = Instant.now()
             )
 
-        `when`(messagesService.insertMessage(message)).thenReturn(Unit)
+        `when`(messagesService.insertMessage(message)).thenReturn(message)
 
         webTestClient
             .post()

@@ -19,4 +19,5 @@ data class SignUpRequest(
     @NotBlank @Size(max = 50) @Email val email: String,
     @NotBlank @Size(min = 6, max = 40) val password: String,
     val roles: Set<String>? = emptySet(),
+    val pushNotificationToken: String? = null,
 )

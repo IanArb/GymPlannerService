@@ -15,6 +15,7 @@ data class User(
     @NotBlank @Size(max = 120) val password: String,
     @NotBlank @Size(max = 50) val email: String,
     @DBRef val roles: Set<Role> = emptySet(),
+    val pushNotificationToken: String? = null,
 )
 
 @Schema(description = "Role information")

@@ -104,6 +104,7 @@ class AuthenticationServiceImpl(
                 email = signUpRequest.email,
                 password = encoder.encode(signUpRequest.password),
                 roles = roles,
+                pushNotificationToken = signUpRequest.pushNotificationToken,
             )
 
         userRepository.save(user)

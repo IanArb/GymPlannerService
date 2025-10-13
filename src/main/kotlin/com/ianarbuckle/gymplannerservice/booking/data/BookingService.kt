@@ -38,6 +38,7 @@ class BookingServiceImpl(
     private val userProfileRepository: UserProfileRepository,
     private val availabilityRepository: AvailabilityRepository,
 ) : BookingService {
+
     override fun fetchAllBookings(): Flow<Booking> = bookingsRepository.findAll()
 
     override suspend fun fetchBookingById(id: String): Booking? = bookingsRepository.findById(id)

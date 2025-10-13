@@ -55,6 +55,8 @@ dependencies {
 
     implementation(libs.springdoc.openapi.webflux.ui)
 
+    implementation(libs.firebase.admin)
+
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.reactor.test)
     testImplementation(libs.kotlin.test.junit5)

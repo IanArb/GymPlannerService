@@ -33,6 +33,7 @@ class AvailabilityServiceImpl(
     private val personalTrainerRepository: PersonalTrainerRepository,
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : AvailabilityService {
+
     override suspend fun getAvailability(
         personalTrainerId: String,
         month: String,

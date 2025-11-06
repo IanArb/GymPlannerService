@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FcmSender(
-    private val firebaseMessaging: FirebaseMessaging = FirebaseMessaging.getInstance()
+    private val firebaseMessaging: FirebaseMessaging
 ) {
 
     private val logger = LoggerFactory.getLogger(FcmSender::class.java)

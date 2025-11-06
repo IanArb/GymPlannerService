@@ -27,6 +27,7 @@ class FcmTokenServiceTests {
 
         coEvery { userRepository.findById(userId) } returns user
         coEvery { user.copy(pushNotificationToken = token) } returns updatedUser
+        coEvery { updatedUser.pushNotificationToken } returns token
         coEvery { userRepository.save(updatedUser) } returns updatedUser
 
         fcmTokenService.registerToken(userId, token)

@@ -1,6 +1,7 @@
 package com.ianarbuckle.gymplannerservice.fcm
 
 import com.ianarbuckle.gymplannerservice.fcm.data.FcmTokenRequest
+import com.ianarbuckle.gymplannerservice.fcm.data.FcmTokenResponse
 import com.ianarbuckle.gymplannerservice.fcm.data.FcmTokenService
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -33,8 +34,9 @@ class FcmControllerTests {
     @Test
     fun `should register push notification token successfully`() = runTest {
         val tokenRequest = FcmTokenRequest(userId = "user123", token = "fcm-token-123")
+        val fcmTokenResponse = FcmTokenResponse(tokenRequest.userId)
         given(fcmTokenService.registerToken(tokenRequest.userId, tokenRequest.token))
-            .willReturn(Unit)
+            .willReturn(fcmTokenResponse)
 
         webTestClient
             .post()

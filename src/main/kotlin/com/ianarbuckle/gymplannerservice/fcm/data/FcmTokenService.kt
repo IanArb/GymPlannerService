@@ -20,13 +20,9 @@ class FcmTokenServiceImpl(
         if (existingToken == null && user != null) {
             val updatedUserWithToken = user.copy(pushNotificationToken = token)
             val user = userRepository.save(updatedUserWithToken)
-            return FcmTokenResponse(
-                token = user.pushNotificationToken
-            )
+            return FcmTokenResponse(token = user.pushNotificationToken)
         }
-        return FcmTokenResponse(
-            token = existingToken
-        )
+        return FcmTokenResponse(token = existingToken)
     }
 
     override suspend fun deleteToken(userId: String) {

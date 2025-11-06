@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController
 class FcmController(private val fcmTokenService: FcmTokenService) {
 
     @PostMapping("/register")
-    suspend fun registerPushNotificationToken(@RequestBody tokenRequest: FcmTokenRequest): FcmTokenResponse {
+    suspend fun registerPushNotificationToken(
+        @RequestBody tokenRequest: FcmTokenRequest
+    ): FcmTokenResponse {
         return fcmTokenService.registerToken(
             userId = tokenRequest.userId,
             token = tokenRequest.token,

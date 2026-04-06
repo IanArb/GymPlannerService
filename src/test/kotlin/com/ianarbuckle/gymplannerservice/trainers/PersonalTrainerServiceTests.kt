@@ -2,8 +2,8 @@ package com.ianarbuckle.gymplannerservice.trainers
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerServiceImpl
 import io.mockk.coEvery

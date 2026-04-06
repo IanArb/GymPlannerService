@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.booking.data
 
 import FutureDate
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate

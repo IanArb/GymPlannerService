@@ -3,6 +3,7 @@ package com.ianarbuckle.gymplannerservice.trainers.data
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import java.util.Locale
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
@@ -18,15 +19,6 @@ data class PersonalTrainer(
     val qualifications: List<String>,
     val gymLocation: GymLocation,
 )
-
-enum class GymLocation {
-    CLONTARF,
-    ASTONQUAY,
-    LEOPARDSTOWN,
-    DUNLOAGHAIRE,
-    WESTMANSTOWN,
-    SANDYMOUNT,
-}
 
 class GymLocationDeserializer : JsonDeserializer<GymLocation>() {
     override fun deserialize(

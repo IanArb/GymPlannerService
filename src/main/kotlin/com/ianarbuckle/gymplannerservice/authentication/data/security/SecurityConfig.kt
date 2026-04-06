@@ -27,6 +27,9 @@ class SecurityConfig(
     ): SecurityWebFilterChain {
         val filter = AuthenticationWebFilter(jwtAuthenticationManager)
         filter.setServerAuthenticationConverter(converter)
+        filter.setAuthenticationFailureHandler { webFilterExchange, _ ->
+            webFilterExchange.chain.filter(webFilterExchange.exchange)
+        }
 
         http
             .exceptionHandling {

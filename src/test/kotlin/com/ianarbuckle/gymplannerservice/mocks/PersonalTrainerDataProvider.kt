@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.mocks
 
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

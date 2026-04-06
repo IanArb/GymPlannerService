@@ -231,6 +231,21 @@ class FacilityStatusControllerTests {
     }
 
     @Test
+    fun `should delete all facilities by gym location`() = runTest {
+        // Given
+        val gymLocation = GymLocation.CLONTARF
+        `when`(facilityStatusService.deleteAllFacilitiesByGymLocation(gymLocation)).thenReturn(Unit)
+
+        // When & Then
+        webTestClient
+            .delete()
+            .uri("/api/v1/facilities/batch?gymLocation=${gymLocation.name}")
+            .exchange()
+            .expectStatus()
+            .isNoContent
+    }
+
+    @Test
     fun `should return 400 when creating facility with invalid status`() = runTest {
         // Given
         val invalidBody =

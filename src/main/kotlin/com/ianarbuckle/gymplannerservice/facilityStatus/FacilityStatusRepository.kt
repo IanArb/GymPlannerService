@@ -10,4 +10,6 @@ interface FacilityStatusRepository : CoroutineCrudRepository<FacilityStatus, Str
     suspend fun findMachinesByGymLocation(gymLocation: GymLocation): Flow<FacilityStatus>
 
     suspend fun findAllMachinesByStatus(machineStatus: String): Flow<FacilityStatus>
+
+    suspend fun deleteAllByGymLocation(gymLocation: GymLocation)
 }

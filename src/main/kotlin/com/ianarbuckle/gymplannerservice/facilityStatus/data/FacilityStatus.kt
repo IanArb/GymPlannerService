@@ -6,7 +6,7 @@ import org.bson.codecs.pojo.annotations.BsonId
 
 @Suppress("ConstructorParameterNaming")
 data class FacilityStatus(
-    @BsonId val _id: String? = null,
+    @BsonId val id: String? = null,
     val machineName: String,
     val machineNumber: Int,
     @Valid val gymLocation: GymLocation,

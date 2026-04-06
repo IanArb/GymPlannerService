@@ -17,7 +17,7 @@ object FacilityStatusDataProvider {
         status: MachineStatus = MachineStatus.OPERATIONAL,
     ): FacilityStatus =
         FacilityStatus(
-            _id = id,
+            id = id,
             machineName = machineName,
             machineNumber = machineNumber,
             gymLocation = gymLocation,

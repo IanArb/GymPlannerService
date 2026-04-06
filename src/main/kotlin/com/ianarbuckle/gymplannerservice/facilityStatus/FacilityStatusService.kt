@@ -22,6 +22,8 @@ interface FacilityStatusService {
     suspend fun updateFacility(facilityStatus: FacilityStatus): FacilityStatus
 
     suspend fun deleteFacilityById(id: String)
+
+    suspend fun deleteAllFacilitiesByGymLocation(gymLocation: GymLocation)
 }
 
 @Service
@@ -51,5 +53,9 @@ class FacilityStatusServiceImpl(private val repository: FacilityStatusRepository
 
     override suspend fun deleteFacilityById(id: String) {
         repository.deleteById(id)
+    }
+
+    override suspend fun deleteAllFacilitiesByGymLocation(gymLocation: GymLocation) {
+        repository.deleteAllByGymLocation(gymLocation)
     }
 }

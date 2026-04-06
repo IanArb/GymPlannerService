@@ -38,7 +38,8 @@ class SecurityConfigTests {
     @MockitoBean private lateinit var authenticationService: AuthenticationService
 
     @Suppress("UnusedPrivateProperty")
-    @MockitoBean private lateinit var facilityStatusService: FacilityStatusService
+    @MockitoBean
+    private lateinit var facilityStatusService: FacilityStatusService
 
     @MockitoBean private lateinit var jwtAuthenticationManager: JWTAuthenticationManager
 

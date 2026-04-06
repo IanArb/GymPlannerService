@@ -24,15 +24,25 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/facilities")
-@Tag(name = "Facility Status", description = "Endpoints for managing gym facility and machine status")
+@Tag(
+    name = "Facility Status",
+    description = "Endpoints for managing gym facility and machine status"
+)
 class FacilityStatusController(
     private val service: FacilityStatusService,
 ) {
-    @Operation(summary = "Get all machines", description = "Retrieve all gym machines across all locations")
+    @Operation(
+        summary = "Get all machines",
+        description = "Retrieve all gym machines across all locations"
+    )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Successful retrieval of all machines"),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of all machines"
+                ),
+            ],
     )
     @GetMapping
     suspend fun getAllMachines(): Flow<FacilityStatus> = service.findAllMachines()
@@ -42,9 +52,13 @@ class FacilityStatusController(
         description = "Retrieve all machines at a specific gym location",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Successful retrieval of facilities"),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of facilities"
+                ),
+            ],
     )
     @GetMapping(params = ["gymLocation"])
     suspend fun getFacilitiesByGymLocation(
@@ -59,15 +73,21 @@ class FacilityStatusController(
 
     @Operation(summary = "Get machine by ID", description = "Retrieve a single machine by its ID")
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Machine found"),
-            ApiResponse(responseCode = "404", description = "Machine not found"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "200", description = "Machine found"),
+                ApiResponse(responseCode = "404", description = "Machine not found"),
+            ],
     )
     @GetMapping("/{id}")
     suspend fun getMachineById(
-        @Parameter(description = "ID of the machine", required = true, schema = Schema(type = "string"))
-        @PathVariable id: String,
+        @Parameter(
+            description = "ID of the machine",
+            required = true,
+            schema = Schema(type = "string")
+        )
+        @PathVariable
+        id: String,
     ): FacilityStatus =
         service.findMachineById(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Machine not found")
@@ -77,22 +97,32 @@ class FacilityStatusController(
         description = "Retrieve all machines filtered by their operational status",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Successful retrieval of facilities by status"),
-        ],
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of facilities by status"
+                ),
+            ],
     )
     @GetMapping("/status/{status}")
     suspend fun getFacilityStatus(
-        @Parameter(description = "Machine status", required = true, schema = Schema(type = "string"))
-        @PathVariable status: String,
+        @Parameter(
+            description = "Machine status",
+            required = true,
+            schema = Schema(type = "string")
+        )
+        @PathVariable
+        status: String,
     ): Flow<FacilityStatus> = service.findMachinesByStatus(status)
 
     @Operation(summary = "Create a facility", description = "Add a new machine to a gym location")
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "201", description = "Facility created successfully"),
-            ApiResponse(responseCode = "400", description = "Invalid request body"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "201", description = "Facility created successfully"),
+                ApiResponse(responseCode = "400", description = "Invalid request body"),
+            ],
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -102,7 +132,8 @@ class FacilityStatusController(
             required = true,
             schema = Schema(implementation = FacilityStatus::class),
         )
-        @RequestBody facilityStatus: FacilityStatus,
+        @RequestBody
+        facilityStatus: FacilityStatus,
     ) {
         service.saveFacility(facilityStatus)
     }
@@ -112,10 +143,11 @@ class FacilityStatusController(
         description = "Add multiple machines to a gym location in a single request",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "201", description = "Facilities created successfully"),
-            ApiResponse(responseCode = "400", description = "Invalid request body"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "201", description = "Facilities created successfully"),
+                ApiResponse(responseCode = "400", description = "Invalid request body"),
+            ],
     )
     @PostMapping("/batch")
     @ResponseStatus(HttpStatus.CREATED)
@@ -124,22 +156,32 @@ class FacilityStatusController(
             description = "List of facility details to create",
             required = true,
         )
-        @RequestBody facilities: List<FacilityStatus>,
+        @RequestBody
+        facilities: List<FacilityStatus>,
     ) {
         service.saveAllFacilities(facilities)
     }
 
-    @Operation(summary = "Update a facility", description = "Update the details or status of an existing machine")
+    @Operation(
+        summary = "Update a facility",
+        description = "Update the details or status of an existing machine"
+    )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Facility updated successfully"),
-            ApiResponse(responseCode = "404", description = "Machine not found"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "200", description = "Facility updated successfully"),
+                ApiResponse(responseCode = "404", description = "Machine not found"),
+            ],
     )
     @PutMapping("/{id}")
     suspend fun updateFacility(
-        @Parameter(description = "ID of the machine to update", required = true, schema = Schema(type = "string"))
-        @PathVariable id: String,
+        @Parameter(
+            description = "ID of the machine to update",
+            required = true,
+            schema = Schema(type = "string")
+        )
+        @PathVariable
+        id: String,
         @RequestBody facilityStatus: FacilityStatus,
     ): FacilityStatus {
         service.findMachineById(id)
@@ -147,18 +189,27 @@ class FacilityStatusController(
         return service.updateFacility(facilityStatus)
     }
 
-    @Operation(summary = "Delete a facility by ID", description = "Remove a single machine by its ID")
+    @Operation(
+        summary = "Delete a facility by ID",
+        description = "Remove a single machine by its ID"
+    )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "204", description = "Facility deleted successfully"),
-            ApiResponse(responseCode = "404", description = "Machine not found"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "204", description = "Facility deleted successfully"),
+                ApiResponse(responseCode = "404", description = "Machine not found"),
+            ],
     )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     suspend fun deleteFacility(
-        @Parameter(description = "ID of the machine to delete", required = true, schema = Schema(type = "string"))
-        @PathVariable id: String,
+        @Parameter(
+            description = "ID of the machine to delete",
+            required = true,
+            schema = Schema(type = "string")
+        )
+        @PathVariable
+        id: String,
     ) {
         service.findMachineById(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Machine not found")
@@ -170,9 +221,10 @@ class FacilityStatusController(
         description = "Remove all machines at a specific gym location in one batch",
     )
     @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "204", description = "Facilities deleted successfully"),
-        ],
+        value =
+            [
+                ApiResponse(responseCode = "204", description = "Facilities deleted successfully"),
+            ],
     )
     @DeleteMapping("/batch")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -182,7 +234,8 @@ class FacilityStatusController(
             required = true,
             schema = Schema(implementation = GymLocation::class),
         )
-        @RequestParam gymLocation: GymLocation,
+        @RequestParam
+        gymLocation: GymLocation,
     ) {
         service.deleteAllFacilitiesByGymLocation(gymLocation)
     }

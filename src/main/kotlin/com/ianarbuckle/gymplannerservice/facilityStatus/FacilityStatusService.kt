@@ -45,7 +45,7 @@ class FacilityStatusServiceImpl(private val repository: FacilityStatusRepository
     }
 
     override suspend fun saveAllFacilities(facilities: List<FacilityStatus>) {
-        repository.saveAll(facilities).collect()
+        repository.saveAll(facilities).collect {}
     }
 
     override suspend fun updateFacility(facilityStatus: FacilityStatus): FacilityStatus =

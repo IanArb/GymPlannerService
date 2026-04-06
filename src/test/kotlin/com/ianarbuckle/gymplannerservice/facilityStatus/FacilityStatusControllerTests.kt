@@ -258,7 +258,8 @@ class FacilityStatusControllerTests {
                 "faultType": "MECHANICAL",
                 "status": "INVALID_STATUS"
             }
-            """.trimIndent()
+            """
+                .trimIndent()
 
         // When & Then
         webTestClient
@@ -287,7 +288,8 @@ class FacilityStatusControllerTests {
                 "faultType": "MECHANICAL",
                 "status": "OPERATIONAL"
             }
-            """.trimIndent()
+            """
+                .trimIndent()
 
         // When & Then
         webTestClient
@@ -318,7 +320,8 @@ class FacilityStatusControllerTests {
                     "status": "INVALID_STATUS"
                 }
             ]
-            """.trimIndent()
+            """
+                .trimIndent()
 
         // When & Then
         webTestClient

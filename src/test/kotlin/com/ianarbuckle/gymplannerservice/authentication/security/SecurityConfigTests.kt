@@ -9,6 +9,7 @@ import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtServerA
 import com.ianarbuckle.gymplannerservice.authentication.data.security.SecurityConfig
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusController
+import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusService
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,6 +36,9 @@ class SecurityConfigTests {
     @Autowired private lateinit var webTestClient: WebTestClient
 
     @MockitoBean private lateinit var authenticationService: AuthenticationService
+
+    @Suppress("UnusedPrivateProperty")
+    @MockitoBean private lateinit var facilityStatusService: FacilityStatusService
 
     @MockitoBean private lateinit var jwtAuthenticationManager: JWTAuthenticationManager
 

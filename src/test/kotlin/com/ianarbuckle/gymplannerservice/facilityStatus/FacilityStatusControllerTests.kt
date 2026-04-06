@@ -231,6 +231,95 @@ class FacilityStatusControllerTests {
     }
 
     @Test
+    fun `should return 400 when creating facility with invalid status`() = runTest {
+        // Given
+        val invalidBody =
+            """
+            {
+                "machineName": "Treadmill",
+                "machineNumber": 1,
+                "gymLocation": "CLONTARF",
+                "location": "MAIN_GYM_FLOOR",
+                "faultType": "MECHANICAL",
+                "status": "INVALID_STATUS"
+            }
+            """.trimIndent()
+
+        // When & Then
+        webTestClient
+            .post()
+            .uri("/api/v1/facilities")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(invalidBody)
+            .exchange()
+            .expectStatus()
+            .isBadRequest
+            .expectBody()
+            .jsonPath("$.error")
+            .isNotEmpty
+    }
+
+    @Test
+    fun `should return 400 when creating facility with invalid location`() = runTest {
+        // Given
+        val invalidBody =
+            """
+            {
+                "machineName": "Treadmill",
+                "machineNumber": 1,
+                "gymLocation": "CLONTARF",
+                "location": "INVALID_LOCATION",
+                "faultType": "MECHANICAL",
+                "status": "OPERATIONAL"
+            }
+            """.trimIndent()
+
+        // When & Then
+        webTestClient
+            .post()
+            .uri("/api/v1/facilities")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(invalidBody)
+            .exchange()
+            .expectStatus()
+            .isBadRequest
+            .expectBody()
+            .jsonPath("$.error")
+            .isNotEmpty
+    }
+
+    @Test
+    fun `should return 400 when creating batch with invalid status`() = runTest {
+        // Given
+        val invalidBody =
+            """
+            [
+                {
+                    "machineName": "Treadmill",
+                    "machineNumber": 1,
+                    "gymLocation": "CLONTARF",
+                    "location": "MAIN_GYM_FLOOR",
+                    "faultType": "MECHANICAL",
+                    "status": "INVALID_STATUS"
+                }
+            ]
+            """.trimIndent()
+
+        // When & Then
+        webTestClient
+            .post()
+            .uri("/api/v1/facilities/batch")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(invalidBody)
+            .exchange()
+            .expectStatus()
+            .isBadRequest
+            .expectBody()
+            .jsonPath("$.error")
+            .isNotEmpty
+    }
+
+    @Test
     fun `should return facilities by status`() = runTest {
         // Given
         val status = MachineStatus.OPERATIONAL.name

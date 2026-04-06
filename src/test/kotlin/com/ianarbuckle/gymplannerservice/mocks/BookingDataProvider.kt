@@ -3,7 +3,7 @@ package com.ianarbuckle.gymplannerservice.mocks
 import com.ianarbuckle.gymplannerservice.booking.data.Booking
 import com.ianarbuckle.gymplannerservice.booking.data.BookingStatus
 import com.ianarbuckle.gymplannerservice.booking.data.PersonalTrainerBooking
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import java.time.LocalDate
 import java.time.LocalTime
 

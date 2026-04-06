@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.trainers
 
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
-import com.ianarbuckle.gymplannerservice.trainers.data.GymLocation
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
 import kotlin.test.Test

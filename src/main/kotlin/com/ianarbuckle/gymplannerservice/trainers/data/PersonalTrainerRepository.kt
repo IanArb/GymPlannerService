@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.trainers.data
 
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository

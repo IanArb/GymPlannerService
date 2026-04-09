@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.security
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -11,14 +12,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsConfigurationSource
+import org.springframework.web.cors.reactive.CorsWebFilter
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfig(
     private val jwtAuthenticationManager: JWTAuthenticationManager,
+    @Value("\${cors.allowed-origins}") private val allowedOrigins: String,
 ) {
     @Bean fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean fun corsWebFilter(): CorsWebFilter = CorsWebFilter(corsConfigurationSource())
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val config = CorsConfiguration()
+        config.allowedOrigins = allowedOrigins.split(",")
+        config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        config.allowedHeaders = listOf("*")
+        config.maxAge = CORS_MAX_AGE
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", config)
+        return source
+    }
 
     @Bean
     fun springSecurityFilter(
@@ -53,10 +74,15 @@ class SecurityConfig(
                     .authenticated()
             }
             .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .cors { it.configurationSource(corsConfigurationSource()) }
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .csrf { it.disable() }
 
         return http.build()
+    }
+
+    companion object {
+        private const val CORS_MAX_AGE = 3600L
     }
 }

@@ -17,7 +17,11 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest
+import org.springframework.mock.web.server.MockServerWebExchange
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
@@ -45,7 +49,7 @@ class SecurityConfigTests {
 
     @Test
     fun `passwordEncoder should be BCryptPasswordEncoder`() {
-        val securityConfig = SecurityConfig(jwtAuthenticationManager)
+        val securityConfig = SecurityConfig(jwtAuthenticationManager, "http://localhost:8080")
         assertThat(securityConfig.passwordEncoder()).isInstanceOf(BCryptPasswordEncoder::class.java)
     }
 
@@ -76,5 +80,52 @@ class SecurityConfigTests {
     @Test
     fun `protected endpoints should return 401 without token`() = runTest {
         webTestClient.get().uri("/api/v1/facilities").exchange().expectStatus().isUnauthorized
+    }
+
+    @Test
+    fun `preflight OPTIONS request should not return CORS headers for disallowed origin`() =
+        runTest {
+            webTestClient
+                .options()
+                .uri("/api/v1/facilities")
+                .header(HttpHeaders.ORIGIN, "http://evil.com")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.GET.name())
+                .exchange()
+                .expectHeader()
+                .doesNotExist(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN)
+        }
+
+    @Test
+    fun `corsConfigurationSource should allow configured origin`() {
+        val securityConfig = SecurityConfig(jwtAuthenticationManager, "http://localhost:8080")
+        val source = securityConfig.corsConfigurationSource()
+        val exchange =
+            MockServerWebExchange.from(
+                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build()
+            )
+        val config = source.getCorsConfiguration(exchange)
+        assertThat(config).isNotNull()
+        assertThat(config!!.allowedOrigins).contains("http://localhost:8080")
+    }
+
+    @Test
+    fun `corsConfigurationSource should support multiple origins`() {
+        val securityConfig =
+            SecurityConfig(
+                jwtAuthenticationManager,
+                "http://localhost:8080,https://your-production-domain.com",
+            )
+        val source = securityConfig.corsConfigurationSource()
+        val exchange =
+            MockServerWebExchange.from(
+                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build()
+            )
+        val config = source.getCorsConfiguration(exchange)
+        assertThat(config).isNotNull()
+        assertThat(config!!.allowedOrigins)
+            .containsExactly(
+                "http://localhost:8080",
+                "https://your-production-domain.com",
+            )
     }
 }

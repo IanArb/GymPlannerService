@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -56,6 +57,30 @@ class PersonalTrainerController(
         @RequestParam
         gymLocation: GymLocation,
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
+
+    @Operation(
+        summary = "Find available personal trainers by date",
+        description = "Retrieve all personal trainers scheduled to work on a given date",
+    )
+    @ApiResponses(
+        value =
+            [
+                ApiResponse(
+                    responseCode = "200",
+                    description = "Successful retrieval of available trainers"
+                ),
+            ],
+    )
+    @GetMapping("/available")
+    fun findAvailableTrainersByDate(
+        @Parameter(
+            description = "Date to check availability (ISO format: yyyy-MM-dd)",
+            required = true,
+            schema = Schema(type = "string", format = "date"),
+        )
+        @RequestParam
+        date: LocalDate,
+    ): Flow<PersonalTrainer> = service.findAvailableTrainersByDate(date)
 
     @Operation(summary = "Find a personal trainer", description = "Find a new personal trainer")
     @ApiResponses(

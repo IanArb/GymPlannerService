@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository
 interface PersonalTrainerRepository : CoroutineCrudRepository<PersonalTrainer, String> {
     @Query("{'gymLocation': ?0}")
     fun findAllByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
+
+    @Query("{'schedule.dayOfWeek': ?0}")
+    fun findAllByScheduleDayOfWeek(dayOfWeek: String): Flow<PersonalTrainer>
 }

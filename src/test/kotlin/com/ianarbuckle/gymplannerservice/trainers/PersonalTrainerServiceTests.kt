@@ -9,7 +9,10 @@ import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerServiceImp
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import java.time.DayOfWeek
+import java.time.LocalDate
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -65,5 +68,34 @@ class PersonalTrainerServiceTests {
         personalTrainerService.updateTrainer(personalTrainer)
 
         coVerify { personalTrainerRepository.save(personalTrainer) }
+    }
+
+    @Test
+    fun `test find available trainers by date returns trainers scheduled on that day`() = runTest {
+        val date = LocalDate.of(2026, 4, 21) // Tuesday
+        val trainers = PersonalTrainerDataProvider.personalTrainers()
+        coEvery {
+            personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.TUESDAY.name)
+        } returns trainers
+
+        personalTrainerService.findAvailableTrainersByDate(date).test {
+            assertThat(awaitItem()).isEqualTo(trainers.first())
+            assertThat(awaitItem()).isEqualTo(trainers.last())
+            awaitComplete()
+        }
+
+        coVerify { personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.TUESDAY.name) }
+    }
+
+    @Test
+    fun `test find available trainers by date returns empty when none scheduled`() = runTest {
+        val date = LocalDate.of(2026, 4, 19) // Sunday
+        coEvery {
+            personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name)
+        } returns flowOf()
+
+        personalTrainerService.findAvailableTrainersByDate(date).test { awaitComplete() }
+
+        coVerify { personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name) }
     }
 }

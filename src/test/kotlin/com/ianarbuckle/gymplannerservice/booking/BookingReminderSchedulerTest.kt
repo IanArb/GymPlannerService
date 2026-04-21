@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.booking
 
-import BookingReminderScheduler
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.booking.data.BookingRepository
 import com.ianarbuckle.gymplannerservice.fcm.FcmSender

@@ -1,11 +1,14 @@
 package com.ianarbuckle.gymplannerservice.trainers.data
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 interface PersonalTrainersService {
     fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
+
+    fun findScheduledTrainersByDate(date: LocalDate): Flow<PersonalTrainer>
 
     suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer
 
@@ -38,6 +41,9 @@ class PersonalTrainerServiceImpl(
     override suspend fun updateTrainer(personalTrainer: PersonalTrainer) {
         repository.save(personalTrainer).takeIf { repository.existsById(personalTrainer.id ?: "") }
     }
+
+    override fun findScheduledTrainersByDate(date: LocalDate): Flow<PersonalTrainer> =
+        repository.findAllByScheduleDayOfWeek(date.dayOfWeek.name)
 
     override suspend fun findById(id: String): PersonalTrainer? = repository.findById(id)
 }

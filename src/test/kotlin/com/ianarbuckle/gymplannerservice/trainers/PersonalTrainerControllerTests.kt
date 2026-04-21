@@ -4,6 +4,7 @@ import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
@@ -86,5 +87,39 @@ class PersonalTrainerControllerTests {
         `when`(personalTrainersService.deleteTrainerById("1")).thenReturn(Unit)
 
         webTestClient.delete().uri("/api/v1/personal_trainers/1").exchange().expectStatus().isOk
+    }
+
+    @Test
+    fun `should return available trainers for a given date`() = runTest {
+        val date = LocalDate.of(2026, 4, 21)
+        val trainers = PersonalTrainerDataProvider.personalTrainers()
+        `when`(personalTrainersService.findScheduledTrainersByDate(date)).thenReturn(trainers)
+
+        webTestClient
+            .get()
+            .uri("/api/v1/personal_trainers/schedule?date=2026-04-21")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk
+            .expectBodyList(PersonalTrainer::class.java)
+            .hasSize(2)
+    }
+
+    @Test
+    fun `should return empty list when no trainers are available on a given date`() = runTest {
+        val date = LocalDate.of(2026, 4, 19)
+        `when`(personalTrainersService.findScheduledTrainersByDate(date))
+            .thenReturn(kotlinx.coroutines.flow.flowOf())
+
+        webTestClient
+            .get()
+            .uri("/api/v1/personal_trainers/schedule?date=2026-04-19")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk
+            .expectBodyList(PersonalTrainer::class.java)
+            .hasSize(0)
     }
 }

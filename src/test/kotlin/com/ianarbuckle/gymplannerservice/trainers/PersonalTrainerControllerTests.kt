@@ -97,7 +97,7 @@ class PersonalTrainerControllerTests {
 
         webTestClient
             .get()
-            .uri("/api/v1/personal_trainers/available?date=2026-04-21")
+            .uri("/api/v1/personal_trainers/schedule?date=2026-04-21")
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus()
@@ -114,7 +114,7 @@ class PersonalTrainerControllerTests {
 
         webTestClient
             .get()
-            .uri("/api/v1/personal_trainers/available?date=2026-04-19")
+            .uri("/api/v1/personal_trainers/schedule?date=2026-04-19")
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus()

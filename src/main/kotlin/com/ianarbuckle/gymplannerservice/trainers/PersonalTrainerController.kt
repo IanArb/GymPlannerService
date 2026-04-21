@@ -71,7 +71,7 @@ class PersonalTrainerController(
                 ),
             ],
     )
-    @GetMapping("/available")
+    @GetMapping("/schedule")
     fun findScheduledTrainersByDate(
         @Parameter(
             description = "Date to find scheduled trainers (ISO format: yyyy-MM-dd)",

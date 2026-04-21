@@ -46,7 +46,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-in")
+            .uri("/api/v1/trainers/1/check-in")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -67,7 +67,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/999/check-in")
+            .uri("/api/v1/trainers/999/check-in")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -83,7 +83,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-in")
+            .uri("/api/v1/trainers/1/check-in")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -99,7 +99,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-in")
+            .uri("/api/v1/trainers/1/check-in")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -122,7 +122,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-in")
+            .uri("/api/v1/trainers/1/check-in")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -142,7 +142,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-out")
+            .uri("/api/v1/trainers/1/check-out")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -164,7 +164,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/999/check-out")
+            .uri("/api/v1/trainers/999/check-out")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -181,7 +181,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-out")
+            .uri("/api/v1/trainers/1/check-out")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -198,7 +198,7 @@ class CheckInControllerTests {
 
         webTestClient
             .post()
-            .uri("/api/v1/personal_trainers/1/check-out")
+            .uri("/api/v1/trainers/1/check-out")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()

@@ -1,6 +1,7 @@
 package com.ianarbuckle.gymplannerservice.checkin.data
 
 import com.google.common.truth.Truth
+import com.ianarbuckle.gymplannerservice.checkin.exception.InvalidCheckOutTimeException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedOutException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotCheckedInException
@@ -224,6 +225,26 @@ class CheckInServiceTests {
 
         assertThrows<TrainerNotCheckedInException> { service.checkOut("1", checkOutTime) }
     }
+
+    @Test
+    fun `should throw InvalidCheckOutTimeException when check-out time is before check-in time`() =
+        runTest {
+            val trainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            val checkInTime = LocalDateTime.of(2026, 4, 21, 9, 0)
+            val checkOutTime = LocalDateTime.of(2026, 4, 21, 8, 0)
+            val existing = CheckInDataProvider.createCheckIn(checkInTime = checkInTime)
+
+            coEvery { personalTrainerRepository.findById("1") } returns trainer
+            coEvery {
+                checkInRepository.findByTrainerIdAndCheckInTimeBetween(
+                    "1",
+                    checkOutTime.toLocalDate().atStartOfDay(),
+                    checkOutTime.toLocalDate().atStartOfDay().plusDays(1),
+                )
+            } returns existing
+
+            assertThrows<InvalidCheckOutTimeException> { service.checkOut("1", checkOutTime) }
+        }
 
     @Test
     fun `should throw TrainerAlreadyCheckedOutException when trainer already checked out`() =

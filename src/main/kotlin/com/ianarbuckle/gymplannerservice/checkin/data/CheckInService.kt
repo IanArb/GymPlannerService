@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.checkin.data
 
+import com.ianarbuckle.gymplannerservice.checkin.exception.InvalidCheckOutTimeException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedOutException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotCheckedInException
@@ -72,6 +73,8 @@ class CheckInServiceImpl(
                 ?: throw TrainerNotCheckedInException()
 
         if (existing.checkOutTime != null) throw TrainerAlreadyCheckedOutException()
+
+        if (!checkOutTime.isAfter(existing.checkInTime)) throw InvalidCheckOutTimeException()
 
         val updatedCheckIn = checkInRepository.save(existing.copy(checkOutTime = checkOutTime))
 

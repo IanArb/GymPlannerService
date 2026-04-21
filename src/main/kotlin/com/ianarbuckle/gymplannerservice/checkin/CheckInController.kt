@@ -4,6 +4,7 @@ import com.ianarbuckle.gymplannerservice.checkin.data.CheckIn
 import com.ianarbuckle.gymplannerservice.checkin.data.CheckInRequest
 import com.ianarbuckle.gymplannerservice.checkin.data.CheckInService
 import com.ianarbuckle.gymplannerservice.checkin.data.CheckOutRequest
+import com.ianarbuckle.gymplannerservice.checkin.exception.InvalidCheckOutTimeException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedOutException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotCheckedInException
@@ -113,6 +114,12 @@ class CheckInController(
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Trainer has already checked out today",
+                ex
+            )
+        } catch (ex: InvalidCheckOutTimeException) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Check-out time must be after check-in time",
                 ex
             )
         }

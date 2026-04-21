@@ -62,7 +62,8 @@ class CheckInServiceImpl(
     }
 
     override suspend fun checkOut(trainerId: String, checkOutTime: LocalDateTime): CheckIn {
-        personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
+        val trainer =
+            personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
 
         val startOfDay = checkOutTime.toLocalDate().atStartOfDay()
         val endOfDay = startOfDay.plusDays(1)
@@ -74,12 +75,9 @@ class CheckInServiceImpl(
 
         val updatedCheckIn = checkInRepository.save(existing.copy(checkOutTime = checkOutTime))
 
-        val updatedTrainer = personalTrainerRepository.findById(trainerId)
-        updatedTrainer?.let {
-            personalTrainerRepository.save(
-                updatedTrainer.copy(availabilityStatus = TrainerAvailabilityStatus.UNAVAILABLE)
-            )
-        }
+        personalTrainerRepository.save(
+            trainer.copy(availabilityStatus = TrainerAvailabilityStatus.UNAVAILABLE)
+        )
 
         return updatedCheckIn
     }

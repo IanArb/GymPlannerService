@@ -93,7 +93,7 @@ class PersonalTrainerControllerTests {
     fun `should return available trainers for a given date`() = runTest {
         val date = LocalDate.of(2026, 4, 21)
         val trainers = PersonalTrainerDataProvider.personalTrainers()
-        `when`(personalTrainersService.findAvailableTrainersByDate(date)).thenReturn(trainers)
+        `when`(personalTrainersService.findScheduledTrainersByDate(date)).thenReturn(trainers)
 
         webTestClient
             .get()
@@ -109,7 +109,7 @@ class PersonalTrainerControllerTests {
     @Test
     fun `should return empty list when no trainers are available on a given date`() = runTest {
         val date = LocalDate.of(2026, 4, 19)
-        `when`(personalTrainersService.findAvailableTrainersByDate(date))
+        `when`(personalTrainersService.findScheduledTrainersByDate(date))
             .thenReturn(kotlinx.coroutines.flow.flowOf())
 
         webTestClient

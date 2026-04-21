@@ -128,6 +128,24 @@ class CheckInServiceTests {
         }
 
     @Test
+    fun `should throw TrainerNotScheduledException when trainer checks in after shift ends`() =
+        runTest {
+            val trainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            val checkInTime = LocalDateTime.of(2026, 4, 21, 17, 0)
+
+            coEvery { personalTrainerRepository.findById("1") } returns trainer
+            coEvery {
+                checkInRepository.findByTrainerIdAndCheckInTimeBetween(
+                    "1",
+                    checkInTime.toLocalDate().atStartOfDay(),
+                    checkInTime.toLocalDate().atStartOfDay().plusDays(1),
+                )
+            } returns null
+
+            assertThrows<TrainerNotScheduledException> { service.checkIn("1", checkInTime) }
+        }
+
+    @Test
     fun `should throw TrainerAlreadyCheckedInException when trainer already checked in today`() =
         runTest {
             val trainer = PersonalTrainerDataProvider.createPersonalTrainer()

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 interface PersonalTrainersService {
     fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
 
-    fun findAvailableTrainersByDate(date: LocalDate): Flow<PersonalTrainer>
+    fun findScheduledTrainersByDate(date: LocalDate): Flow<PersonalTrainer>
 
     suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer
 
@@ -42,7 +42,7 @@ class PersonalTrainerServiceImpl(
         repository.save(personalTrainer).takeIf { repository.existsById(personalTrainer.id ?: "") }
     }
 
-    override fun findAvailableTrainersByDate(date: LocalDate): Flow<PersonalTrainer> =
+    override fun findScheduledTrainersByDate(date: LocalDate): Flow<PersonalTrainer> =
         repository.findAllByScheduleDayOfWeek(date.dayOfWeek.name)
 
     override suspend fun findById(id: String): PersonalTrainer? = repository.findById(id)

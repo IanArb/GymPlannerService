@@ -59,7 +59,7 @@ class PersonalTrainerController(
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
 
     @Operation(
-        summary = "Find available personal trainers by date",
+        summary = "Find personal trainers scheduled by date",
         description = "Retrieve all personal trainers scheduled to work on a given date",
     )
     @ApiResponses(
@@ -67,20 +67,20 @@ class PersonalTrainerController(
             [
                 ApiResponse(
                     responseCode = "200",
-                    description = "Successful retrieval of available trainers"
+                    description = "Successful retrieval of scheduled trainers"
                 ),
             ],
     )
     @GetMapping("/available")
-    fun findAvailableTrainersByDate(
+    fun findScheduledTrainersByDate(
         @Parameter(
-            description = "Date to check availability (ISO format: yyyy-MM-dd)",
+            description = "Date to find scheduled trainers (ISO format: yyyy-MM-dd)",
             required = true,
             schema = Schema(type = "string", format = "date"),
         )
         @RequestParam
         date: LocalDate,
-    ): Flow<PersonalTrainer> = service.findAvailableTrainersByDate(date)
+    ): Flow<PersonalTrainer> = service.findScheduledTrainersByDate(date)
 
     @Operation(summary = "Find a personal trainer", description = "Find a new personal trainer")
     @ApiResponses(

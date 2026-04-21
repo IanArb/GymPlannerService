@@ -78,7 +78,7 @@ class PersonalTrainerServiceTests {
             personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.TUESDAY.name)
         } returns trainers
 
-        personalTrainerService.findAvailableTrainersByDate(date).test {
+        personalTrainerService.findScheduledTrainersByDate(date).test {
             assertThat(awaitItem()).isEqualTo(trainers.first())
             assertThat(awaitItem()).isEqualTo(trainers.last())
             awaitComplete()
@@ -94,7 +94,7 @@ class PersonalTrainerServiceTests {
             personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name)
         } returns flowOf()
 
-        personalTrainerService.findAvailableTrainersByDate(date).test { awaitComplete() }
+        personalTrainerService.findScheduledTrainersByDate(date).test { awaitComplete() }
 
         coVerify { personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name) }
     }

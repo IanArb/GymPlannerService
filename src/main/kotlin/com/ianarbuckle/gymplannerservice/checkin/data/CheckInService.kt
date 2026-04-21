@@ -36,6 +36,8 @@ class CheckInServiceImpl(
             trainer.schedule.find { it.dayOfWeek == checkInTime.dayOfWeek }
                 ?: throw TrainerNotScheduledException()
 
+        if (!checkInTime.toLocalTime().isBefore(shift.endTime)) throw TrainerNotScheduledException()
+
         val status =
             if (!checkInTime.toLocalTime().isAfter(shift.startTime)) {
                 CheckInStatus.ON_TIME

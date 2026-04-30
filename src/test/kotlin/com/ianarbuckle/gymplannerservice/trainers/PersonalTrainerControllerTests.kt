@@ -90,14 +90,16 @@ class PersonalTrainerControllerTests {
     }
 
     @Test
-    fun `should return available trainers for a given date`() = runTest {
+    fun `should return scheduled trainers for a given date and location`() = runTest {
         val date = LocalDate.of(2026, 4, 21)
+        val gymLocation = GymLocation.CLONTARF
         val trainers = PersonalTrainerDataProvider.personalTrainers()
-        `when`(personalTrainersService.findScheduledTrainersByDate(date)).thenReturn(trainers)
+        `when`(personalTrainersService.findScheduledTrainersByDate(date, gymLocation))
+            .thenReturn(trainers)
 
         webTestClient
             .get()
-            .uri("/api/v1/personal_trainers/schedule?date=2026-04-21")
+            .uri("/api/v1/personal_trainers/schedule?date=2026-04-21&gymLocation=CLONTARF")
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus()
@@ -107,19 +109,21 @@ class PersonalTrainerControllerTests {
     }
 
     @Test
-    fun `should return empty list when no trainers are available on a given date`() = runTest {
-        val date = LocalDate.of(2026, 4, 19)
-        `when`(personalTrainersService.findScheduledTrainersByDate(date))
-            .thenReturn(kotlinx.coroutines.flow.flowOf())
+    fun `should return empty list when no trainers are scheduled on a given date and location`() =
+        runTest {
+            val date = LocalDate.of(2026, 4, 19)
+            val gymLocation = GymLocation.CLONTARF
+            `when`(personalTrainersService.findScheduledTrainersByDate(date, gymLocation))
+                .thenReturn(kotlinx.coroutines.flow.flowOf())
 
-        webTestClient
-            .get()
-            .uri("/api/v1/personal_trainers/schedule?date=2026-04-19")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBodyList(PersonalTrainer::class.java)
-            .hasSize(0)
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/personal_trainers/schedule?date=2026-04-19&gymLocation=CLONTARF")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBodyList(PersonalTrainer::class.java)
+                .hasSize(0)
+        }
 }

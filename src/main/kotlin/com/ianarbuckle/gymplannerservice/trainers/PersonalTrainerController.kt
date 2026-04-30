@@ -59,8 +59,9 @@ class PersonalTrainerController(
     ): Flow<PersonalTrainer> = service.findTrainersByGymLocation(gymLocation)
 
     @Operation(
-        summary = "Find personal trainers scheduled by date",
-        description = "Retrieve all personal trainers scheduled to work on a given date",
+        summary = "Find personal trainers scheduled by date and location",
+        description =
+            "Retrieve all personal trainers scheduled to work on a given date at a given gym location",
     )
     @ApiResponses(
         value =
@@ -80,7 +81,14 @@ class PersonalTrainerController(
         )
         @RequestParam
         date: LocalDate,
-    ): Flow<PersonalTrainer> = service.findScheduledTrainersByDate(date)
+        @Parameter(
+            description = "Gym location",
+            required = true,
+            schema = Schema(implementation = GymLocation::class),
+        )
+        @RequestParam
+        gymLocation: GymLocation,
+    ): Flow<PersonalTrainer> = service.findScheduledTrainersByDate(date, gymLocation)
 
     @Operation(summary = "Find a personal trainer", description = "Find a new personal trainer")
     @ApiResponses(

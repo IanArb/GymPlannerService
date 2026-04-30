@@ -11,6 +11,9 @@ interface PersonalTrainerRepository : CoroutineCrudRepository<PersonalTrainer, S
     @Query("{'gymLocation': ?0}")
     fun findAllByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
 
-    @Query("{'schedule.dayOfWeek': ?0}")
-    fun findAllByScheduleDayOfWeek(dayOfWeek: String): Flow<PersonalTrainer>
+    @Query("{'schedule.dayOfWeek': ?0, 'gymLocation': ?1}")
+    fun findAllByScheduleDayOfWeekAndGymLocation(
+        dayOfWeek: String,
+        gymLocation: GymLocation,
+    ): Flow<PersonalTrainer>
 }

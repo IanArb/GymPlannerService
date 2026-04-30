@@ -71,31 +71,53 @@ class PersonalTrainerServiceTests {
     }
 
     @Test
-    fun `test find available trainers by date returns trainers scheduled on that day`() = runTest {
-        val date = LocalDate.of(2026, 4, 21) // Tuesday
-        val trainers = PersonalTrainerDataProvider.personalTrainers()
-        coEvery {
-            personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.TUESDAY.name)
-        } returns trainers
+    fun `test find scheduled trainers by date and location returns trainers scheduled on that day`() =
+        runTest {
+            val date = LocalDate.of(2026, 4, 21) // Tuesday
+            val gymLocation = GymLocation.CLONTARF
+            val trainers = PersonalTrainerDataProvider.personalTrainers()
+            coEvery {
+                personalTrainerRepository.findAllByScheduleDayOfWeekAndGymLocation(
+                    DayOfWeek.TUESDAY.name,
+                    gymLocation,
+                )
+            } returns trainers
 
-        personalTrainerService.findScheduledTrainersByDate(date).test {
-            assertThat(awaitItem()).isEqualTo(trainers.first())
-            assertThat(awaitItem()).isEqualTo(trainers.last())
-            awaitComplete()
+            personalTrainerService.findScheduledTrainersByDate(date, gymLocation).test {
+                assertThat(awaitItem()).isEqualTo(trainers.first())
+                assertThat(awaitItem()).isEqualTo(trainers.last())
+                awaitComplete()
+            }
+
+            coVerify {
+                personalTrainerRepository.findAllByScheduleDayOfWeekAndGymLocation(
+                    DayOfWeek.TUESDAY.name,
+                    gymLocation,
+                )
+            }
         }
 
-        coVerify { personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.TUESDAY.name) }
-    }
-
     @Test
-    fun `test find available trainers by date returns empty when none scheduled`() = runTest {
-        val date = LocalDate.of(2026, 4, 19) // Sunday
-        coEvery {
-            personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name)
-        } returns flowOf()
+    fun `test find scheduled trainers by date and location returns empty when none scheduled`() =
+        runTest {
+            val date = LocalDate.of(2026, 4, 19) // Sunday
+            val gymLocation = GymLocation.CLONTARF
+            coEvery {
+                personalTrainerRepository.findAllByScheduleDayOfWeekAndGymLocation(
+                    DayOfWeek.SUNDAY.name,
+                    gymLocation,
+                )
+            } returns flowOf()
 
-        personalTrainerService.findScheduledTrainersByDate(date).test { awaitComplete() }
+            personalTrainerService.findScheduledTrainersByDate(date, gymLocation).test {
+                awaitComplete()
+            }
 
-        coVerify { personalTrainerRepository.findAllByScheduleDayOfWeek(DayOfWeek.SUNDAY.name) }
-    }
+            coVerify {
+                personalTrainerRepository.findAllByScheduleDayOfWeekAndGymLocation(
+                    DayOfWeek.SUNDAY.name,
+                    gymLocation,
+                )
+            }
+        }
 }

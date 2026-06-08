@@ -5,7 +5,6 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.LoginRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
-import com.ianarbuckle.gymplannerservice.authentication.data.exception.RoleNotFoundException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
@@ -231,43 +230,6 @@ class AuthenticationControllerTests {
 
         whenever(authenticationService.createUser(signUpRequest))
             .thenThrow(EmailAlreadyExistsException())
-
-        webTestClient
-            .post()
-            .uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(signUpRequestJson))
-            .exchange()
-            .expectStatus()
-            .isBadRequest
-            .expectBody()
-    }
-
-    @Test
-    fun `test register with invalid role`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "existinguser",
-                email = "newuser@mail.com",
-                password = "password",
-                roles = setOf("invalid"),
-                firstName = "New",
-                surname = "User",
-            )
-        val signUpRequestJson =
-            """
-                {
-                    "username": "${signUpRequest.username}",
-                    "email": "${signUpRequest.email}",
-                    "password": "${signUpRequest.password}",
-                    "roles": ["invalid"],
-                    "firstName": "${signUpRequest.firstName}",
-                    "surname": "${signUpRequest.surname}"
-                }
-                """
-                .trimIndent()
-
-        whenever(authenticationService.createUser(signUpRequest)).thenThrow(RoleNotFoundException())
 
         webTestClient
             .post()

@@ -5,7 +5,6 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.LoginRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
-import com.ianarbuckle.gymplannerservice.authentication.data.exception.RoleNotFoundException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
@@ -81,7 +80,7 @@ class AuthenticationController(
                 ),
                 ApiResponse(
                     responseCode = "400",
-                    description = "Bad request - User already exists or invalid role",
+                    description = "Bad request - User already exists",
                 ),
             ],
     )
@@ -101,12 +100,6 @@ class AuthenticationController(
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Email already exists",
-                ex,
-            )
-        } catch (ex: RoleNotFoundException) {
-            throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Role already exists",
                 ex,
             )
         }

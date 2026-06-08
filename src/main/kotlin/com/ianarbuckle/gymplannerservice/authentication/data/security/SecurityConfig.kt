@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.security
 
+import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -74,6 +75,13 @@ class SecurityConfig(
                         "/api/v1/auth/**",
                     )
                     .permitAll()
+                    .pathMatchers(
+                        "/api/v1/facilities/**",
+                        "/api/v1/personal_trainers/schedule/**",
+                        "/api/v1/personal_trainers/schedule",
+                        "/api/v1/trainers/**",
+                    )
+                    .hasAnyAuthority(ERole.ROLE_MODERATOR.name, ERole.ROLE_ADMIN.name)
                     .anyExchange()
                     .authenticated()
             }

@@ -1,7 +1,6 @@
 package com.ianarbuckle.gymplannerservice.mocks
 
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 
 object UserDataProvider {
@@ -11,7 +10,7 @@ object UserDataProvider {
         username: String = "testuser",
         password: String = "encodedPassword",
         email: String = "user@mail.com",
-        roles: Set<Role> = setOf(Role(id = "1", name = ERole.ROLE_USER)),
+        roles: Set<ERole> = setOf(ERole.ROLE_USER),
         pushNotificationToken: String = "pushToken"
     ): User =
         User(

@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.domain
 
+import com.ianarbuckle.gymplannerservice.common.GymLocation
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
@@ -20,4 +21,5 @@ data class SignUpRequest(
     @NotBlank @Size(min = 6, max = 40) val password: String,
     val roles: Set<String>? = emptySet(),
     val pushNotificationToken: String? = null,
+    val gymLocation: GymLocation? = null,
 )

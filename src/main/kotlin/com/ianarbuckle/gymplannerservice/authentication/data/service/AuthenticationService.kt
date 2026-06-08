@@ -5,13 +5,10 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.LoginRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
-import com.ianarbuckle.gymplannerservice.authentication.data.exception.RoleNotFoundException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.RoleRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
@@ -31,7 +28,6 @@ interface AuthenticationService {
 class AuthenticationServiceImpl(
     private val userRepository: UserRepository,
     private val userProfileRepository: UserProfileRepository,
-    private val rolesRepository: RoleRepository,
     private val encoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
 ) : AuthenticationService {
@@ -64,36 +60,20 @@ class AuthenticationServiceImpl(
         }
 
         val strRoles = signUpRequest.roles
-        val roles: MutableSet<Role> = HashSet()
-
-        if (strRoles?.isEmpty() == true) {
-            val userRole: Role =
-                rolesRepository.findByName(ERole.ROLE_USER) ?: throw RoleNotFoundException()
-            roles.add(userRole)
-        } else {
-            strRoles?.map { role ->
-                when (role) {
-                    "admin" -> {
-                        val adminRole: Role =
-                            rolesRepository.findByName(ERole.ROLE_ADMIN)
-                                ?: throw RoleNotFoundException()
-                        roles.add(adminRole)
+        val roles: MutableSet<ERole> =
+            if (strRoles.isNullOrEmpty()) {
+                mutableSetOf(ERole.ROLE_USER)
+            } else {
+                strRoles
+                    .map { role ->
+                        when (role) {
+                            "admin" -> ERole.ROLE_ADMIN
+                            "mod" -> ERole.ROLE_MODERATOR
+                            else -> ERole.ROLE_USER
+                        }
                     }
-                    "mod" -> {
-                        val modRole: Role =
-                            rolesRepository.findByName(ERole.ROLE_MODERATOR)
-                                ?: throw RoleNotFoundException()
-                        roles.add(modRole)
-                    }
-                    else -> {
-                        val userRole: Role =
-                            rolesRepository.findByName(ERole.ROLE_USER)
-                                ?: throw RoleNotFoundException()
-                        roles.add(userRole)
-                    }
-                }
+                    .toMutableSet()
             }
-        }
 
         val userId = ObjectId().toHexString()
 
@@ -115,6 +95,7 @@ class AuthenticationServiceImpl(
                 firstName = signUpRequest.firstName,
                 surname = signUpRequest.surname,
                 email = signUpRequest.email,
+                gymLocation = signUpRequest.gymLocation,
             ),
         )
 

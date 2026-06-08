@@ -2,7 +2,6 @@ package com.ianarbuckle.gymplannerservice.authentication.security
 
 import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.model.Role
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.security.BearerToken
@@ -35,7 +34,7 @@ class JWTAuthenticationManagerTests {
                 id = "123456",
                 username = username,
                 password = "password",
-                roles = setOf(Role("1", ERole.ROLE_USER)),
+                roles = setOf(ERole.ROLE_USER),
                 email = "test@mail.com",
             )
 
@@ -103,7 +102,7 @@ class JWTAuthenticationManagerTests {
                 id = "123456",
                 username = username,
                 password = "password",
-                roles = setOf(Role("1", ERole.ROLE_USER)),
+                roles = setOf(ERole.ROLE_USER),
                 email = "test@mail.com",
             )
 

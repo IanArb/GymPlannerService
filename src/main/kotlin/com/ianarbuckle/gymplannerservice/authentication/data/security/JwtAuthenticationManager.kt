@@ -29,8 +29,6 @@ private const val SUBSTRING_LENGTH = 7
 
 @Component
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
-    private val logger: Logger =
-        LoggerFactory.getLogger(JwtServerAuthenticationConverter::class.java)
 
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> {
         val header = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)

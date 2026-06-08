@@ -65,14 +65,14 @@ class JWTAuthenticationManager(
                 ?: throw BadCredentialsException("No User found")
 
         val authorities = user.roles.map { SimpleGrantedAuthority(it.name) }
-        logger.info(
-            "Authenticated user='{}' roles={} authorities={}",
-            user.username,
-            user.roles,
-            authorities,
-        )
 
         if (jwtUtil.validateToken(token.value, user.username)) {
+            logger.info(
+                "Authenticated user='{}' roles={} authorities={}",
+                user.username,
+                user.roles,
+                authorities,
+            )
             return UsernamePasswordAuthenticationToken(user.username, user.password, authorities)
         }
 

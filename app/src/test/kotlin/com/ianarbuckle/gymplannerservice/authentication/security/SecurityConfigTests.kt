@@ -5,12 +5,12 @@ import com.ianarbuckle.gymplannerservice.authentication.AuthenticationController
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JWTAuthenticationManager
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtServerAuthenticationConverter
-import com.ianarbuckle.gymplannerservice.authentication.data.security.SecurityConfig
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusController
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusService
+import com.ianarbuckle.gymplannerservice.security.JWTAuthenticationManager
+import com.ianarbuckle.gymplannerservice.security.JwtServerAuthenticationConverter
+import com.ianarbuckle.gymplannerservice.security.SecurityConfig
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers

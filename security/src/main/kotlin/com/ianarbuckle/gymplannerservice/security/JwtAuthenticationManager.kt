@@ -1,6 +1,5 @@
-package com.ianarbuckle.gymplannerservice.authentication.data.security
+package com.ianarbuckle.gymplannerservice.security
 
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import kotlinx.coroutines.reactor.mono
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -42,7 +41,7 @@ class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
 @Component
 class JWTAuthenticationManager(
     private val jwtUtil: JwtUtils,
-    private val userRepository: UserRepository,
+    private val userLookup: SecurityUserLookup,
 ) : ReactiveAuthenticationManager {
     private val logger: Logger = LoggerFactory.getLogger(JWTAuthenticationManager::class.java)
 
@@ -60,16 +59,15 @@ class JWTAuthenticationManager(
     private suspend fun validate(token: BearerToken): Authentication {
         val username = jwtUtil.extractUsername(token.value)
         val user =
-            userRepository.findByUsername(username)
+            userLookup.findByUsername(username)
                 ?: throw BadCredentialsException("No User found")
 
-        val authorities = user.roles.map { SimpleGrantedAuthority(it.name) }
+        val authorities = user.authorities.map { SimpleGrantedAuthority(it) }
 
         if (jwtUtil.validateToken(token.value, user.username)) {
             logger.info(
-                "Authenticated user='{}' roles={} authorities={}",
+                "Authenticated user='{}' authorities={}",
                 user.username,
-                user.roles,
                 authorities,
             )
             return UsernamePasswordAuthenticationToken(user.username, user.password, authorities)

@@ -1,6 +1,5 @@
-package com.ianarbuckle.gymplannerservice.authentication.data.security
+package com.ianarbuckle.gymplannerservice.security
 
-import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -79,7 +78,7 @@ class SecurityConfig(
                         "/api/v1/personal_trainers/schedule/**",
                         "/api/v1/personal_trainers/schedule",
                         "/api/v1/trainers/**",
-                    ).hasAnyAuthority(ERole.ROLE_MODERATOR.name, ERole.ROLE_ADMIN.name)
+                    ).hasAnyAuthority(ROLE_MODERATOR, ROLE_ADMIN)
                     .anyExchange()
                     .authenticated()
             }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
@@ -93,5 +92,9 @@ class SecurityConfig(
 
     companion object {
         private const val CORS_MAX_AGE = 3600L
+
+        // Authority names; must match the domain's ERole enum constant names.
+        private const val ROLE_MODERATOR = "ROLE_MODERATOR"
+        private const val ROLE_ADMIN = "ROLE_ADMIN"
     }
 }

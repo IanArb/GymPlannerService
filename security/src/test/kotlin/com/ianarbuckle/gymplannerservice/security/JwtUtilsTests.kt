@@ -1,7 +1,6 @@
-package com.ianarbuckle.gymplannerservice.authentication.security
+package com.ianarbuckle.gymplannerservice.security
 
 import com.google.common.truth.Truth.assertThat
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import java.util.Date
 import kotlin.test.Test
 

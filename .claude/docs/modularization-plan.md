@@ -162,19 +162,56 @@ Spring/Jakarta libs (no dependency on `:app`).
 
 ---
 
-## Phase 3 — Extract `:security`
+## Phase 3 — Extract `:security` ✅ DONE
 
-Move the cross-cutting JWT / filter-chain infrastructure into `:security`
-(depends only on `:core-utils`). This is the safe "authentication starting point."
+Move the cross-cutting JWT / filter-chain infrastructure into `:security`. This
+is the safe "authentication starting point."
 
-- [ ] Create `:security` module.
-- [ ] Move `SecurityConfig`, `JwtUtils`, `JwtAuthenticationManager`,
-      `AuthEntryPointJwt` (the `authentication/data/security/` package).
-- [ ] Resolve any references back into auth *domain* via an interface/port so
-      `:security` stays domain-free.
-- [ ] `:app` (and later feature modules) depend on `:security`.
+- [x] Created `:security` module (applies `gymplanner.spring-conventions` +
+      spring-security + webflux + jjwt). It depends on **no** project — nothing
+      it moved uses `:core-utils`, so it's a true leaf (not `:core-utils` as
+      originally sketched).
+- [x] Moved `SecurityConfig`, `JwtUtils`, `JwtAuthenticationManager` (incl.
+      `BearerToken` + `JwtServerAuthenticationConverter`) into a **new package**
+      `com.ianarbuckle.gymplannerservice.security` (kept under the app base
+      package so `@SpringBootApplication` still component-scans them; avoids
+      splitting `authentication.*` across two modules).
+- [x] Moved `TokenExpiredException` into `:security` (only `JwtUtils` used it);
+      removed it from the auth domain's `Exceptions.kt`.
+- [x] **Broke the coupling back into the auth domain with a port:** added
+      `SecurityUserLookup` + `AuthenticatedUser` interfaces in `:security`;
+      `JWTAuthenticationManager` depends on the port instead of `UserRepository`.
+      The app provides `UserSecurityLookup` (a `@Component` adapter backed by
+      `UserRepository`, mapping `User.roles` → authority-name strings). This
+      inverts the dependency: `:app` → `:security`, never the reverse.
+- [x] `SecurityConfig` no longer imports `ERole`; role authorities are local
+      `ROLE_MODERATOR`/`ROLE_ADMIN` string constants (must match the domain
+      enum's names).
+- [x] `:app` depends on `implementation(project(":security"))`;
+      `AuthenticationService` updated to import `JwtUtils` from `:security`.
+- [x] Tests: `JwtUtilsTests` + `JWTAuthenticationManagerTests` moved to
+      `:security` (the latter rewired to mock the `SecurityUserLookup` port
+      instead of `UserRepository`/`User`/`ERole`). `SecurityConfigTests` (a
+      `@WebFluxTest` bound to app controllers) and `AuthenticationServiceTests`
+      stayed in `:app` with updated imports.
 
-**Exit criteria:** full suite green; `:security` depends only on `:core-utils`.
+**Deviations from the sketch:**
+  - `AuthEntryPointJwt` was **not** moved — it's dead code (unreferenced, and a
+    servlet `AuthenticationEntryPoint` in a WebFlux app). Left in `:app`'s
+    `authentication.data.security` package; delete or reconcile in Phase 4 rather
+    than drag servlet-api into the clean `:security` module.
+  - `:security` depends on no project (not `:core-utils`).
+
+**Verification note:** the repo has **no full-context `@SpringBootTest`** (slice
+tests only, likely to avoid Firebase `@PostConstruct` init), so the port→adapter
+wiring isn't exercised at runtime by the suite. It's sound by construction:
+single `SecurityUserLookup` impl, both beans under the scanned base package,
+`UserRepository` is a Spring Data bean. A context smoke test could close this gap
+if desired.
+
+**Exit criteria (all met):** `./gradlew clean test spotlessCheck detekt` green
+across all three modules; `:app:bootJar` still produces the runnable fat jar;
+`:security` has no dependency on `:app` (no cycle).
 
 ---
 

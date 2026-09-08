@@ -7,11 +7,11 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlre
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationServiceImpl
 import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.UserDataProvider
+import com.ianarbuckle.gymplannerservice.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import io.mockk.coEvery
 import io.mockk.coVerify

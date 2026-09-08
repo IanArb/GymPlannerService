@@ -10,6 +10,7 @@ description = "app"
 dependencies {
     implementation(project(":core-utils"))
     implementation(project(":security"))
+    implementation(project(":authentication"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)

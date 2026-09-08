@@ -13,6 +13,12 @@ val libs = the<LibrariesForLibs>()
 kotlin {
     jvmToolchain(22)
     compilerOptions {
+        // Emit method parameter names (MethodParameters attribute). Jackson 3 has
+        // no Kotlin module on the classpath and constructs Kotlin data classes via
+        // constructor parameter names — without this, DTOs in library modules fail
+        // to deserialize ("no Creators"). :app already got this from the Spring
+        // Boot plugin; this extends it to every module.
+        javaParameters = true
         freeCompilerArgs.addAll(
             "-Xjsr305=strict",
             "-Xannotation-default-target=param-property",

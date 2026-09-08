@@ -8,7 +8,7 @@ import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotF
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.AvailabilityDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.UserProfileDataProvider

@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.userProfile
 
 import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

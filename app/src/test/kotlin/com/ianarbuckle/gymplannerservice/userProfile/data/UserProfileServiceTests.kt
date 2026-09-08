@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.userProfile.data
 
 import com.google.common.truth.Truth.assertThat
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.UserProfileDataProvider
 import io.mockk.coEvery
 import io.mockk.coVerify

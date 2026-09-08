@@ -7,7 +7,7 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpReques
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses

@@ -31,7 +31,7 @@ class ClassesScheduler(
 
                 val users =
                     userRepository.findAll().filter {
-                        it.pushNotificationToken != null && it.pushNotificationToken.isNotEmpty()
+                        !it.pushNotificationToken.isNullOrEmpty()
                     }
 
                 users.collect { user ->

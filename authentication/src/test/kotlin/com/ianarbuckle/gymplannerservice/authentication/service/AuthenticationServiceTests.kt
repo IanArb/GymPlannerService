@@ -6,13 +6,13 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpReques
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
+import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationServiceImpl
+import com.ianarbuckle.gymplannerservice.authentication.data.service.UserProfileRegistrar
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.mocks.UserDataProvider
 import com.ianarbuckle.gymplannerservice.security.JwtUtils
-import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -26,16 +26,29 @@ import kotlin.test.Test
 
 class AuthenticationServiceTests {
     private val userRepository: UserRepository = mockk()
-    private val userProfileRepository: UserProfileRepository = mockk()
+    private val userProfileRegistrar: UserProfileRegistrar = mockk()
     private val passwordEncoder: PasswordEncoder = mockk()
     private val jwtUtils: JwtUtils = mockk()
 
     private val authenticationService: AuthenticationService =
         AuthenticationServiceImpl(
             userRepository,
-            userProfileRepository,
+            userProfileRegistrar,
             passwordEncoder,
             jwtUtils,
+        )
+
+    private fun testUser(
+        username: String = "testuser",
+        password: String = "encodedPassword",
+    ): User =
+        User(
+            id = "123456",
+            username = username,
+            password = password,
+            email = "user@mail.com",
+            roles = setOf(ERole.ROLE_USER),
+            pushNotificationToken = "pushToken",
         )
 
     @Test
@@ -47,7 +60,7 @@ class AuthenticationServiceTests {
             val jwtToken = "jwtToken"
             val expiration: Long = 1000
 
-            coEvery { userRepository.findByUsername(username) } returns UserDataProvider.createUser()
+            coEvery { userRepository.findByUsername(username) } returns testUser()
             every { passwordEncoder.matches(password, encodedPassword) } returns true
             every { jwtUtils.generateToken(username) } returns jwtToken
             every { jwtUtils.extractExpiration(jwtToken) } returns Date(expiration)
@@ -79,7 +92,7 @@ class AuthenticationServiceTests {
             coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
             coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
             coEvery { userRepository.save(any()) } returnsArgument 0
-            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRegistrar.save(any()) } returns Unit
             every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
             val result = authenticationService.createUser(signUpRequest)
@@ -89,7 +102,7 @@ class AuthenticationServiceTests {
             coVerify { userRepository.existsByUsername(signUpRequest.username) }
             coVerify { userRepository.existsByEmail(signUpRequest.email) }
             coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_USER) }) }
-            coVerify { userProfileRepository.save(any()) }
+            coVerify { userProfileRegistrar.save(any()) }
             verify { passwordEncoder.encode(signUpRequest.password) }
         }
 
@@ -110,12 +123,12 @@ class AuthenticationServiceTests {
             coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
             coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
             coEvery { userRepository.save(any()) } returnsArgument 0
-            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRegistrar.save(any()) } returns Unit
             every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
             authenticationService.createUser(signUpRequest)
 
-            coVerify { userProfileRepository.save(match { it.gymLocation == GymLocation.CLONTARF }) }
+            coVerify { userProfileRegistrar.save(match { it.gymLocation == GymLocation.CLONTARF }) }
         }
 
     @Test
@@ -134,7 +147,7 @@ class AuthenticationServiceTests {
             coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
             coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
             coEvery { userRepository.save(any()) } returnsArgument 0
-            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRegistrar.save(any()) } returns Unit
             every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
             authenticationService.createUser(signUpRequest)
@@ -210,7 +223,7 @@ class AuthenticationServiceTests {
             coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
             coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
             coEvery { userRepository.save(any()) } returnsArgument 0
-            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRegistrar.save(any()) } returns Unit
             every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
             authenticationService.createUser(signUpRequest)

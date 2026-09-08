@@ -215,17 +215,60 @@ across all three modules; `:app:bootJar` still produces the runnable fat jar;
 
 ---
 
-## Phase 4 — Break cycles, then extract `:authentication`
+## Phase 4 — Break cycles, then extract `:authentication` ✅ DONE
 
-- [ ] Relocate misplaced `booking.exception.UserNotFoundException` into `:core-utils`.
-- [ ] Invert `authentication → userProfile` / `authentication → booking` using
-      **ports** (interfaces owned by auth, implemented by consumers) so arrows
-      point one way.
-- [ ] Extract the auth *domain* as `:authentication` (depends on `:core`,
-      `:security`): `AuthenticationController`, `User`, `UserRepository`,
-      `AuthenticationService`, auth `domain`/`exception`.
+- [x] Relocated `UserNotFoundException` from `booking.exception` into `:core-utils`
+      (package `…common`) — it's shared by auth, booking, and userProfile. Updated
+      all 9 importers (main + tests).
+- [x] Broke **authentication → booking**: the only edge was the `UserNotFoundException`
+      import (now in `:core-utils`).
+- [x] Broke **authentication → userProfile** with a port: added `UserProfileRegistrar`
+      in `:authentication` (`AuthenticationService` calls it to persist the profile on
+      registration); `:app`'s userProfile feature provides `UserProfileRegistrarAdapter`
+      (backed by `UserProfileRepository`).
+- [x] Extracted `:authentication` (applies `gymplanner.spring-conventions`; depends on
+      `:core-utils` + `:security`). Moved the whole `authentication` package
+      (Controller, `User`/`ERole`/`UserProfile` model, `UserRepository`, DTOs,
+      exceptions, `AuthenticationService`, and the `UserSecurityLookup` adapter),
+      keeping package names so the ~15 inbound consumers in `:app` need no import
+      changes — just the `implementation(project(":authentication"))` edge.
+- [x] Deleted the dead `AuthEntryPointJwt` (unreferenced servlet entry point).
+- [x] Tests: `AuthenticationServiceTests` (pure MockK) → `:authentication`, rewired to
+      mock `UserProfileRegistrar` and inline its one user fixture (so it no longer needs
+      `:app`'s `UserDataProvider`). `AuthenticationControllerTests` (`@WebFluxTest`) also
+      moved to `:authentication` — this required (a) test deps (`starter-test`,
+      `webflux-test`, `data-mongodb-test`, `flapdoodle`), (b) a copy of
+      `application-test.properties` in the module's test resources, and (c) a local
+      `@SpringBootApplication` test class (`AuthenticationTestApplication`): the real app
+      class is in `:app`, so `@WebFluxTest` otherwise fails with "Unable to find a
+      @SpringBootConfiguration", and a bare `@SpringBootConfiguration` (no component scan)
+      leaves it with no controllers to register (→ 404s).
+- [x] `SecurityConfigTests` stays in `:app` — it's an integration test wiring
+      `SecurityConfig` against real controllers from `:authentication` **and** `:app`
+      (`FacilityStatusController`). It cannot move to `:security` (a leaf module): that
+      would need `security → authentication`/`security → app`, i.e. dependency cycles.
 
-**Exit criteria:** no cycles involving authentication; full suite green.
+**Cross-module issues surfaced & fixed (both real, both were hidden by the monolith):**
+  1. **Smart-cast across modules** — `ClassesScheduler` did
+     `it.pushNotificationToken != null && it.pushNotificationToken.isNotEmpty()`; Kotlin
+     forbids smart-casting a nullable property from another module. Rewrote as
+     `!it.pushNotificationToken.isNullOrEmpty()`.
+  2. **Jackson could not deserialize DTOs in library modules** — Spring Boot 4 uses
+     Jackson 3, and there is **no Kotlin Jackson module on the classpath**, so Jackson
+     constructs Kotlin data classes via constructor *parameter names* (the
+     `MethodParameters` bytecode attribute). `:app` had them because the Spring Boot
+     Gradle plugin enables `-java-parameters`; library modules did not, so
+     `LoginRequest`/`SignUpRequest`/`UserProfile` failed with "no Creators" (HTTP 500).
+     **Fix:** set `javaParameters = true` in `gymplanner.kotlin-library` so every module
+     emits parameter names. (A future alternative: add the Jackson 3 Kotlin module.)
+
+**Kept for now (revisit in Phase 5):** `UserProfile` model + persistence semantics live
+in `:authentication`; when userProfile becomes its own module, move the model there and
+refine the `UserProfileRegistrar` port to primitives.
+
+**Exit criteria (all met):** no cycles (`app → authentication → {core-utils, security}`);
+`./gradlew clean test spotlessCheck detekt` green across all four modules; `:app:bootJar`
+still produces the runnable fat jar.
 
 ---
 

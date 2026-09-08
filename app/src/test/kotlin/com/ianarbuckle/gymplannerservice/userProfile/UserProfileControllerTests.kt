@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.userProfile
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.UserProfileDataProvider
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileService
 import kotlinx.coroutines.test.runTest

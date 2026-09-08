@@ -10,8 +10,8 @@ import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.model.User
 import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.booking.exception.UserNotFoundException
+import com.ianarbuckle.gymplannerservice.security.JwtUtils
 import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import org.bson.types.ObjectId
 import org.springframework.security.authentication.BadCredentialsException

@@ -1,6 +1,5 @@
-package com.ianarbuckle.gymplannerservice.authentication.data.security
+package com.ianarbuckle.gymplannerservice.security
 
-import com.ianarbuckle.gymplannerservice.authentication.data.exception.TokenExpiredException
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

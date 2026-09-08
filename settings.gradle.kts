@@ -10,3 +10,4 @@ rootProject.name = "GymPlannerService"
 
 include(":app")
 include(":core-utils")
+include(":security")

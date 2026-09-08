@@ -1,12 +1,6 @@
-package com.ianarbuckle.gymplannerservice.authentication.security
+package com.ianarbuckle.gymplannerservice.security
 
 import com.google.common.truth.Truth.assertThat
-import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.model.User
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.authentication.data.security.BearerToken
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JWTAuthenticationManager
-import com.ianarbuckle.gymplannerservice.authentication.data.security.JwtUtils
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -21,26 +15,29 @@ import kotlin.test.Test
 
 class JWTAuthenticationManagerTests {
     private val jwtUtils: JwtUtils = mockk()
-    private val userRepository: UserRepository = mockk()
+    private val userLookup: SecurityUserLookup = mockk()
     private val jwtAuthenticationManager: JWTAuthenticationManager =
-        JWTAuthenticationManager(jwtUtils, userRepository)
+        JWTAuthenticationManager(jwtUtils, userLookup)
+
+    private fun authenticatedUser(
+        name: String,
+        vararg authorities: String,
+    ): AuthenticatedUser =
+        object : AuthenticatedUser {
+            override val username = name
+            override val password = "password"
+            override val authorities = authorities.toList()
+        }
 
     @Test
     fun `authenticate with valid token`() =
         runTest {
             val token = "validToken"
             val username = "testuser"
-            val user =
-                User(
-                    id = "123456",
-                    username = username,
-                    password = "password",
-                    roles = setOf(ERole.ROLE_USER),
-                    email = "test@mail.com",
-                )
+            val user = authenticatedUser(username, "ROLE_USER")
 
             every { jwtUtils.extractUsername(token) } returns username
-            coEvery { userRepository.findByUsername(username) } returns user
+            coEvery { userLookup.findByUsername(username) } returns user
             every { jwtUtils.validateToken(token, username) } returns true
 
             val authentication = jwtAuthenticationManager.authenticate(BearerToken(token)).block()
@@ -49,12 +46,12 @@ class JWTAuthenticationManagerTests {
             assertThat(authentication?.name).isEqualTo(username)
             assertThat(authentication?.authorities?.size).isEqualTo(1)
             assertTrue(
-                authentication?.authorities?.contains(SimpleGrantedAuthority(ERole.ROLE_USER.name)) ==
+                authentication?.authorities?.contains(SimpleGrantedAuthority("ROLE_USER")) ==
                     true,
             )
 
             verify { jwtUtils.extractUsername(token) }
-            coVerify { userRepository.findByUsername(username) }
+            coVerify { userLookup.findByUsername(username) }
             verify { jwtUtils.validateToken(token, username) }
         }
 
@@ -83,7 +80,7 @@ class JWTAuthenticationManagerTests {
             val username = "nonExistentUser"
 
             every { jwtUtils.extractUsername(token) } returns username
-            coEvery { userRepository.findByUsername(username) } returns null
+            coEvery { userLookup.findByUsername(username) } returns null
 
             val exception =
                 assertThrows<BadCredentialsException> {
@@ -93,7 +90,7 @@ class JWTAuthenticationManagerTests {
             assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
 
             verify { jwtUtils.extractUsername(token) }
-            coVerify { userRepository.findByUsername(username) }
+            coVerify { userLookup.findByUsername(username) }
         }
 
     @Test
@@ -101,17 +98,10 @@ class JWTAuthenticationManagerTests {
         runTest {
             val token = "validToken"
             val username = "testuser"
-            val user =
-                User(
-                    id = "123456",
-                    username = username,
-                    password = "password",
-                    roles = setOf(ERole.ROLE_USER),
-                    email = "test@mail.com",
-                )
+            val user = authenticatedUser(username, "ROLE_USER")
 
             every { jwtUtils.extractUsername(token) } returns username
-            coEvery { userRepository.findByUsername(username) } returns user
+            coEvery { userLookup.findByUsername(username) } returns user
             every { jwtUtils.validateToken(token, username) } returns false
 
             val exception =
@@ -122,7 +112,7 @@ class JWTAuthenticationManagerTests {
             assertThat(exception).isInstanceOf(BadCredentialsException::class.java)
 
             verify { jwtUtils.extractUsername(token) }
-            coVerify { userRepository.findByUsername(username) }
+            coVerify { userLookup.findByUsername(username) }
             verify { jwtUtils.validateToken(token, username) }
         }
 }

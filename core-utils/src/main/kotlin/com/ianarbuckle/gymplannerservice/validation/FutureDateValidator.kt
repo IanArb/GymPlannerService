@@ -1,3 +1,5 @@
+package com.ianarbuckle.gymplannerservice.validation
+
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext

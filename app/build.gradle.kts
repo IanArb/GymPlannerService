@@ -8,6 +8,8 @@ plugins {
 description = "app"
 
 dependencies {
+    implementation(project(":core-utils"))
+
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
     implementation(libs.spring.boot.starter.webflux)
@@ -18,6 +20,8 @@ dependencies {
     runtimeOnly(libs.jjwt.impl)
     runtimeOnly(libs.jjwt.jackson)
 
+    // developmentOnly doesn't extend implementation, so it needs the BOM directly.
+    developmentOnly(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.spring.boot.get()}"))
     developmentOnly(libs.spring.boot.devtools)
 
     implementation(libs.springdoc.openapi.webflux.ui)

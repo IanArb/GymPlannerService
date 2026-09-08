@@ -1,7 +1,7 @@
 package com.ianarbuckle.gymplannerservice.booking.data
 
-import FutureDate
 import com.ianarbuckle.gymplannerservice.common.GymLocation
+import com.ianarbuckle.gymplannerservice.validation.FutureDate
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotNull
 import org.bson.codecs.pojo.annotations.BsonId

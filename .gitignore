@@ -40,4 +40,4 @@ out/
 .kotlin
 
 ### Json ###
-src/main/resources/firebase-service-account.json
+app/src/main/resources/firebase-service-account.json

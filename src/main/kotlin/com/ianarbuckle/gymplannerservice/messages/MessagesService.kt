@@ -17,7 +17,5 @@ class MessagesServiceImpl(
 ) : MessagesService {
     override fun findAlMessages(): Flow<Message> = repository.findAll()
 
-    override suspend fun insertMessage(message: Message): Message {
-        return repository.save(message)
-    }
+    override suspend fun insertMessage(message: Message): Message = repository.save(message)
 }

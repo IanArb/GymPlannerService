@@ -1,11 +1,11 @@
 package com.ianarbuckle.gymplannerservice.availability.data
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.time.LocalDate
-import java.time.LocalTime
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Schema(description = "Availability information")
 @Document

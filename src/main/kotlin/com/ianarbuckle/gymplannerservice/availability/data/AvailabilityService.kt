@@ -3,9 +3,9 @@ package com.ianarbuckle.gymplannerservice.availability.data
 import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
+import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDate
-import org.springframework.stereotype.Service
 
 interface AvailabilityService {
     suspend fun getAvailability(
@@ -33,7 +33,6 @@ class AvailabilityServiceImpl(
     private val personalTrainerRepository: PersonalTrainerRepository,
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : AvailabilityService {
-
     override suspend fun getAvailability(
         personalTrainerId: String,
         month: String,
@@ -79,8 +78,7 @@ class AvailabilityServiceImpl(
         availabilityRepository
             .save(
                 availability,
-            )
-            .takeIf {
+            ).takeIf {
                 availabilityRepository.existsByPersonalTrainerId(availability.personalTrainerId)
             }
     }

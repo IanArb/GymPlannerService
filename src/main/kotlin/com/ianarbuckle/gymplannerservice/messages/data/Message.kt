@@ -1,10 +1,10 @@
 package com.ianarbuckle.gymplannerservice.messages.data
 
 import jakarta.validation.constraints.Future
-import java.time.Instant
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 
 @Document
 data class Message(

@@ -65,27 +65,24 @@ class SecurityConfig(
                         exchange.response.headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer")
                     }
                 }
-            }
-            .authorizeExchange {
-                it.pathMatchers(
+            }.authorizeExchange {
+                it
+                    .pathMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/webjars/swagger-ui/**",
                         "/api/v1/auth/**",
-                    )
-                    .permitAll()
+                    ).permitAll()
                     .pathMatchers(
                         "/api/v1/facilities/**",
                         "/api/v1/personal_trainers/schedule/**",
                         "/api/v1/personal_trainers/schedule",
                         "/api/v1/trainers/**",
-                    )
-                    .hasAnyAuthority(ERole.ROLE_MODERATOR.name, ERole.ROLE_ADMIN.name)
+                    ).hasAnyAuthority(ERole.ROLE_MODERATOR.name, ERole.ROLE_ADMIN.name)
                     .anyExchange()
                     .authenticated()
-            }
-            .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+            }.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
             .cors { it.configurationSource(corsConfigurationSource()) }
             .httpBasic { it.disable() }
             .formLogin { it.disable() }

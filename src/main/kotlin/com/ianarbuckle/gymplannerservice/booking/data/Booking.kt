@@ -4,10 +4,10 @@ import FutureDate
 import com.ianarbuckle.gymplannerservice.common.GymLocation
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotNull
-import java.time.LocalDate
-import java.time.LocalTime
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Schema(description = "Booking information")
 @Document

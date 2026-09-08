@@ -7,16 +7,27 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class FcmSender(private val firebaseMessaging: FirebaseMessaging) {
-
+class FcmSender(
+    private val firebaseMessaging: FirebaseMessaging,
+) {
     private val logger = LoggerFactory.getLogger(FcmSender::class.java)
 
-    fun sendMessage(token: String, title: String, body: String) {
+    fun sendMessage(
+        token: String,
+        title: String,
+        body: String,
+    ) {
         val message =
-            Message.builder()
+            Message
+                .builder()
                 .setToken(token)
-                .setNotification(Notification.builder().setTitle(title).setBody(body).build())
-                .build()
+                .setNotification(
+                    Notification
+                        .builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build(),
+                ).build()
 
         try {
             val response = firebaseMessaging.send(message)

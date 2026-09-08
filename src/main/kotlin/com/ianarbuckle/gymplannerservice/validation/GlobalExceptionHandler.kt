@@ -11,9 +11,7 @@ import org.springframework.web.server.ServerWebInputException
 @RestControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler(WebExchangeBindException::class)
-    fun handleValidationExceptions(
-        ex: WebExchangeBindException
-    ): ResponseEntity<Map<String, String?>> {
+    fun handleValidationExceptions(ex: WebExchangeBindException): ResponseEntity<Map<String, String?>> {
         val errors =
             ex.bindingResult.allErrors.associate { error ->
                 val fieldError = error as FieldError
@@ -24,9 +22,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ServerWebInputException::class)
-    fun handleDecodingExceptions(
-        ex: ServerWebInputException
-    ): ResponseEntity<Map<String, String?>> {
+    fun handleDecodingExceptions(ex: ServerWebInputException): ResponseEntity<Map<String, String?>> {
         val message = ex.cause?.cause?.message ?: ex.reason ?: "Invalid request body"
         return ResponseEntity(mapOf("error" to message), HttpStatus.BAD_REQUEST)
     }

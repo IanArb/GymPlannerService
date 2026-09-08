@@ -11,13 +11,12 @@ import com.ianarbuckle.gymplannerservice.authentication.data.security.SecurityCo
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusController
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusService
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -34,6 +33,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
+import kotlin.test.Test
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
@@ -60,61 +60,70 @@ class SecurityConfigTests {
     }
 
     @Test
-    fun `auth endpoints should be accessible without token`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "newuser",
-                firstName = "New",
-                surname = "User",
-                email = "newuser@mail.com",
-                password = "password123",
-                roles = setOf("user"),
-            )
-        `when`(authenticationService.createUser(signUpRequest))
-            .thenReturn(MessageResponse(message = "User registered successfully!"))
+    fun `auth endpoints should be accessible without token`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    firstName = "New",
+                    surname = "User",
+                    email = "newuser@mail.com",
+                    password = "password123",
+                    roles = setOf("user"),
+                )
+            `when`(authenticationService.createUser(signUpRequest))
+                .thenReturn(MessageResponse(message = "User registered successfully!"))
 
-        webTestClient
-            .post()
-            .uri("/api/v1/auth/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(signUpRequest)
-            .exchange()
-            .expectStatus()
-            .isOk
-    }
-
-    @Test
-    fun `protected endpoints should return 401 without token`() = runTest {
-        webTestClient.get().uri("/api/v1/facilities").exchange().expectStatus().isUnauthorized
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(signUpRequest)
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
 
     @Test
-    fun `users with ROLE_USER should be forbidden from facilities`() = runTest {
-        `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
-            .thenReturn(authenticationFor(ERole.ROLE_USER))
-
-        webTestClient
-            .get()
-            .uri("/api/v1/facilities")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer faketoken")
-            .exchange()
-            .expectStatus()
-            .isForbidden
-    }
+    fun `protected endpoints should return 401 without token`() =
+        runTest {
+            webTestClient
+                .get()
+                .uri("/api/v1/facilities")
+                .exchange()
+                .expectStatus()
+                .isUnauthorized
+        }
 
     @Test
-    fun `users with ROLE_ADMIN should be allowed on facilities`() = runTest {
-        `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
-            .thenReturn(authenticationFor(ERole.ROLE_ADMIN))
+    fun `users with ROLE_USER should be forbidden from facilities`() =
+        runTest {
+            `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
+                .thenReturn(authenticationFor(ERole.ROLE_USER))
 
-        webTestClient
-            .get()
-            .uri("/api/v1/facilities")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer faketoken")
-            .exchange()
-            .expectStatus()
-            .isOk
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/facilities")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer faketoken")
+                .exchange()
+                .expectStatus()
+                .isForbidden
+        }
+
+    @Test
+    fun `users with ROLE_ADMIN should be allowed on facilities`() =
+        runTest {
+            `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
+                .thenReturn(authenticationFor(ERole.ROLE_ADMIN))
+
+            webTestClient
+                .get()
+                .uri("/api/v1/facilities")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer faketoken")
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
 
     private fun authenticationFor(role: ERole): Mono<Authentication> =
         Mono.just(
@@ -122,7 +131,7 @@ class SecurityConfigTests {
                 "user",
                 "password",
                 listOf(SimpleGrantedAuthority(role.name)),
-            )
+            ),
         )
 
     private fun anyAuthentication(): Authentication = anyKotlin()
@@ -152,7 +161,7 @@ class SecurityConfigTests {
         val source = securityConfig.corsConfigurationSource()
         val exchange =
             MockServerWebExchange.from(
-                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build()
+                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build(),
             )
         val config = source.getCorsConfiguration(exchange)
         assertThat(config).isNotNull()
@@ -169,7 +178,7 @@ class SecurityConfigTests {
         val source = securityConfig.corsConfigurationSource()
         val exchange =
             MockServerWebExchange.from(
-                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build()
+                MockServerHttpRequest.get("http://localhost:8080/api/v1/facilities").build(),
             )
         val config = source.getCorsConfiguration(exchange)
         assertThat(config).isNotNull()

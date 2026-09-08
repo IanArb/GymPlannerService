@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
 interface FacilityStatusRepository : CoroutineCrudRepository<FacilityStatus, String> {
-
     suspend fun findMachinesByGymLocation(gymLocation: GymLocation): Flow<FacilityStatus>
 
     suspend fun findAllMachinesByStatus(machineStatus: String): Flow<FacilityStatus>

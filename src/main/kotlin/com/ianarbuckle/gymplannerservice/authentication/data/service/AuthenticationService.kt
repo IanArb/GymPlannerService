@@ -71,8 +71,7 @@ class AuthenticationServiceImpl(
                             "mod" -> ERole.ROLE_MODERATOR
                             else -> ERole.ROLE_USER
                         }
-                    }
-                    .toMutableSet()
+                    }.toMutableSet()
             }
 
         val userId = ObjectId().toHexString()

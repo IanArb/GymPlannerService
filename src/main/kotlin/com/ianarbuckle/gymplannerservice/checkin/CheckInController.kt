@@ -40,7 +40,7 @@ class CheckInController(
                 ApiResponse(responseCode = "200", description = "Check-in recorded successfully"),
                 ApiResponse(
                     responseCode = "400",
-                    description = "Trainer not scheduled or already checked in"
+                    description = "Trainer not scheduled or already checked in",
                 ),
                 ApiResponse(responseCode = "404", description = "Trainer not found"),
             ],
@@ -64,13 +64,13 @@ class CheckInController(
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Trainer is not scheduled to work at this time",
-                ex
+                ex,
             )
         } catch (ex: TrainerAlreadyCheckedInException) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Trainer has already checked in today",
-                ex
+                ex,
             )
         }
 
@@ -108,19 +108,19 @@ class CheckInController(
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Trainer has not checked in today",
-                ex
+                ex,
             )
         } catch (ex: TrainerAlreadyCheckedOutException) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Trainer has already checked out today",
-                ex
+                ex,
             )
         } catch (ex: InvalidCheckOutTimeException) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Check-out time must be after check-in time",
-                ex
+                ex,
             )
         }
 }

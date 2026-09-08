@@ -1,27 +1,27 @@
 package com.ianarbuckle.gymplannerservice.messages
 
 import com.ianarbuckle.gymplannerservice.messages.data.Message
-import java.time.Instant
-import kotlin.test.Test
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.data.mongodb.test.autoconfigure.AutoConfigureDataMongo
+import org.springframework.boot.security.autoconfigure.web.reactive.ReactiveWebSecurityAutoConfiguration
+import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.Instant
+import kotlin.test.Test
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [MessagesController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
+    excludeAutoConfiguration = [ReactiveWebSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -32,83 +32,86 @@ class MessagesControllerTests {
     @MockitoBean private lateinit var messagesService: MessagesService
 
     @Test
-    fun `should return all messages`() = runTest {
-        val messages =
-            listOf(
+    fun `should return all messages`() =
+        runTest {
+            val messages =
+                listOf(
+                    Message(
+                        id = "1",
+                        username = "Bob",
+                        userId = "user1",
+                        content = "Hello, world!",
+                        timestamp = Instant.now(),
+                    ),
+                    Message(
+                        id = "2",
+                        username = "Lisa",
+                        userId = "user2",
+                        content = "Hi there!",
+                        timestamp = Instant.now(),
+                    ),
+                )
+            `when`(messagesService.findAlMessages()).thenReturn(flowOf(*messages.toTypedArray()))
+
+            webTestClient
+                .get()
+                .uri("/api/v1/messages")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .jsonPath("$[0].id")
+                .isEqualTo(messages[0].id)
+                .jsonPath("$[1].id")
+                .isEqualTo(messages[1].id)
+        }
+
+    @Test
+    fun `should save message`() =
+        runTest {
+            val message =
                 Message(
                     id = "1",
                     username = "Bob",
                     userId = "user1",
                     content = "Hello, world!",
-                    timestamp = Instant.now()
-                ),
+                    timestamp = Instant.now().plusSeconds(1),
+                )
+
+            `when`(messagesService.insertMessage(message)).thenReturn(message)
+
+            webTestClient
+                .post()
+                .uri("/api/v1/messages")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(message)
+                .exchange()
+                .expectStatus()
+                .isCreated
+        }
+
+    @Test
+    fun `should save message returns 400 bad request when timestamp not in the future`() =
+        runTest {
+            val message =
                 Message(
-                    id = "2",
-                    username = "Lisa",
-                    userId = "user2",
-                    content = "Hi there!",
-                    timestamp = Instant.now()
-                ),
-            )
-        `when`(messagesService.findAlMessages()).thenReturn(flowOf(*messages.toTypedArray()))
+                    id = "1",
+                    username = "Bob",
+                    userId = "user1",
+                    content = "Hello, world!",
+                    timestamp = Instant.now(),
+                )
 
-        webTestClient
-            .get()
-            .uri("/api/v1/messages")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .jsonPath("$[0].id")
-            .isEqualTo(messages[0].id)
-            .jsonPath("$[1].id")
-            .isEqualTo(messages[1].id)
-    }
+            `when`(messagesService.insertMessage(message)).thenReturn(message)
 
-    @Test
-    fun `should save message`() = runTest {
-        val message =
-            Message(
-                id = "1",
-                username = "Bob",
-                userId = "user1",
-                content = "Hello, world!",
-                timestamp = Instant.now().plusSeconds(1)
-            )
-
-        `when`(messagesService.insertMessage(message)).thenReturn(message)
-
-        webTestClient
-            .post()
-            .uri("/api/v1/messages")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(message)
-            .exchange()
-            .expectStatus()
-            .isCreated
-    }
-
-    @Test
-    fun `should save message returns 400 bad request when timestamp not in the future`() = runTest {
-        val message =
-            Message(
-                id = "1",
-                username = "Bob",
-                userId = "user1",
-                content = "Hello, world!",
-                timestamp = Instant.now()
-            )
-
-        `when`(messagesService.insertMessage(message)).thenReturn(message)
-
-        webTestClient
-            .post()
-            .uri("/api/v1/messages")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(message)
-            .exchange()
-            .expectStatus()
-            .isBadRequest
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/messages")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(message)
+                .exchange()
+                .expectStatus()
+                .isBadRequest
+        }
 }

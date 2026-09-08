@@ -8,13 +8,19 @@ import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotFoundExcept
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotScheduledException
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.trainers.data.TrainerAvailabilityStatus
-import java.time.LocalDateTime
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 interface CheckInService {
-    suspend fun checkIn(trainerId: String, checkInTime: LocalDateTime): CheckIn
+    suspend fun checkIn(
+        trainerId: String,
+        checkInTime: LocalDateTime,
+    ): CheckIn
 
-    suspend fun checkOut(trainerId: String, checkOutTime: LocalDateTime): CheckIn
+    suspend fun checkOut(
+        trainerId: String,
+        checkOutTime: LocalDateTime,
+    ): CheckIn
 }
 
 @Service
@@ -22,8 +28,10 @@ class CheckInServiceImpl(
     private val checkInRepository: CheckInRepository,
     private val personalTrainerRepository: PersonalTrainerRepository,
 ) : CheckInService {
-
-    override suspend fun checkIn(trainerId: String, checkInTime: LocalDateTime): CheckIn {
+    override suspend fun checkIn(
+        trainerId: String,
+        checkInTime: LocalDateTime,
+    ): CheckIn {
         val trainer =
             personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
 
@@ -52,17 +60,20 @@ class CheckInServiceImpl(
                     trainerId = trainerId,
                     checkInTime = checkInTime,
                     status = status,
-                )
+                ),
             )
 
         personalTrainerRepository.save(
-            trainer.copy(availabilityStatus = TrainerAvailabilityStatus.AVAILABLE)
+            trainer.copy(availabilityStatus = TrainerAvailabilityStatus.AVAILABLE),
         )
 
         return checkIn
     }
 
-    override suspend fun checkOut(trainerId: String, checkOutTime: LocalDateTime): CheckIn {
+    override suspend fun checkOut(
+        trainerId: String,
+        checkOutTime: LocalDateTime,
+    ): CheckIn {
         val trainer =
             personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
 
@@ -79,7 +90,7 @@ class CheckInServiceImpl(
         val updatedCheckIn = checkInRepository.save(existing.copy(checkOutTime = checkOutTime))
 
         personalTrainerRepository.save(
-            trainer.copy(availabilityStatus = TrainerAvailabilityStatus.UNAVAILABLE)
+            trainer.copy(availabilityStatus = TrainerAvailabilityStatus.UNAVAILABLE),
         )
 
         return updatedCheckIn

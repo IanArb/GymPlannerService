@@ -98,7 +98,7 @@ class GymLocationsController(
 
     @Operation(
         summary = "Delete a gym location by ID",
-        description = "Delete a gym location by its ID"
+        description = "Delete a gym location by its ID",
     )
     @ApiResponses(
         value =

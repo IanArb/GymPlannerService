@@ -114,16 +114,51 @@ convention plugins.
 
 ---
 
-## Phase 2 — Extract the leaves (`:core-utils`)
+## Phase 2 — Extract the leaves (`:core-utils`) ✅ DONE
 
 Move zero-dependency shared code into a `:core-utils` module. Pure de-risking; proves
 the convention plugins on a real extraction.
 
-- [ ] Create `:core` module (applies `gymplanner.kotlin-library`).
-- [ ] Move `common`, `utils`, `validation` into `:core`.
-- [ ] `:app` depends on `:core-utils`; fix imports.
+- [x] Created `:core-utils` module. It applies `gymplanner.spring-conventions`
+      (not just kotlin-library) because `GlobalExceptionHandler` is a WebFlux
+      `@RestControllerAdvice` and `@FutureDate` uses Jakarta Validation; the
+      module adds `spring-boot-starter-webflux` + `spring-boot-starter-validation`.
+- [x] Moved `common` (GymLocation), `utils` (LocalDateTimeKtx, ExtensionsKt),
+      and `validation` (GlobalExceptionHandler, FutureDate/FutureDateValidator)
+      into `:core-utils`, keeping identical package names → **zero import churn**
+      for the ~19 consumers (they resolve via the new project dependency).
+- [x] Fixed a latent bug: `FutureDateValidator.kt` had **no package declaration**
+      (default package), so `Booking.kt` used `import FutureDate` — which cannot
+      cross a module boundary. Gave it `package …validation` and updated the
+      import to `com.ianarbuckle.gymplannerservice.validation.FutureDate`.
+- [x] `include(":core-utils")` in settings; `:app` depends on
+      `implementation(project(":core-utils"))`.
+- [x] Fixed a second latent bug: the `@FutureDate` annotation was missing its
+      spec-mandated `groups`/`payload` members, which throws
+      `ConstraintDefinitionException` whenever a booking date is validated (no
+      test covered it). Restored the members and added
+      `FutureDateValidatorTest` in `:core-utils` (past date → violation, future
+      date → none) as a regression guard.
 
-**Exit criteria:** full suite green; `:core-utils` has no dependency on `:app`.
+**Gotcha resolved (build-wide):** `:core-utils:compileKotlin` failed with
+`getPluginClasspaths() is null` from the Kotlin Build Tools API. Root cause:
+`io.spring.dependency-management` applies managed versions to *every*
+configuration — including `kotlinCompilerPluginClasspath` — which corrupts the
+kotlin-spring (all-open) compiler-plugin classpath. **Fix:** dropped that plugin
+from `gymplanner.spring-conventions` entirely and switched to Gradle's native
+`platform("org.springframework.boot:spring-boot-dependencies:<ver>")` BOM, which
+only constrains dependency configurations. Consequences:
+  - The Phase 1 `pinDetektKotlinVersion()` re-assertion in spring-conventions is
+    no longer needed (no dependency-management to override it); the pin in
+    `gymplanner.kotlin-library` now suffices.
+  - `developmentOnly` doesn't extend `implementation`, so `:app` adds the
+    `platform(...)` BOM to that configuration directly for `spring-boot-devtools`.
+  - Added `gradle.properties` with larger daemon heap/metaspace (the default
+    384 MiB metaspace was crashing the daemon and triggering the buggy fallback).
+
+**Exit criteria (all met):** `./gradlew clean test spotlessCheck detekt` green;
+`:app:bootJar` still produces the runnable fat jar; `:core-utils` depends only on
+Spring/Jakarta libs (no dependency on `:app`).
 
 ---
 

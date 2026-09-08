@@ -10,19 +10,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.boot.security.autoconfigure.web.reactive.ReactiveWebSecurityAutoConfiguration
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
     controllers = [FaultReportController::class],
-    excludeAutoConfiguration = [ReactiveSecurityAutoConfiguration::class],
+    excludeAutoConfiguration = [ReactiveWebSecurityAutoConfiguration::class],
 )
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")

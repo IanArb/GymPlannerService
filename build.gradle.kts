@@ -34,10 +34,8 @@ detekt {
 }
 
 dependencies {
-    implementation(libs.spring.boot.starter.data.mongodb)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
-    implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.validation)
     implementation(libs.spring.boot.starter.security)
@@ -58,13 +56,15 @@ dependencies {
     implementation(libs.firebase.admin)
 
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.starter.webflux.test)
+    testImplementation(libs.spring.security.test)
+    testImplementation(libs.spring.boot.starter.data.mongodb.test)
     testImplementation(libs.reactor.test)
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.turbine.test)
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockk)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(libs.flapdoodle.mongo)

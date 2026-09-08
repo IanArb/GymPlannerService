@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class User(
     @BsonId val id: String,
     @NotBlank @Size(max = 20) val username: String,
-    @NotBlank @Size(max = 120) val password: String,
+    @NotBlank @Size(max = 120) val password: String?,
     @NotBlank @Size(max = 50) val email: String,
     val roles: Set<ERole> = emptySet(),
     val pushNotificationToken: String? = null,

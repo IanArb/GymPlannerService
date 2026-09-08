@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.ianarbuckle.gymplannerservice.common.GymLocation
+import org.bson.codecs.pojo.annotations.BsonId
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.util.Locale
-import org.bson.codecs.pojo.annotations.BsonId
-import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class PersonalTrainer(

@@ -27,9 +27,9 @@ interface FacilityStatusService {
 }
 
 @Service
-class FacilityStatusServiceImpl(private val repository: FacilityStatusRepository) :
-    FacilityStatusService {
-
+class FacilityStatusServiceImpl(
+    private val repository: FacilityStatusRepository,
+) : FacilityStatusService {
     override suspend fun findAllMachines(): Flow<FacilityStatus> = repository.findAll()
 
     override suspend fun findMachinesByGymLocation(gymLocation: GymLocation): Flow<FacilityStatus> =
@@ -48,8 +48,7 @@ class FacilityStatusServiceImpl(private val repository: FacilityStatusRepository
         repository.saveAll(facilities).collect {}
     }
 
-    override suspend fun updateFacility(facilityStatus: FacilityStatus): FacilityStatus =
-        repository.save(facilityStatus)
+    override suspend fun updateFacility(facilityStatus: FacilityStatus): FacilityStatus = repository.save(facilityStatus)
 
     override suspend fun deleteFacilityById(id: String) {
         repository.deleteById(id)

@@ -38,7 +38,6 @@ class BookingServiceImpl(
     private val userProfileRepository: UserProfileRepository,
     private val availabilityRepository: AvailabilityRepository,
 ) : BookingService {
-
     override fun fetchAllBookings(): Flow<Booking> = bookingsRepository.findAll()
 
     override suspend fun fetchBookingById(id: String): Booking? = bookingsRepository.findById(id)
@@ -71,8 +70,8 @@ class BookingServiceImpl(
         bookingsRepository.findAll().collect {
             if (
                 it.personalTrainer.id == booking.personalTrainer.id &&
-                    it.bookingDate == booking.bookingDate &&
-                    it.startTime == booking.startTime
+                it.bookingDate == booking.bookingDate &&
+                it.startTime == booking.startTime
             ) {
                 throw PersonalTrainerAlreadyBookedException()
             }
@@ -88,7 +87,7 @@ class BookingServiceImpl(
                 val updatedTime = time.copy(status = Status.BOOKED)
                 val updatedSlot = slot.copy(times = slot.times - time + updatedTime)
                 availabilityRepository.save(
-                    availability.copy(slots = availability.slots - slot + updatedSlot)
+                    availability.copy(slots = availability.slots - slot + updatedSlot),
                 )
             }
         }

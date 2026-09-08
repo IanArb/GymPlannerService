@@ -29,10 +29,10 @@ private const val SUBSTRING_LENGTH = 7
 
 @Component
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
-
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> {
         val header = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-        return Mono.justOrEmpty(header)
+        return Mono
+            .justOrEmpty(header)
             .filter { it.startsWith("Bearer ") }
             .map { it.substring(SUBSTRING_LENGTH) }
             .map { BearerToken(it) }
@@ -47,7 +47,8 @@ class JWTAuthenticationManager(
     private val logger: Logger = LoggerFactory.getLogger(JWTAuthenticationManager::class.java)
 
     override fun authenticate(authentication: Authentication): Mono<Authentication> =
-        Mono.justOrEmpty(authentication)
+        Mono
+            .justOrEmpty(authentication)
             .filter { auth -> auth is BearerToken }
             .cast(BearerToken::class.java)
             .flatMap { jwt -> mono { validate(jwt) } }

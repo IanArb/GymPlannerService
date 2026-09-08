@@ -1,9 +1,9 @@
 package com.ianarbuckle.gymplannerservice.booking.data
 
-import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 @Repository
 interface BookingRepository : CoroutineCrudRepository<Booking, String> {

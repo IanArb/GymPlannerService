@@ -4,8 +4,6 @@ import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
-import java.time.LocalDate
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.`when`
@@ -19,6 +17,8 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.LocalDate
+import kotlin.test.Test
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
@@ -34,79 +34,89 @@ class PersonalTrainerControllerTests {
     @MockitoBean private lateinit var personalTrainersService: PersonalTrainersService
 
     @Test
-    fun `should return all personal trainers by gym location`() = runTest {
-        val personalTrainers = PersonalTrainerDataProvider.personalTrainers()
-        `when`(personalTrainersService.findTrainersByGymLocation(GymLocation.CLONTARF))
-            .thenReturn(personalTrainers)
+    fun `should return all personal trainers by gym location`() =
+        runTest {
+            val personalTrainers = PersonalTrainerDataProvider.personalTrainers()
+            `when`(personalTrainersService.findTrainersByGymLocation(GymLocation.CLONTARF))
+                .thenReturn(personalTrainers)
 
-        webTestClient
-            .get()
-            .uri("/api/v1/personal_trainers?gymLocation=CLONTARF")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBodyList(PersonalTrainer::class.java)
-            .hasSize(2)
-    }
-
-    @Test
-    fun `should create personal trainer`() = runTest {
-        val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
-        `when`(personalTrainersService.createTrainer(personalTrainer)).thenReturn(personalTrainer)
-
-        webTestClient
-            .post()
-            .uri("/api/v1/personal_trainers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(personalTrainer)
-            .exchange()
-            .expectStatus()
-            .isCreated
-            .expectBody(PersonalTrainer::class.java)
-            .isEqualTo(personalTrainer)
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/personal_trainers?gymLocation=CLONTARF")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBodyList(PersonalTrainer::class.java)
+                .hasSize(2)
+        }
 
     @Test
-    fun `should update personal trainer`() = runTest {
-        val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
-        `when`(personalTrainersService.updateTrainer(personalTrainer)).thenReturn(Unit)
+    fun `should create personal trainer`() =
+        runTest {
+            val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            `when`(personalTrainersService.createTrainer(personalTrainer)).thenReturn(personalTrainer)
 
-        webTestClient
-            .put()
-            .uri("/api/v1/personal_trainers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(personalTrainer)
-            .exchange()
-            .expectStatus()
-            .isOk
-    }
-
-    @Test
-    fun `should delete personal trainer by id`() = runTest {
-        `when`(personalTrainersService.deleteTrainerById("1")).thenReturn(Unit)
-
-        webTestClient.delete().uri("/api/v1/personal_trainers/1").exchange().expectStatus().isOk
-    }
+            webTestClient
+                .post()
+                .uri("/api/v1/personal_trainers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(personalTrainer)
+                .exchange()
+                .expectStatus()
+                .isCreated
+                .expectBody(PersonalTrainer::class.java)
+                .isEqualTo(personalTrainer)
+        }
 
     @Test
-    fun `should return scheduled trainers for a given date and location`() = runTest {
-        val date = LocalDate.of(2026, 4, 21)
-        val gymLocation = GymLocation.CLONTARF
-        val trainers = PersonalTrainerDataProvider.personalTrainers()
-        `when`(personalTrainersService.findScheduledTrainersByDate(date, gymLocation))
-            .thenReturn(trainers)
+    fun `should update personal trainer`() =
+        runTest {
+            val personalTrainer = PersonalTrainerDataProvider.createPersonalTrainer()
+            `when`(personalTrainersService.updateTrainer(personalTrainer)).thenReturn(Unit)
 
-        webTestClient
-            .get()
-            .uri("/api/v1/personal_trainers/schedule?date=2026-04-21&gymLocation=CLONTARF")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBodyList(PersonalTrainer::class.java)
-            .hasSize(2)
-    }
+            webTestClient
+                .put()
+                .uri("/api/v1/personal_trainers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(personalTrainer)
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
+
+    @Test
+    fun `should delete personal trainer by id`() =
+        runTest {
+            `when`(personalTrainersService.deleteTrainerById("1")).thenReturn(Unit)
+
+            webTestClient
+                .delete()
+                .uri("/api/v1/personal_trainers/1")
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
+
+    @Test
+    fun `should return scheduled trainers for a given date and location`() =
+        runTest {
+            val date = LocalDate.of(2026, 4, 21)
+            val gymLocation = GymLocation.CLONTARF
+            val trainers = PersonalTrainerDataProvider.personalTrainers()
+            `when`(personalTrainersService.findScheduledTrainersByDate(date, gymLocation))
+                .thenReturn(trainers)
+
+            webTestClient
+                .get()
+                .uri("/api/v1/personal_trainers/schedule?date=2026-04-21&gymLocation=CLONTARF")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBodyList(PersonalTrainer::class.java)
+                .hasSize(2)
+        }
 
     @Test
     fun `should return empty list when no trainers are scheduled on a given date and location`() =

@@ -1,9 +1,9 @@
 package com.ianarbuckle.gymplannerservice.checkin.data
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.time.LocalDateTime
 import org.bson.codecs.pojo.annotations.BsonId
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDateTime
 
 @Document
 data class CheckIn(

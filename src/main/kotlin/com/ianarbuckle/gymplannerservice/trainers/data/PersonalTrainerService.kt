@@ -1,9 +1,9 @@
 package com.ianarbuckle.gymplannerservice.trainers.data
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 interface PersonalTrainersService {
     fun findTrainersByGymLocation(gymLocation: GymLocation): Flow<PersonalTrainer>
@@ -26,8 +26,7 @@ interface PersonalTrainersService {
 class PersonalTrainerServiceImpl(
     private val repository: PersonalTrainerRepository,
 ) : PersonalTrainersService {
-    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer =
-        repository.save(personalTrainer)
+    override suspend fun createTrainer(personalTrainer: PersonalTrainer): PersonalTrainer = repository.save(personalTrainer)
 
     override suspend fun deleteTrainerById(id: String) = repository.deleteById(id)
 
@@ -38,7 +37,8 @@ class PersonalTrainerServiceImpl(
             GymLocation.DUNLOAGHAIRE,
             GymLocation.WESTMANSTOWN,
             GymLocation.SANDYMOUNT,
-            GymLocation.LEOPARDSTOWN, -> repository.findAllByGymLocation(gymLocation)
+            GymLocation.LEOPARDSTOWN,
+            -> repository.findAllByGymLocation(gymLocation)
         }
 
     override suspend fun updateTrainer(personalTrainer: PersonalTrainer) {
@@ -48,8 +48,7 @@ class PersonalTrainerServiceImpl(
     override fun findScheduledTrainersByDate(
         date: LocalDate,
         gymLocation: GymLocation,
-    ): Flow<PersonalTrainer> =
-        repository.findAllByScheduleDayOfWeekAndGymLocation(date.dayOfWeek.name, gymLocation)
+    ): Flow<PersonalTrainer> = repository.findAllByScheduleDayOfWeekAndGymLocation(date.dayOfWeek.name, gymLocation)
 
     override suspend fun findById(id: String): PersonalTrainer? = repository.findById(id)
 }

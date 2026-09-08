@@ -3,20 +3,19 @@ package com.ianarbuckle.gymplannerservice.fitnessclass
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.fcm.FcmSender
 import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassesService
-import java.time.Clock
-import java.time.LocalDateTime
 import kotlinx.coroutines.flow.filter
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.LocalDateTime
 
 @Component
 class ClassesScheduler(
     private val fcmSender: FcmSender,
     private val classesService: FitnessClassesService,
     private val userRepository: UserRepository,
-    private val clock: Clock
+    private val clock: Clock,
 ) {
-
     // Runs every hour
     @Scheduled(cron = "0 0 * * * *")
     suspend fun sendClassReminders() {

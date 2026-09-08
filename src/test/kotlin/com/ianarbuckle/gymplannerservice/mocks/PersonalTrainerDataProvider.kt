@@ -4,10 +4,10 @@ import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
 import com.ianarbuckle.gymplannerservice.trainers.data.ScheduledShift
 import com.ianarbuckle.gymplannerservice.trainers.data.TrainerAvailabilityStatus
-import java.time.DayOfWeek
-import java.time.LocalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import java.time.DayOfWeek
+import java.time.LocalTime
 
 object PersonalTrainerDataProvider {
     fun createPersonalTrainer(

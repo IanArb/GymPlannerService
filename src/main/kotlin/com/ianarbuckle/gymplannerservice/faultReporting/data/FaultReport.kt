@@ -3,8 +3,8 @@ package com.ianarbuckle.gymplannerservice.faultReporting.data
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
-import java.time.LocalDateTime
 import org.bson.codecs.pojo.annotations.BsonId
+import java.time.LocalDateTime
 
 data class FaultReport(
     @BsonId val id: String? = null,

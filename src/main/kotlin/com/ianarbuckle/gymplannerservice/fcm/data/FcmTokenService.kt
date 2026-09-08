@@ -4,7 +4,10 @@ import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepo
 import org.springframework.stereotype.Service
 
 interface FcmTokenService {
-    suspend fun registerToken(userId: String, token: String): FcmTokenResponse
+    suspend fun registerToken(
+        userId: String,
+        token: String,
+    ): FcmTokenResponse
 
     suspend fun deleteToken(userId: String)
 }
@@ -13,8 +16,10 @@ interface FcmTokenService {
 class FcmTokenServiceImpl(
     private val userRepository: UserRepository,
 ) : FcmTokenService {
-
-    override suspend fun registerToken(userId: String, token: String): FcmTokenResponse {
+    override suspend fun registerToken(
+        userId: String,
+        token: String,
+    ): FcmTokenResponse {
         val user = userRepository.findById(userId)
         val existingToken = user?.pushNotificationToken
         if (existingToken == null && user != null) {

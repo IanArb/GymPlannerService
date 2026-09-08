@@ -18,7 +18,7 @@ data class FacilityStatus(
 enum class MachineStatus {
     OPERATIONAL,
     OUT_OF_ORDER,
-    UNDER_MAINTENANCE
+    UNDER_MAINTENANCE,
 }
 
 enum class Location {
@@ -32,5 +32,5 @@ enum class FaultType {
     MECHANICAL,
     ELECTRICAL,
     SOFTWARE,
-    OTHER
+    OTHER,
 }

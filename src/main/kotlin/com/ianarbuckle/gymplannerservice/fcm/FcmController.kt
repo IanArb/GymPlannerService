@@ -12,20 +12,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("api/v1/fcm")
-class FcmController(private val fcmTokenService: FcmTokenService) {
-
+class FcmController(
+    private val fcmTokenService: FcmTokenService,
+) {
     @PostMapping("/register")
     suspend fun registerPushNotificationToken(
-        @RequestBody tokenRequest: FcmTokenRequest
-    ): FcmTokenResponse {
-        return fcmTokenService.registerToken(
+        @RequestBody tokenRequest: FcmTokenRequest,
+    ): FcmTokenResponse =
+        fcmTokenService.registerToken(
             userId = tokenRequest.userId,
             token = tokenRequest.token,
         )
-    }
 
     @DeleteMapping("/delete/{userId}")
-    suspend fun deletePushNotificationToken(@PathVariable userId: String) {
+    suspend fun deletePushNotificationToken(
+        @PathVariable userId: String,
+    ) {
         fcmTokenService.deleteToken(userId)
     }
 }

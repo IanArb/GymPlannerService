@@ -2,8 +2,7 @@ package com.ianarbuckle.gymplannerservice.checkin.exception
 
 class TrainerNotFoundException : RuntimeException("Personal trainer not found")
 
-class TrainerNotScheduledException :
-    RuntimeException("Trainer is not scheduled to work at this time")
+class TrainerNotScheduledException : RuntimeException("Trainer is not scheduled to work at this time")
 
 class TrainerAlreadyCheckedInException : RuntimeException("Trainer has already checked in today")
 

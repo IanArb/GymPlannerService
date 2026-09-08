@@ -26,21 +26,21 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/v1/facilities")
 @Tag(
     name = "Facility Status",
-    description = "Endpoints for managing gym facility and machine status"
+    description = "Endpoints for managing gym facility and machine status",
 )
 class FacilityStatusController(
     private val service: FacilityStatusService,
 ) {
     @Operation(
         summary = "Get all machines",
-        description = "Retrieve all gym machines across all locations"
+        description = "Retrieve all gym machines across all locations",
     )
     @ApiResponses(
         value =
             [
                 ApiResponse(
                     responseCode = "200",
-                    description = "Successful retrieval of all machines"
+                    description = "Successful retrieval of all machines",
                 ),
             ],
     )
@@ -56,7 +56,7 @@ class FacilityStatusController(
             [
                 ApiResponse(
                     responseCode = "200",
-                    description = "Successful retrieval of facilities"
+                    description = "Successful retrieval of facilities",
                 ),
             ],
     )
@@ -84,7 +84,7 @@ class FacilityStatusController(
         @Parameter(
             description = "ID of the machine",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable
         id: String,
@@ -101,7 +101,7 @@ class FacilityStatusController(
             [
                 ApiResponse(
                     responseCode = "200",
-                    description = "Successful retrieval of facilities by status"
+                    description = "Successful retrieval of facilities by status",
                 ),
             ],
     )
@@ -110,7 +110,7 @@ class FacilityStatusController(
         @Parameter(
             description = "Machine status",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable
         status: String,
@@ -164,7 +164,7 @@ class FacilityStatusController(
 
     @Operation(
         summary = "Update a facility",
-        description = "Update the details or status of an existing machine"
+        description = "Update the details or status of an existing machine",
     )
     @ApiResponses(
         value =
@@ -178,7 +178,7 @@ class FacilityStatusController(
         @Parameter(
             description = "ID of the machine to update",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable
         id: String,
@@ -191,7 +191,7 @@ class FacilityStatusController(
 
     @Operation(
         summary = "Delete a facility by ID",
-        description = "Remove a single machine by its ID"
+        description = "Remove a single machine by its ID",
     )
     @ApiResponses(
         value =
@@ -206,7 +206,7 @@ class FacilityStatusController(
         @Parameter(
             description = "ID of the machine to delete",
             required = true,
-            schema = Schema(type = "string")
+            schema = Schema(type = "string"),
         )
         @PathVariable
         id: String,

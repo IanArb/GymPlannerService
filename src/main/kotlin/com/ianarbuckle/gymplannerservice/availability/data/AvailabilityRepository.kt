@@ -13,5 +13,6 @@ interface AvailabilityRepository : CoroutineCrudRepository<Availability, String>
 
     suspend fun existsByPersonalTrainerId(personalTrainerId: String): Boolean
 
-    @Query("{ 'slots.times.id': ?0 }") suspend fun findByTimeId(timeId: String): Availability?
+    @Query("{ 'slots.times.id': ?0 }")
+    suspend fun findByTimeId(timeId: String): Availability?
 }

@@ -3,17 +3,17 @@ package com.ianarbuckle.gymplannerservice.booking
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.booking.data.BookingRepository
 import com.ianarbuckle.gymplannerservice.fcm.FcmSender
-import java.time.Clock
-import java.time.LocalDateTime
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.time.Clock
+import java.time.LocalDateTime
 
 @Component
 class BookingReminderScheduler(
     private val bookingRepository: BookingRepository,
     private val user: UserRepository,
     private val fcmSender: FcmSender,
-    private val clock: Clock
+    private val clock: Clock,
 ) {
     // Runs every hour
     @Scheduled(cron = "0 0 * * * *")
@@ -29,7 +29,7 @@ class BookingReminderScheduler(
             fcmSender.sendMessage(
                 token,
                 "Booking Reminder",
-                "You have a booking with ${booking.personalTrainer.name} on ${booking.bookingDate}"
+                "You have a booking with ${booking.personalTrainer.name} on ${booking.bookingDate}",
             )
         }
     }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.AutoConfigureDataMongo
+import org.springframework.boot.security.autoconfigure.web.reactive.ReactiveWebSecurityAutoConfiguration
 import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
@@ -18,7 +19,6 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.boot.security.autoconfigure.web.reactive.ReactiveWebSecurityAutoConfiguration
 import kotlin.test.Ignore
 
 @ExtendWith(SpringExtension::class)
@@ -35,73 +35,76 @@ class AvailabilityControllerTests {
     @MockitoBean private lateinit var availabilityService: AvailabilityService
 
     @Test
-    fun `should return availability when found`() = runTest {
-        val availability = AvailabilityDataProvider.createAvailability()
-        given(
+    fun `should return availability when found`() =
+        runTest {
+            val availability = AvailabilityDataProvider.createAvailability()
+            given(
                 availabilityService.getAvailability(
                     availability.personalTrainerId,
-                    availability.month
-                )
-            )
-            .willReturn(availability)
+                    availability.month,
+                ),
+            ).willReturn(availability)
 
-        webTestClient
-            .get()
-            .uri("/api/v1/availability/${availability.personalTrainerId}/${availability.month}")
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .jsonPath("$.personalTrainerId")
-            .isEqualTo(availability.personalTrainerId)
-            .jsonPath("$.month")
-            .isEqualTo(availability.month)
-    }
-
-    @Test
-    fun `should return 404 when availability not found`() = runTest {
-        val personalTrainerId = "trainer1"
-        val month = "2023-12"
-        given(availabilityService.getAvailability(personalTrainerId, month))
-            .willThrow(AvailabilityNotFoundException::class.java)
-
-        webTestClient
-            .get()
-            .uri("/api/v1/availability/$personalTrainerId/$month")
-            .exchange()
-            .expectStatus()
-            .isNotFound
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/availability/${availability.personalTrainerId}/${availability.month}")
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .jsonPath("$.personalTrainerId")
+                .isEqualTo(availability.personalTrainerId)
+                .jsonPath("$.month")
+                .isEqualTo(availability.month)
+        }
 
     @Test
-    fun `should return 404 when personal trainer not found`() = runTest {
-        val personalTrainerId = "trainer1"
-        val month = "2023-12"
-        given(availabilityService.getAvailability(personalTrainerId, month))
-            .willThrow(PersonalTrainerNotFoundException::class.java)
+    fun `should return 404 when availability not found`() =
+        runTest {
+            val personalTrainerId = "trainer1"
+            val month = "2023-12"
+            given(availabilityService.getAvailability(personalTrainerId, month))
+                .willThrow(AvailabilityNotFoundException::class.java)
 
-        webTestClient
-            .get()
-            .uri("/api/v1/availability/$personalTrainerId/$month")
-            .exchange()
-            .expectStatus()
-            .isNotFound
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/availability/$personalTrainerId/$month")
+                .exchange()
+                .expectStatus()
+                .isNotFound
+        }
 
     @Test
-    fun `should save availability`() = runTest {
-        val availability = AvailabilityDataProvider.createAvailability()
-        given(availabilityService.saveAvailability(availability)).willReturn(availability)
+    fun `should return 404 when personal trainer not found`() =
+        runTest {
+            val personalTrainerId = "trainer1"
+            val month = "2023-12"
+            given(availabilityService.getAvailability(personalTrainerId, month))
+                .willThrow(PersonalTrainerNotFoundException::class.java)
 
-        webTestClient
-            .post()
-            .uri("/api/v1/availability")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(availability)
-            .exchange()
-            .expectStatus()
-            .isCreated
-    }
+            webTestClient
+                .get()
+                .uri("/api/v1/availability/$personalTrainerId/$month")
+                .exchange()
+                .expectStatus()
+                .isNotFound
+        }
+
+    @Test
+    fun `should save availability`() =
+        runTest {
+            val availability = AvailabilityDataProvider.createAvailability()
+            given(availabilityService.saveAvailability(availability)).willReturn(availability)
+
+            webTestClient
+                .post()
+                .uri("/api/v1/availability")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(availability)
+                .exchange()
+                .expectStatus()
+                .isCreated
+        }
 
     @Test
     fun `should update availability`() {
@@ -131,32 +134,34 @@ class AvailabilityControllerTests {
 
     @Ignore("Flaky test")
     @Test
-    fun `should return availability status`() = runTest {
-        val personalTrainerId = "trainer1"
-        val month = "2023-12"
-        val checkAvailability = CheckAvailability(
-            personalTrainerId = personalTrainerId,
-            isAvailable = true
-        )
+    fun `should return availability status`() =
+        runTest {
+            val personalTrainerId = "trainer1"
+            val month = "2023-12"
+            val checkAvailability =
+                CheckAvailability(
+                    personalTrainerId = personalTrainerId,
+                    isAvailable = true,
+                )
 
-        given(availabilityService.isAvailable(personalTrainerId, month))
-            .willReturn(checkAvailability)
+            given(availabilityService.isAvailable(personalTrainerId, month))
+                .willReturn(checkAvailability)
 
-        val uri = "/api/v1/availability/check_availability"
+            val uri = "/api/v1/availability/check_availability"
 
-        webTestClient
-            .get()
-            .uri(
-                uri.plus("?personalTrainerId=$personalTrainerId")
-                    .plus("&month=$month")
-            )
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .jsonPath("$.personalTrainerId")
-            .isEqualTo(personalTrainerId)
-            .jsonPath("$.isAvailable")
-            .isEqualTo(true)
-    }
+            webTestClient
+                .get()
+                .uri(
+                    uri
+                        .plus("?personalTrainerId=$personalTrainerId")
+                        .plus("&month=$month"),
+                ).exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .jsonPath("$.personalTrainerId")
+                .isEqualTo(personalTrainerId)
+                .jsonPath("$.isAvailable")
+                .isEqualTo(true)
+        }
 }

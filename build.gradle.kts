@@ -79,11 +79,11 @@ tasks.withType<Test> { useJUnitPlatform() }
 spotless {
     kotlin {
         target("**/*.kt")
-        ktfmt().kotlinlangStyle()
+        ktlint()
     }
     kotlinGradle {
         target("**/*.gradle.kts")
-        ktfmt().kotlinlangStyle()
+        ktlint()
     }
 }
 
@@ -93,7 +93,10 @@ dependencyManagement {
         .all {
             resolutionStrategy.eachDependency {
                 if (requested.group == "org.jetbrains.kotlin") {
-                    useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+                    useVersion(
+                        io.gitlab.arturbosch.detekt
+                            .getSupportedKotlinVersion(),
+                    )
                 }
             }
         }

@@ -4,13 +4,13 @@ import com.ianarbuckle.gymplannerservice.authentication.data.exception.TokenExpi
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.Date
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.Date
 
 @Component
 class JwtUtils(
@@ -23,8 +23,7 @@ class JwtUtils(
 
     fun extractUsername(token: String?): String = extractClaim(token) { claims -> claims.subject }
 
-    fun extractExpiration(token: String?): Date =
-        extractClaim(token) { claims -> claims.expiration }
+    fun extractExpiration(token: String?): Date = extractClaim(token) { claims -> claims.expiration }
 
     fun <T> extractClaim(
         token: String?,
@@ -35,7 +34,12 @@ class JwtUtils(
     }
 
     private fun extractAllClaims(token: String?): Claims =
-        Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload
+        Jwts
+            .parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload
 
     private fun isTokenExpired(token: String?): Boolean {
         val expirationDate = extractExpiration(token)
@@ -54,7 +58,8 @@ class JwtUtils(
         claims: Map<String, Any?>,
         subject: String,
     ): String =
-        Jwts.builder()
+        Jwts
+            .builder()
             .claims(claims)
             .subject(subject)
             .issuedAt(Date(System.currentTimeMillis()))

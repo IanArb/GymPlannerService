@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/v1/personal_trainers")
@@ -68,7 +68,7 @@ class PersonalTrainerController(
             [
                 ApiResponse(
                     responseCode = "200",
-                    description = "Successful retrieval of scheduled trainers"
+                    description = "Successful retrieval of scheduled trainers",
                 ),
             ],
     )

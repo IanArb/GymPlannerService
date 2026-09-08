@@ -8,16 +8,16 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 class CheckInCleanupSchedulerTest {
-
     private val checkInRepository = mockk<CheckInRepository>()
     private val scheduler = CheckInCleanupScheduler(checkInRepository)
 
     @Test
-    fun `should delete all check-ins`() = runTest {
-        coEvery { checkInRepository.deleteAll() } returns Unit
+    fun `should delete all check-ins`() =
+        runTest {
+            coEvery { checkInRepository.deleteAll() } returns Unit
 
-        scheduler.deleteAllCheckIns()
+            scheduler.deleteAllCheckIns()
 
-        coVerify { checkInRepository.deleteAll() }
-    }
+            coVerify { checkInRepository.deleteAll() }
+        }
 }

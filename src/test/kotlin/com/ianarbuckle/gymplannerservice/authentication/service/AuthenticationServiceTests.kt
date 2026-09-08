@@ -18,11 +18,11 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.sql.Date
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.sql.Date
+import kotlin.test.Test
 
 class AuthenticationServiceTests {
     private val userRepository: UserRepository = mockk()
@@ -39,175 +39,182 @@ class AuthenticationServiceTests {
         )
 
     @Test
-    fun `test authenticationUser with valid credentials`() = runTest {
-        val username = "testuser"
-        val password = "password"
-        val encodedPassword = "encodedPassword"
-        val jwtToken = "jwtToken"
-        val expiration: Long = 1000
+    fun `test authenticationUser with valid credentials`() =
+        runTest {
+            val username = "testuser"
+            val password = "password"
+            val encodedPassword = "encodedPassword"
+            val jwtToken = "jwtToken"
+            val expiration: Long = 1000
 
-        coEvery { userRepository.findByUsername(username) } returns UserDataProvider.createUser()
-        every { passwordEncoder.matches(password, encodedPassword) } returns true
-        every { jwtUtils.generateToken(username) } returns jwtToken
-        every { jwtUtils.extractExpiration(jwtToken) } returns Date(expiration)
+            coEvery { userRepository.findByUsername(username) } returns UserDataProvider.createUser()
+            every { passwordEncoder.matches(password, encodedPassword) } returns true
+            every { jwtUtils.generateToken(username) } returns jwtToken
+            every { jwtUtils.extractExpiration(jwtToken) } returns Date(expiration)
 
-        val result = authenticationService.authenticationUser(LoginRequest(username, password))
+            val result = authenticationService.authenticationUser(LoginRequest(username, password))
 
-        assertThat(jwtToken).isEqualTo(result.token)
-        assertThat(expiration).isEqualTo(result.expiration)
+            assertThat(jwtToken).isEqualTo(result.token)
+            assertThat(expiration).isEqualTo(result.expiration)
 
-        coVerify { userRepository.findByUsername(username) }
-        verify { passwordEncoder.matches(password, encodedPassword) }
-        verify { jwtUtils.generateToken(username) }
-        verify { jwtUtils.extractExpiration(jwtToken) }
-    }
-
-    @Test
-    fun `test createUser with valid data`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "newuser",
-                email = "newuser@mail.com",
-                password = "password",
-                roles = setOf("user"),
-                firstName = "New",
-                surname = "User",
-            )
-
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
-        coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
-        coEvery { userRepository.save(any()) } returnsArgument 0
-        coEvery { userProfileRepository.save(any()) } returnsArgument 0
-        every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
-
-        val result = authenticationService.createUser(signUpRequest)
-
-        assertThat("User registered successfully!").isEqualTo(result.message)
-
-        coVerify { userRepository.existsByUsername(signUpRequest.username) }
-        coVerify { userRepository.existsByEmail(signUpRequest.email) }
-        coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_USER) }) }
-        coVerify { userProfileRepository.save(any()) }
-        verify { passwordEncoder.encode(signUpRequest.password) }
-    }
+            coVerify { userRepository.findByUsername(username) }
+            verify { passwordEncoder.matches(password, encodedPassword) }
+            verify { jwtUtils.generateToken(username) }
+            verify { jwtUtils.extractExpiration(jwtToken) }
+        }
 
     @Test
-    fun `test createUser propagates gymLocation to UserProfile`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "newuser",
-                email = "newuser@mail.com",
-                password = "password",
-                roles = setOf("user"),
-                firstName = "New",
-                surname = "User",
-                gymLocation = GymLocation.CLONTARF,
-            )
+    fun `test createUser with valid data`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
 
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
-        coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
-        coEvery { userRepository.save(any()) } returnsArgument 0
-        coEvery { userProfileRepository.save(any()) } returnsArgument 0
-        every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
+            coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
+            coEvery { userRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
-        authenticationService.createUser(signUpRequest)
+            val result = authenticationService.createUser(signUpRequest)
 
-        coVerify { userProfileRepository.save(match { it.gymLocation == GymLocation.CLONTARF }) }
-    }
+            assertThat("User registered successfully!").isEqualTo(result.message)
 
-    @Test
-    fun `test createUser maps admin role string to ERole_ROLE_ADMIN`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "adminuser",
-                email = "admin@mail.com",
-                password = "password",
-                roles = setOf("admin"),
-                firstName = "Admin",
-                surname = "User",
-            )
-
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
-        coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
-        coEvery { userRepository.save(any()) } returnsArgument 0
-        coEvery { userProfileRepository.save(any()) } returnsArgument 0
-        every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
-
-        authenticationService.createUser(signUpRequest)
-
-        coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_ADMIN) }) }
-    }
+            coVerify { userRepository.existsByUsername(signUpRequest.username) }
+            coVerify { userRepository.existsByEmail(signUpRequest.email) }
+            coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_USER) }) }
+            coVerify { userProfileRepository.save(any()) }
+            verify { passwordEncoder.encode(signUpRequest.password) }
+        }
 
     @Test
-    fun `test createUser with existing username`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "existinguser",
-                email = "newuser@mail.com",
-                password = "password",
-                roles = setOf("user"),
-                firstName = "New",
-                surname = "User",
-            )
+    fun `test createUser propagates gymLocation to UserProfile`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                    gymLocation = GymLocation.CLONTARF,
+                )
 
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns true
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
+            coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
+            coEvery { userRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
-        val exception =
-            assertThrows<UserAlreadyExistsException> {
-                authenticationService.createUser(signUpRequest)
-            }
+            authenticationService.createUser(signUpRequest)
 
-        assertThat(exception).isInstanceOf(UserAlreadyExistsException::class.java)
-
-        coVerify { userRepository.existsByUsername(signUpRequest.username) }
-    }
-
-    @Test
-    fun `test createUser with existing email`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "newuser",
-                email = "existing@mail.com",
-                password = "password",
-                roles = setOf("user"),
-                firstName = "New",
-                surname = "User",
-            )
-
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
-        coEvery { userRepository.existsByEmail(signUpRequest.email) } returns true
-
-        val exception =
-            assertThrows<EmailAlreadyExistsException> {
-                authenticationService.createUser(signUpRequest)
-            }
-
-        assertThat(exception).isInstanceOf(EmailAlreadyExistsException::class.java)
-
-        coVerify { userRepository.existsByUsername(signUpRequest.username) }
-        coVerify { userRepository.existsByEmail(signUpRequest.email) }
-    }
+            coVerify { userProfileRepository.save(match { it.gymLocation == GymLocation.CLONTARF }) }
+        }
 
     @Test
-    fun `test createUser with unknown role string defaults to ROLE_USER`() = runTest {
-        val signUpRequest =
-            SignUpRequest(
-                username = "newuser",
-                email = "newuser@mail.com",
-                password = "password",
-                roles = setOf("invalidrole"),
-                firstName = "New",
-                surname = "User",
-            )
+    fun `test createUser maps admin role string to ERole_ROLE_ADMIN`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "adminuser",
+                    email = "admin@mail.com",
+                    password = "password",
+                    roles = setOf("admin"),
+                    firstName = "Admin",
+                    surname = "User",
+                )
 
-        coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
-        coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
-        coEvery { userRepository.save(any()) } returnsArgument 0
-        coEvery { userProfileRepository.save(any()) } returnsArgument 0
-        every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
+            coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
+            coEvery { userRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
 
-        authenticationService.createUser(signUpRequest)
+            authenticationService.createUser(signUpRequest)
 
-        coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_USER) }) }
-    }
+            coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_ADMIN) }) }
+        }
+
+    @Test
+    fun `test createUser with existing username`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "existinguser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
+
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns true
+
+            val exception =
+                assertThrows<UserAlreadyExistsException> {
+                    authenticationService.createUser(signUpRequest)
+                }
+
+            assertThat(exception).isInstanceOf(UserAlreadyExistsException::class.java)
+
+            coVerify { userRepository.existsByUsername(signUpRequest.username) }
+        }
+
+    @Test
+    fun `test createUser with existing email`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    email = "existing@mail.com",
+                    password = "password",
+                    roles = setOf("user"),
+                    firstName = "New",
+                    surname = "User",
+                )
+
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
+            coEvery { userRepository.existsByEmail(signUpRequest.email) } returns true
+
+            val exception =
+                assertThrows<EmailAlreadyExistsException> {
+                    authenticationService.createUser(signUpRequest)
+                }
+
+            assertThat(exception).isInstanceOf(EmailAlreadyExistsException::class.java)
+
+            coVerify { userRepository.existsByUsername(signUpRequest.username) }
+            coVerify { userRepository.existsByEmail(signUpRequest.email) }
+        }
+
+    @Test
+    fun `test createUser with unknown role string defaults to ROLE_USER`() =
+        runTest {
+            val signUpRequest =
+                SignUpRequest(
+                    username = "newuser",
+                    email = "newuser@mail.com",
+                    password = "password",
+                    roles = setOf("invalidrole"),
+                    firstName = "New",
+                    surname = "User",
+                )
+
+            coEvery { userRepository.existsByUsername(signUpRequest.username) } returns false
+            coEvery { userRepository.existsByEmail(signUpRequest.email) } returns false
+            coEvery { userRepository.save(any()) } returnsArgument 0
+            coEvery { userProfileRepository.save(any()) } returnsArgument 0
+            every { passwordEncoder.encode(signUpRequest.password) } returns "encodedPassword"
+
+            authenticationService.createUser(signUpRequest)
+
+            coVerify { userRepository.save(match { it.roles == setOf(ERole.ROLE_USER) }) }
+        }
 }

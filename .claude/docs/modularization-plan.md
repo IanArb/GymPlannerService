@@ -276,19 +276,57 @@ still produces the runnable fat jar.
 
 Order by fewest dependencies so each extraction stays acyclic:
 
-1. [ ] `exercises`, `faultReporting`, `gymlocations`, `messages` (no feature deps)
+1. [ ] leaves (no feature deps):
+   - [x] **`exercises`** ✅ — extracted to `:exercises` (applies `gymplanner.spring-conventions`
+     + webflux/mongodb/validation/springdoc; **no project deps** — true leaf, no in/out
+     coupling, no tests). Package names kept; `:app` depends on
+     `implementation(project(":exercises"))` so its beans are component-scanned and
+     bundled in the fat jar (`BOOT-INF/lib/exercises-…jar`). Full gate + bootJar green.
+   - [ ] `faultReporting`, `gymlocations`, `messages`
 2. [ ] `facilityStatus`, `trainers`, `checkin` (depend on `common`/`trainers`)
 3. [ ] `fcm`, `fitnessclass` (depend on `authentication`/`fcm`)
 4. [ ] `availability`, `booking` — **break the `availability ↔ booking` cycle**
        (ports) when reached.
 5. [ ] `userProfile` **last** (most entangled).
 
-Each feature module: applies convention plugins, depends on `:core`/`:security`
-(+ specific features via ports), moves its `data`/`exception` subpackages,
-keeps tests alongside.
+Each feature module: applies convention plugins, depends on `:core-utils`/`:security`
+(+ specific features via ports), moves its `data`/`exception` subpackages, **and
+migrates its tests into the module** (co-located with the code, not left in `:app`).
+
+### Test migration is part of every extraction (not optional)
+
+For each feature, move **all** of its tests along with the code — `*ServiceTests`,
+`*ControllerTests`, `*RepositoryTests`, schedulers, and any feature-specific mock/data
+providers under `mocks/`. Two categories, handled differently (pattern established in
+Phases 3–4):
+
+- **Service / pure unit tests (MockK, no Spring context)** — move as-is. Only fix
+  imports for anything relocated (e.g. `common.UserNotFoundException`). If a test used a
+  shared `mocks/*DataProvider` that stays in `:app`, either move the provider (if only
+  this feature uses it) or inline the fixture.
+- **Controller / slice tests (`@WebFluxTest`, `@DataMongoTest`, etc.)** — moving them
+  into a library module requires, in that module:
+  1. test deps: `spring-boot-starter-test`, `spring-boot-starter-webflux-test`,
+     `spring-boot-starter-data-mongodb-test`, `flapdoodle` (as the feature needs);
+  2. a copy of `application-test.properties` in the module's `src/test/resources`
+     (remember: **`spring.mongodb.*`**, not the old `spring.data.mongodb.*`);
+  3. a local `@SpringBootApplication` test class (e.g. `XxxTestApplication`) — the real
+     app class is in `:app`, so `@WebFluxTest` otherwise fails with "Unable to find a
+     @SpringBootConfiguration", and a bare `@SpringBootConfiguration` (no component scan)
+     leaves it with no controllers → 404s.
+
+Genuinely cross-module integration tests that wire several features' controllers together
+(like `SecurityConfigTests`) stay in `:app` — a leaf/feature module can't depend on `:app`
+or sibling features without creating a cycle.
+
+After each move, run `./gradlew clean test spotlessCheck detekt` — the per-module `test`
+tasks must all pass (root `test` fans out to every module; see `run-tests.yaml`).
+
+> Note: `:exercises` (module 1) had **no** tests, so nothing to migrate there; the tiers
+> below (`*Service`/`*Controller` tests exist) will exercise this fully.
 
 **Exit criteria:** `:app` contains only wiring/config/`main()`; every feature is
-its own module; full suite green; no cycles.
+its own module **with its own tests**; full suite green; no cycles.
 
 ---
 

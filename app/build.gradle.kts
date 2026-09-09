@@ -11,6 +11,8 @@ dependencies {
     implementation(project(":core-utils"))
     implementation(project(":security"))
     implementation(project(":authentication"))
+    implementation(project(":exercises"))
+    implementation(project(":fault-reporting"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)

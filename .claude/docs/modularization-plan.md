@@ -282,12 +282,27 @@ Order by fewest dependencies so each extraction stays acyclic:
      coupling, no tests). Package names kept; `:app` depends on
      `implementation(project(":exercises"))` so its beans are component-scanned and
      bundled in the fat jar (`BOOT-INF/lib/exercises-…jar`). Full gate + bootJar green.
-   - [ ] `faultReporting`, `gymlocations`, `messages`
-2. [ ] `facilityStatus`, `trainers`, `checkin` (depend on `common`/`trainers`)
-3. [ ] `fcm`, `fitnessclass` (depend on `authentication`/`fcm`)
+   - [x] **`faultReporting`** ✅ — extracted to `:fault-reporting` (leaf, no project deps).
+     Migrated its tests too: `FaultReportServiceTests` (MockK) + `FaultReportControllerTests`
+     (`@WebFluxTest`) + the feature-only `FaultReportDataProvider` mock. Added test deps
+     (`starter-test`, `webflux-test`, and `starter-security` only so the test can reference
+     `ReactiveWebSecurityAutoConfiguration` in its exclusion), a copy of
+     `application-test.properties`, and a base-package `FaultReportTestApplication`
+     (`@SpringBootApplication`) so `@WebFluxTest` resolves a config. Full gate green.
+   - [x] **`gymlocations`** ✅ → `:gym-locations` (leaf, no project deps). Migrated
+     `GymLocationsServiceTests` (MockK) + `GymLocationsControllerTests` (`@WebFluxTest` +
+     `@AutoConfigureDataMongo`) + feature-only `GymLocationsProvider` mock. Its
+     `data/GymLocation` @Document is distinct from `:core-utils`' `common.GymLocation` enum.
+   - [x] **`messages`** ✅ → `:messages` (leaf, no project deps). Migrated `MessagesServiceTests`
+     (MockK) + `MessagesControllerTests` (`@WebFluxTest` + `@AutoConfigureDataMongo`).
+   - Both got the slice-test stack (`starter-test`, `webflux-test`, `data-mongodb-test`,
+     `flapdoodle`, `+security` for the exclusion ref), a copy of `application-test.properties`,
+     and a base-package `*TestApplication`. Full gate green across all 7 modules.
+2. [ ] `facility-status`, `trainers`, `checkin` (depend on `common`/`trainers`)
+3. [ ] `fcm`, `fitness-class` (depend on `authentication`/`fcm`)
 4. [ ] `availability`, `booking` — **break the `availability ↔ booking` cycle**
        (ports) when reached.
-5. [ ] `userProfile` **last** (most entangled).
+5. [ ] `user-profile` **last** (most entangled).
 
 Each feature module: applies convention plugins, depends on `:core-utils`/`:security`
 (+ specific features via ports), moves its `data`/`exception` subpackages, **and

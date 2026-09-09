@@ -13,6 +13,8 @@ dependencies {
     implementation(project(":authentication"))
     implementation(project(":exercises"))
     implementation(project(":fault-reporting"))
+    implementation(project(":gym-locations"))
+    implementation(project(":messages"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)

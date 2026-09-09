@@ -298,7 +298,23 @@ Order by fewest dependencies so each extraction stays acyclic:
    - Both got the slice-test stack (`starter-test`, `webflux-test`, `data-mongodb-test`,
      `flapdoodle`, `+security` for the exclusion ref), a copy of `application-test.properties`,
      and a base-package `*TestApplication`. Full gate green across all 7 modules.
-2. [ ] `facility-status`, `trainers`, `checkin` (depend on `common`/`trainers`)
+2. [x] **Tier 2 done** ✅ — `trainers`, `facility-status`, `checkin`:
+   - **`trainers`** → `:trainers`. `api(:core-utils)` because `GymLocation` is in
+     `PersonalTrainer`'s public API. Applies **`java-test-fixtures`**: the shared
+     `PersonalTrainerDataProvider` (used by trainers, checkin, and app's availability tests)
+     moved to `src/testFixtures` and is consumed via `testFixtures(project(":trainers"))`
+     (adds `kotlinx-coroutines-reactor` to the fixtures classpath for `Flow`). Migrated
+     `PersonalTrainer{Service,Controller}Tests`.
+   - **`facility-status`** → `:facility-status`, `implementation(:core-utils)` (its types
+     aren't consumed by other modules, so no `api` needed). Migrated its Service/Controller
+     tests + feature-only `FacilityStatusDataProvider`.
+   - **`checkin`** → `:checkin`, `implementation(:trainers)` (`PersonalTrainerRepository`,
+     `TrainerAvailabilityStatus`; `:core-utils` comes transitively via trainers' `api`).
+     Migrated `CheckIn{Service,Controller}Tests` + `CheckInCleanupSchedulerTest` +
+     feature-only `CheckInDataProvider`; its service test consumes the trainers test-fixture.
+   - `:app` now also depends on `:trainers`/`:facility-status`/`:checkin` and pulls
+     `testFixtures(project(":trainers"))` for `AvailabilityServiceTests`. Full gate green
+     across all 9 modules (incl. `:trainers:test`, `:facility-status:test`, `:checkin:test`).
 3. [ ] `fcm`, `fitness-class` (depend on `authentication`/`fcm`)
 4. [ ] `availability`, `booking` — **break the `availability ↔ booking` cycle**
        (ports) when reached.

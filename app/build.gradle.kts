@@ -15,6 +15,9 @@ dependencies {
     implementation(project(":fault-reporting"))
     implementation(project(":gym-locations"))
     implementation(project(":messages"))
+    implementation(project(":trainers"))
+    implementation(project(":facility-status"))
+    implementation(project(":checkin"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
@@ -40,4 +43,6 @@ dependencies {
     testImplementation(libs.spring.boot.starter.data.mongodb.test)
     testImplementation(libs.reactor.test)
     testImplementation(libs.flapdoodle.mongo)
+    // AvailabilityServiceTests uses PersonalTrainerDataProvider (test fixture in :trainers).
+    testImplementation(testFixtures(project(":trainers")))
 }

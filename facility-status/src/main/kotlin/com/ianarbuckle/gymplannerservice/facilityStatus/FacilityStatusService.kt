@@ -1,9 +1,7 @@
 package com.ianarbuckle.gymplannerservice.facilityStatus
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.facilityStatus.data.FacilityStatus
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import org.springframework.stereotype.Service
 
 interface FacilityStatusService {

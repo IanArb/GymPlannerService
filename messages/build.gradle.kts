@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.validation)

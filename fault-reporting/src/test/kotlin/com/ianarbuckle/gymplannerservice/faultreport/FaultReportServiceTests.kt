@@ -2,9 +2,9 @@ package com.ianarbuckle.gymplannerservice.faultreport
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportRepository
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportServiceImpl
+import com.ianarbuckle.gymplannerservice.faultReporting.FaultReportRepository
+import com.ianarbuckle.gymplannerservice.faultReporting.FaultReportService
+import com.ianarbuckle.gymplannerservice.faultReporting.FaultReportServiceImpl
 import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.mocks.FaultReportDataProvider
 import io.mockk.coEvery

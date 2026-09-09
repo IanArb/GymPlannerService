@@ -1,9 +1,5 @@
 package com.ianarbuckle.gymplannerservice.checkin
 
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckIn
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInRequest
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInService
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckOutRequest
 import com.ianarbuckle.gymplannerservice.checkin.exception.InvalidCheckOutTimeException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedOutException

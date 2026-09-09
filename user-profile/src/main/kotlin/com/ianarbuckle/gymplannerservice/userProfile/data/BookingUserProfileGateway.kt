@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.userProfile.data
 
-import com.ianarbuckle.gymplannerservice.booking.data.UserProfileGateway
+import com.ianarbuckle.gymplannerservice.booking.UserProfileGateway
 import org.springframework.stereotype.Component
 
 /**

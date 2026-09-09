@@ -4,10 +4,10 @@
 // booking still lives there).
 plugins {
     id("gymplanner.spring-conventions")
-    `java-test-fixtures`
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":trainers"))
 
@@ -21,6 +21,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
-    // AvailabilityServiceTests uses PersonalTrainerDataProvider (fixture in :trainers).
-    testImplementation(testFixtures(project(":trainers")))
+    // DataProviders (Availability/PersonalTrainer/...) live in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

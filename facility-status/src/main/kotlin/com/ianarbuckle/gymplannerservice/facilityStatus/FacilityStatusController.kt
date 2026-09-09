@@ -1,7 +1,6 @@
 package com.ianarbuckle.gymplannerservice.facilityStatus
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.facilityStatus.data.FacilityStatus
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema

@@ -1,8 +1,8 @@
 package com.ianarbuckle.gymplannerservice.faultreport
 
 import com.ianarbuckle.gymplannerservice.faultReporting.FaultReportController
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
+import com.ianarbuckle.gymplannerservice.faultReporting.FaultReport
+import com.ianarbuckle.gymplannerservice.faultReporting.FaultReportService
 import com.ianarbuckle.gymplannerservice.mocks.FaultReportDataProvider
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

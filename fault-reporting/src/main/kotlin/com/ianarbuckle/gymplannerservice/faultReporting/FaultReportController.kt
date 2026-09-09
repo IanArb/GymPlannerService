@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.faultReporting
 
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReport
-import com.ianarbuckle.gymplannerservice.faultReporting.data.FaultReportService
 import com.ianarbuckle.gymplannerservice.faultReporting.exception.FaultReportAlreadyExistsException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

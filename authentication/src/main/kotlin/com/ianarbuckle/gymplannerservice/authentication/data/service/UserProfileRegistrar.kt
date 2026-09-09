@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.service
 
-import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
+import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 
 /**
  * Port for persisting the profile created during registration. Implemented by

@@ -1,8 +1,6 @@
 package com.ianarbuckle.gymplannerservice.trainers
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema

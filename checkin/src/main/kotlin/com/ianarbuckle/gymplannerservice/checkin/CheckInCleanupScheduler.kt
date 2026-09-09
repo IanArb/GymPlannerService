@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.checkin
 
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInRepository
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 

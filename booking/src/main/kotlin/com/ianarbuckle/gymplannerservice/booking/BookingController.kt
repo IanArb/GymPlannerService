@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.booking
 
-import com.ianarbuckle.gymplannerservice.booking.data.Booking
-import com.ianarbuckle.gymplannerservice.booking.data.BookingService
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException

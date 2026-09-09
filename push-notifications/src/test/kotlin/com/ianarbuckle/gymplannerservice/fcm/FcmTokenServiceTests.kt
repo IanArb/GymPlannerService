@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.fcm
 
-import com.ianarbuckle.gymplannerservice.authentication.data.model.User
+import com.ianarbuckle.gymplannerservice.authentication.User
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.fcm.data.FcmTokenServiceImpl
 import io.mockk.coEvery

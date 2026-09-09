@@ -2,7 +2,6 @@ package com.ianarbuckle.gymplannerservice.fitnessclass
 
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.fcm.FcmSender
-import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassesService
 import kotlinx.coroutines.flow.filter
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component

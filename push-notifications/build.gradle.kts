@@ -10,6 +10,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":authentication"))
 
     implementation(libs.spring.boot.starter.webflux)

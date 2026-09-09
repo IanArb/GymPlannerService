@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.checkin
 
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInService
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInStatus
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyCheckedOutException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotCheckedInException

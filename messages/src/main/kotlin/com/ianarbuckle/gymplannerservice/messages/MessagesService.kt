@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.messages
 
-import com.ianarbuckle.gymplannerservice.messages.data.Message
-import com.ianarbuckle.gymplannerservice.messages.data.MessagesRepository
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 

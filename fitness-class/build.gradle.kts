@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":authentication"))
     implementation(project(":push-notifications"))
 
@@ -17,4 +18,6 @@ dependencies {
     testImplementation(libs.spring.boot.starter.webflux.test)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
+    // FitnessClassDataProvider lives in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

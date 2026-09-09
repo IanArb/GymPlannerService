@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.validation)
@@ -15,4 +17,6 @@ dependencies {
     // Only needed so the @WebFluxTest can reference ReactiveWebSecurityAutoConfiguration
     // in its excludeAutoConfiguration (security is not otherwise used by this feature).
     testImplementation(libs.spring.boot.starter.security)
+    // FaultReportDataProvider lives in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

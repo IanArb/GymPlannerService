@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.checkin
 
-import com.ianarbuckle.gymplannerservice.checkin.data.CheckInRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

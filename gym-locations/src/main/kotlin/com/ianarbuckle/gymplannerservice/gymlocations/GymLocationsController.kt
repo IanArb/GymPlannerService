@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.gymlocations
 
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema

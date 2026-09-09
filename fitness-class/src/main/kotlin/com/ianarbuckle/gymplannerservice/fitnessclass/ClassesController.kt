@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.fitnessclass
 
-import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClass
-import com.ianarbuckle.gymplannerservice.fitnessclass.data.FitnessClassesService
 import com.ianarbuckle.gymplannerservice.fitnessclass.exception.NoFitnessClassFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

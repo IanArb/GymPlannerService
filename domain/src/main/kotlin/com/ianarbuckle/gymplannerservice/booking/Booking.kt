@@ -1,0 +1,44 @@
+package com.ianarbuckle.gymplannerservice.booking
+
+import com.ianarbuckle.gymplannerservice.common.GymLocation
+import com.ianarbuckle.gymplannerservice.validation.FutureDate
+import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.NotNull
+import org.bson.codecs.pojo.annotations.BsonId
+import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDate
+import java.time.LocalTime
+
+@Schema(description = "Booking information")
+@Document
+data class Booking(
+    @BsonId val id: String? = null,
+    @Schema(description = "Time slot id") val timeSlotId: String,
+    @field:NotNull(message = "User id is mandatory") val userId: String,
+    @Schema(description = "Booking date")
+    @field:NotNull(message = "Booking date is mandatory")
+    @field:FutureDate
+    val bookingDate: LocalDate,
+    @Schema(description = "Start time")
+    @field:NotNull(message = "Start time is mandatory")
+    val startTime: LocalTime,
+    @Schema(description = "Personal trainer information")
+    @field:NotNull(message = "Personal trainer is mandatory")
+    val personalTrainer: PersonalTrainerBooking,
+    @Schema(description = "Booking status") val status: BookingStatus? = BookingStatus.PENDING,
+)
+
+enum class BookingStatus {
+    PENDING,
+    CONFIRMED,
+    CANCELLED,
+}
+
+@Schema(description = "Personal trainer information")
+@Document
+data class PersonalTrainerBooking(
+    val id: String,
+    @Schema(description = "Name") val name: String,
+    @Schema(description = "Image URL") val imageUrl: String,
+    @Schema(description = "Gym location") val gymLocation: GymLocation,
+)

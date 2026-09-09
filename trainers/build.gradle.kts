@@ -3,19 +3,15 @@
 // artifact (PersonalTrainerDataProvider) consumed by :checkin and :app tests.
 plugins {
     id("gymplanner.spring-conventions")
-    `java-test-fixtures`
 }
 
 dependencies {
-    api(project(":core-utils"))
+    implementation(project(":domain"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.validation)
     implementation(libs.springdoc.openapi.webflux.ui)
-
-    // PersonalTrainerDataProvider builds Flow-based fixtures.
-    testFixturesImplementation(libs.kotlinx.coroutines.reactor)
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.starter.webflux.test)
@@ -23,4 +19,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
+    // DataProviders (PersonalTrainerDataProvider, ...) live in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

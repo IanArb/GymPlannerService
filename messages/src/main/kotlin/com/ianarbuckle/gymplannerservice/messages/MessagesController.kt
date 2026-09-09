@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.messages
 
-import com.ianarbuckle.gymplannerservice.messages.data.Message
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses

@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":authentication"))
     implementation(project(":booking"))
@@ -21,6 +22,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
-    // UserProfile tests use UserProfileDataProvider (fixture in :authentication).
-    testImplementation(testFixtures(project(":authentication")))
+    // UserProfileDataProvider lives in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

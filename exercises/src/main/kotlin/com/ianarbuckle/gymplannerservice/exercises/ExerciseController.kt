@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.exercises
 
-import com.ianarbuckle.gymplannerservice.exercises.data.Exercise
-import com.ianarbuckle.gymplannerservice.exercises.data.ExerciseService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import kotlinx.coroutines.flow.Flow

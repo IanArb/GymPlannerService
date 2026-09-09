@@ -7,6 +7,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":authentication"))
     implementation(project(":availability"))
@@ -24,7 +25,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
-    // AvailabilityDataProvider fixture (BookingServiceTests). The user-profile
-    // dependency is behind the UserProfileGateway port, so no auth fixture needed.
-    testImplementation(testFixtures(project(":availability")))
+    // DataProviders (Booking/Availability/User/...) live in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

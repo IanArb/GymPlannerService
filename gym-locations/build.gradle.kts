@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.validation)
@@ -16,4 +18,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
+    // GymLocationsProvider lives in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

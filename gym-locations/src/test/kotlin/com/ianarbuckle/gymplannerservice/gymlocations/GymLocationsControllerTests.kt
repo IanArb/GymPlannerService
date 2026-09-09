@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.gymlocations
 
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocation
-import com.ianarbuckle.gymplannerservice.gymlocations.data.GymLocationsService
 import com.ianarbuckle.gymplannerservice.mocks.GymLocationsProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

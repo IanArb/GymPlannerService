@@ -4,12 +4,10 @@
 // feature modules (cross-feature calls are inverted behind ports it owns).
 plugins {
     id("gymplanner.spring-conventions")
-    // Publishes UserProfileDataProvider (UserProfile fixtures) consumed by
-    // :booking and the user-profile tests still in :app.
-    `java-test-fixtures`
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":security"))
 

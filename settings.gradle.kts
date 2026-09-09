@@ -10,6 +10,7 @@ rootProject.name = "GymPlannerService"
 
 include(":app")
 include(":core-utils")
+include(":domain")
 include(":security")
 include(":authentication")
 include(":exercises")

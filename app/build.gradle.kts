@@ -8,6 +8,7 @@ plugins {
 description = "app"
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":security"))
     implementation(project(":authentication"))

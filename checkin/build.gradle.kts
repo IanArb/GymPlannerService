@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":trainers"))
 
     implementation(libs.spring.boot.starter.webflux)
@@ -19,6 +20,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
-    // CheckInServiceTests uses PersonalTrainerDataProvider (test fixture in :trainers).
-    testImplementation(testFixtures(project(":trainers")))
+    // DataProviders (CheckIn/PersonalTrainer/...) live in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

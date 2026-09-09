@@ -1,8 +1,5 @@
 package com.ianarbuckle.gymplannerservice.availability
 
-import com.ianarbuckle.gymplannerservice.availability.data.Availability
-import com.ianarbuckle.gymplannerservice.availability.data.AvailabilityService
-import com.ianarbuckle.gymplannerservice.availability.data.CheckAvailability
 import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
 import io.swagger.v3.oas.annotations.Operation

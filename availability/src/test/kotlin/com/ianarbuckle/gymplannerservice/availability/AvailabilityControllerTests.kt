@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.availability
 
-import com.ianarbuckle.gymplannerservice.availability.data.AvailabilityService
-import com.ianarbuckle.gymplannerservice.availability.data.CheckAvailability
 import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.AvailabilityDataProvider

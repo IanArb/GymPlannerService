@@ -6,9 +6,9 @@ import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageRespo
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
-import com.ianarbuckle.gymplannerservice.authentication.data.model.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.model.User
-import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
+import com.ianarbuckle.gymplannerservice.authentication.ERole
+import com.ianarbuckle.gymplannerservice.authentication.User
+import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.security.JwtUtils

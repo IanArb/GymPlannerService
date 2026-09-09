@@ -1,6 +1,5 @@
 package com.ianarbuckle.gymplannerservice.messages
 
-import com.ianarbuckle.gymplannerservice.messages.data.Message
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith

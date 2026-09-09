@@ -1,7 +1,6 @@
 package com.ianarbuckle.gymplannerservice.booking
 
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.booking.data.BookingRepository
 import com.ianarbuckle.gymplannerservice.fcm.FcmSender
 import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.UserDataProvider

@@ -3,7 +3,6 @@ package com.ianarbuckle.gymplannerservice.facilityStatus
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.facilityStatus.data.MachineStatus
 import com.ianarbuckle.gymplannerservice.mocks.FacilityStatusDataProvider
 import io.mockk.coEvery
 import io.mockk.coVerify

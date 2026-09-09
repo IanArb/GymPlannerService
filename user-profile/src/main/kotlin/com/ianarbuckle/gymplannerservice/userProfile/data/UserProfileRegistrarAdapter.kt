@@ -1,6 +1,6 @@
 package com.ianarbuckle.gymplannerservice.userProfile.data
 
-import com.ianarbuckle.gymplannerservice.authentication.data.model.UserProfile
+import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.service.UserProfileRegistrar
 import org.springframework.stereotype.Component
 

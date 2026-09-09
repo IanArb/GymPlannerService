@@ -2,8 +2,6 @@ package com.ianarbuckle.gymplannerservice.trainers
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.trainers.data.PersonalTrainersService
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.`when`

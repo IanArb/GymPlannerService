@@ -1,8 +1,6 @@
 package com.ianarbuckle.gymplannerservice.facilityStatus
 
 import com.ianarbuckle.gymplannerservice.common.GymLocation
-import com.ianarbuckle.gymplannerservice.facilityStatus.data.FacilityStatus
-import com.ianarbuckle.gymplannerservice.facilityStatus.data.MachineStatus
 import com.ianarbuckle.gymplannerservice.mocks.FacilityStatusDataProvider
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

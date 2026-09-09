@@ -443,6 +443,38 @@ base-package `*TestApplication` so `@WebFluxTest` slices resolve a `@SpringBootC
 
 ---
 
+## Post-migration: `:domain` module (shared entities + test fixtures) ✅ DONE
+
+Consolidated the persistence **entities/value types/enums** into a base `:domain` module,
+so all test data providers can live in one place.
+
+- **Why:** test fixtures were split across three `java-test-fixtures` source sets
+  (`:authentication`, `:trainers`, `:availability`) plus seven feature-local `*DataProvider`s.
+  A central `:test-support` module is impossible (it would depend on feature mains while
+  their tests depend back on it → project cycle). A base `:domain` module sits *below* every
+  feature, so its `testFixtures` can hold **all** providers with no cycle.
+- **What moved:** 11 entity files (`User`/`ERole`/`UserProfile`, `PersonalTrainer`,
+  `Availability`, `Booking`, `CheckIn`, `Exercise`, `FacilityStatus`, `FaultReport`,
+  `FitnessClass`, gym-locations `GymLocation` doc, `Message`) + all 10 `*DataProvider`s →
+  `:domain` (`src/main` and `src/testFixtures`). **Package names preserved** → zero source
+  import changes; it's a file-move + build-wiring refactor. Web request/response DTOs
+  (`LoginRequest`, `JwtResponse`, `FcmToken*`) stayed in their features.
+- **Wiring:** every feature `implementation(project(":domain"))`; every module whose tests
+  use a provider switched to `testImplementation(testFixtures(project(":domain")))`; the three
+  old `java-test-fixtures` source sets removed. `:domain` exposes its Spring deps (mongodb,
+  validation, springdoc) + `:core-utils` via `api` (entity annotations are part of the
+  compiled surface). The Spring Boot `platform()` BOM had to be added to
+  `testFixturesImplementation` explicitly (the convention only puts it on
+  implementation/testImplementation).
+- **Trade-off accepted:** this is a shared-kernel layer (entities in `:domain`,
+  repositories/services/controllers in features) — a deliberate step away from pure vertical
+  slices. Note it creates **split packages** across modules (e.g. `trainers.data.PersonalTrainer`
+  in `:domain`, `trainers.data.PersonalTrainerRepository` in `:trainers`) — fine on the plain
+  classpath, but would need attention under JPMS.
+- Full gate + `:app:bootJar` green (17 `include`s; `domain-*.jar` bundled).
+
+---
+
 ## Conventions during migration
 
 - One phase (or one module within Phase 5) per PR — keep diffs reviewable.

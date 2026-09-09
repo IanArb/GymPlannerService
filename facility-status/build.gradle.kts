@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core-utils"))
 
     implementation(libs.spring.boot.starter.webflux)
@@ -17,4 +18,6 @@ dependencies {
     testImplementation(libs.flapdoodle.mongo)
     // Only for the @WebFluxTest's ReactiveWebSecurityAutoConfiguration exclusion.
     testImplementation(libs.spring.boot.starter.security)
+    // FacilityStatusDataProvider lives in :domain test fixtures.
+    testImplementation(testFixtures(project(":domain")))
 }

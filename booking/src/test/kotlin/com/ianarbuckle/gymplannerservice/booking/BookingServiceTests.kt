@@ -3,16 +3,13 @@ package com.ianarbuckle.gymplannerservice.booking
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import com.ianarbuckle.gymplannerservice.availability.AvailabilityRepository
-import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
+import com.ianarbuckle.gymplannerservice.common.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.AvailabilityDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.BookingDataProvider
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainer
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainerRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -24,16 +21,16 @@ import kotlin.test.Test
 
 class BookingServiceTests {
     private val bookingsRepository = mockk<BookingRepository>()
-    private val personalTrainersRepository = mockk<PersonalTrainerRepository>()
+    private val personalTrainerGateway = mockk<PersonalTrainerGateway>()
     private val userProfileGateway = mockk<UserProfileGateway>()
-    private val availabilityRepository = mockk<AvailabilityRepository>()
+    private val availabilityGateway = mockk<AvailabilityGateway>()
 
     private val bookingService =
         BookingServiceImpl(
             bookingsRepository = bookingsRepository,
-            personalTrainersRepository = personalTrainersRepository,
+            personalTrainerGateway = personalTrainerGateway,
             userProfileGateway = userProfileGateway,
-            availabilityRepository = availabilityRepository,
+            availabilityGateway = availabilityGateway,
         )
 
     @Test
@@ -72,7 +69,7 @@ class BookingServiceTests {
     @Test
     fun `findBookingsByPersonalTrainerId should throw exception when personal trainer not found`() =
         runTest {
-            coEvery { personalTrainersRepository.findById("1") } returns null
+            coEvery { personalTrainerGateway.existsById("1") } returns false
 
             val exception =
                 assertThrows<PersonalTrainerNotFoundException> {
@@ -89,7 +86,7 @@ class BookingServiceTests {
     @Test
     fun `findBookingsByPersonalTrainerId should throw exception when no bookings found`() =
         runTest {
-            coEvery { personalTrainersRepository.findById("1") } returns mockk<PersonalTrainer>()
+            coEvery { personalTrainerGateway.existsById("1") } returns true
             coEvery { bookingsRepository.findBookingsByPersonalTrainerId("1") } returns flowOf()
 
             val exception =
@@ -108,17 +105,7 @@ class BookingServiceTests {
     fun `saveBooking should throw exception when personal trainer already booked`() =
         runTest {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
-            val personalTrainer =
-                PersonalTrainer(
-                    id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.name,
-                    lastName = booking.personalTrainer.name,
-                    bio = "",
-                    imageUrl = booking.personalTrainer.imageUrl,
-                    gymLocation = booking.personalTrainer.gymLocation,
-                    qualifications = emptyList(),
-                )
-            coEvery { personalTrainersRepository.findById(any()) } returns personalTrainer
+            coEvery { personalTrainerGateway.existsById(any()) } returns true
             coEvery { bookingsRepository.findAll() } returns flowOf(booking)
 
             val exception =
@@ -138,29 +125,20 @@ class BookingServiceTests {
         runTest {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
 
-            coEvery { personalTrainersRepository.findById(any()) } returns
-                PersonalTrainer(
-                    id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.name,
-                    lastName = booking.personalTrainer.name,
-                    bio = "",
-                    imageUrl = booking.personalTrainer.imageUrl,
-                    gymLocation = booking.personalTrainer.gymLocation,
-                    qualifications = emptyList(),
-                )
+            coEvery { personalTrainerGateway.existsById(any()) } returns true
             coEvery { bookingsRepository.findAll() } returns flowOf()
             coEvery { bookingsRepository.save(booking) } returns booking
 
-            coEvery { availabilityRepository.save(any()) } returns
+            coEvery { availabilityGateway.save(any()) } returns
                 AvailabilityDataProvider.createAvailability()
-            coEvery { availabilityRepository.findByTimeId(any()) } returns
+            coEvery { availabilityGateway.findByTimeId(any()) } returns
                 AvailabilityDataProvider.createAvailability(
                     timeSlotId = "1",
                 )
 
             val result = bookingService.saveBooking(booking)
 
-            coVerify(exactly = 1) { availabilityRepository.save(any()) }
+            coVerify(exactly = 1) { availabilityGateway.save(any()) }
 
             assertThat(result).isEqualTo(booking)
         }
@@ -170,29 +148,20 @@ class BookingServiceTests {
         runTest {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
 
-            coEvery { personalTrainersRepository.findById(any()) } returns
-                PersonalTrainer(
-                    id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.name,
-                    lastName = booking.personalTrainer.name,
-                    bio = "",
-                    imageUrl = booking.personalTrainer.imageUrl,
-                    gymLocation = booking.personalTrainer.gymLocation,
-                    qualifications = emptyList(),
-                )
+            coEvery { personalTrainerGateway.existsById(any()) } returns true
             coEvery { bookingsRepository.findAll() } returns flowOf()
             coEvery { bookingsRepository.save(booking) } returns booking
 
-            coEvery { availabilityRepository.save(any()) } returns
+            coEvery { availabilityGateway.save(any()) } returns
                 AvailabilityDataProvider.createAvailability()
-            coEvery { availabilityRepository.findByTimeId(any()) } returns
+            coEvery { availabilityGateway.findByTimeId(any()) } returns
                 AvailabilityDataProvider.createAvailability(
                     timeSlotId = "2",
                 )
 
             val result = bookingService.saveBooking(booking)
 
-            coVerify(exactly = 0) { availabilityRepository.save(any()) }
+            coVerify(exactly = 0) { availabilityGateway.save(any()) }
 
             assertThat(result).isEqualTo(booking)
         }
@@ -202,22 +171,13 @@ class BookingServiceTests {
         runTest {
             val booking = BookingDataProvider.createBooking(status = BookingStatus.CONFIRMED)
 
-            coEvery { personalTrainersRepository.findById(any()) } returns
-                PersonalTrainer(
-                    id = booking.personalTrainer.id,
-                    firstName = booking.personalTrainer.name,
-                    lastName = booking.personalTrainer.name,
-                    bio = "",
-                    imageUrl = booking.personalTrainer.imageUrl,
-                    gymLocation = booking.personalTrainer.gymLocation,
-                    qualifications = emptyList(),
-                )
+            coEvery { personalTrainerGateway.existsById(any()) } returns true
             coEvery { bookingsRepository.findAll() } returns flowOf()
             coEvery { bookingsRepository.save(booking) } returns booking
 
-            coEvery { availabilityRepository.save(any()) } returns
+            coEvery { availabilityGateway.save(any()) } returns
                 AvailabilityDataProvider.createAvailability()
-            coEvery { availabilityRepository.findByTimeId(any()) } returns null
+            coEvery { availabilityGateway.findByTimeId(any()) } returns null
 
             val exception =
                 assertThrows<AvailabilityNotFoundException> { bookingService.saveBooking(booking) }

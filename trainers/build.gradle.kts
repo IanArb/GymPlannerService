@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

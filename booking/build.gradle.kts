@@ -10,8 +10,6 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":authentication"))
-    implementation(project(":availability"))
-    implementation(project(":trainers"))
     implementation(project(":push-notifications"))
 
     implementation(libs.spring.boot.starter.webflux)

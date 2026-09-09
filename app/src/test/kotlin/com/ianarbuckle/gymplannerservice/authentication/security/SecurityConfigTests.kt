@@ -2,9 +2,9 @@ package com.ianarbuckle.gymplannerservice.authentication.security
 
 import com.google.common.truth.Truth.assertThat
 import com.ianarbuckle.gymplannerservice.authentication.AuthenticationController
+import com.ianarbuckle.gymplannerservice.authentication.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
-import com.ianarbuckle.gymplannerservice.authentication.ERole
 import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusController
 import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusService

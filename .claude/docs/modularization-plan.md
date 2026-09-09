@@ -350,7 +350,16 @@ Order by fewest dependencies so each extraction stays acyclic:
    - `UserProfileDataProvider` (shared with tier-5 userProfile tests) → **`:authentication`
      test-fixture**; `:app` consumes `testFixtures(:authentication)` for those tests.
    - Full gate green across all 13 modules (15 `include`s incl. root/app).
-5. [ ] `user-profile` **last** (most entangled).
+5. [x] **Tier 5 done** ✅ — `userProfile` → `:user-profile` (the last feature).
+   Depends on `:authentication` (UserProfile model + `UserProfileRegistrar` port),
+   `:booking` (`UserProfileGateway` port) and `:core-utils`. It **implements both ports**
+   (`UserProfileRegistrarAdapter`, `BookingUserProfileGateway`) so `:authentication` and
+   `:booking` never depend back on it — fully acyclic. Migrated
+   `UserProfile{Service,Controller}Tests` (`@WebFluxTest` + `@AutoConfigureDataMongo`,
+   using the `:authentication` `UserProfileDataProvider` fixture). Afterwards `:app`'s
+   `testFixtures(:authentication)` was dropped (only userProfile tests used it).
+   **`:app/src/main` is now just `GymPlannerServiceApplication` + `Configuration`** —
+   the target end-state. Full gate + `:app:bootJar` green (all 15 module jars bundled).
 
 Each feature module: applies convention plugins, depends on `:core-utils`/`:security`
 (+ specific features via ports), moves its `data`/`exception` subpackages, **and
@@ -388,8 +397,49 @@ tasks must all pass (root `test` fans out to every module; see `run-tests.yaml`)
 > Note: `:exercises` (module 1) had **no** tests, so nothing to migrate there; the tiers
 > below (`*Service`/`*Controller` tests exist) will exercise this fully.
 
-**Exit criteria:** `:app` contains only wiring/config/`main()`; every feature is
-its own module **with its own tests**; full suite green; no cycles.
+**Exit criteria (all met ✅):** `:app` contains only wiring/config/`main()`
+(`GymPlannerServiceApplication` + `Configuration`); every feature is its own module
+**with its own tests**; full suite green; no cycles.
+
+---
+
+## ✅ Migration complete
+
+All phases done. Final layout (15 Gradle modules + `build-logic`):
+
+```
+:app  (entrypoint + Configuration + bootJar; depends on every feature module)
+  → :authentication :security :core-utils
+  → :exercises :fault-reporting :gym-locations :messages
+  → :trainers :facility-status :checkin
+  → :push-notifications :fitness-class
+  → :availability :booking :user-profile
+
+:authentication → :core-utils, :security          (+ testFixtures: UserProfileDataProvider)
+:security, :core-utils                             (leaves)
+:trainers → :core-utils (api)                      (+ testFixtures: PersonalTrainerDataProvider)
+:facility-status, :exercises, :fault-reporting, :gym-locations, :messages → (leaf/`:core-utils`)
+:checkin → :trainers
+:push-notifications → :authentication
+:fitness-class → :authentication, :push-notifications
+:availability → :trainers, :core-utils             (+ testFixtures: AvailabilityDataProvider)
+:booking → :authentication, :availability, :trainers, :push-notifications, :core-utils
+:user-profile → :authentication, :booking, :core-utils
+```
+
+**Cycles broken via ports / relocation** (no Gradle cycles anywhere):
+- `security` ↔ `authentication` → `SecurityUserLookup` port (impl in :authentication).
+- `authentication` → `userProfile` → `UserProfileRegistrar` port (impl in :user-profile).
+- `booking` → `userProfile` → `UserProfileGateway` port (impl in :user-profile).
+- `availability` ↔ `booking` → relocated `PersonalTrainerNotFoundException` to `:core-utils`.
+- Shared exceptions (`UserNotFoundException`, `PersonalTrainerNotFoundException`) live in `:core-utils`.
+
+**Shared test data** lives as `java-test-fixtures` on the owning module
+(`:authentication`, `:trainers`, `:availability`); each feature's own mocks moved with it.
+
+**Cross-cutting build facts:** `spring.mongodb.*` (Boot 4), `javaParameters = true` for
+Jackson, `platform()` BOM instead of `io.spring.dependency-management`, and a per-module
+base-package `*TestApplication` so `@WebFluxTest` slices resolve a `@SpringBootConfiguration`.
 
 ---
 

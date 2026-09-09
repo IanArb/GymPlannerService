@@ -20,6 +20,8 @@ dependencies {
     implementation(project(":checkin"))
     implementation(project(":push-notifications"))
     implementation(project(":fitness-class"))
+    implementation(project(":availability"))
+    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
@@ -43,6 +45,7 @@ dependencies {
     testImplementation(libs.spring.boot.starter.data.mongodb.test)
     testImplementation(libs.reactor.test)
     testImplementation(libs.flapdoodle.mongo)
-    // AvailabilityServiceTests uses PersonalTrainerDataProvider (test fixture in :trainers).
-    testImplementation(testFixtures(project(":trainers")))
+    // The user-profile tests (still in :app, Tier 5) use UserProfileDataProvider
+    // (fixture in :authentication).
+    testImplementation(testFixtures(project(":authentication")))
 }

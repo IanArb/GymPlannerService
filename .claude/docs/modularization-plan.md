@@ -331,8 +331,25 @@ Order by fewest dependencies so each extraction stays acyclic:
      `FakeFitnessClassRepository`, and feature-only `FitnessClassDataProvider`.
    - Both got base-package `*TestApplication`s + `application-test.properties`. Full gate
      green across all 11 modules.
-4. [ ] `availability`, `booking` — **break the `availability ↔ booking` cycle**
-       (ports) when reached.
+4. [x] **Tier 4 done** ✅ — `availability`, `booking` (cycles broken):
+   - **`availability ↔ booking` broken by relocation:** the only `availability → booking`
+     edge was `PersonalTrainerNotFoundException` → moved to `:core-utils/common` (alongside
+     `UserNotFoundException`). That left one-way `booking → availability`, so `availability`
+     extracted first.
+   - **`availability`** → `:availability`, `implementation(:trainers, :core-utils)` +
+     `java-test-fixtures` (`AvailabilityDataProvider`, consumed by `:booking`). Migrated its
+     Service/Controller tests; `AvailabilityServiceTests` uses the `:trainers` fixture.
+   - **`booking ↔ userProfile` broken by a port:** `BookingService` only checked profile
+     existence, so added `UserProfileGateway { existsByUserId }` in `:booking`, implemented
+     by `BookingUserProfileGateway` in `:app`'s userProfile feature. `:booking` no longer
+     depends on userProfile (which is still in `:app`).
+   - **`booking`** → `:booking`, depends on `:authentication`, `:availability`, `:trainers`,
+     `:push-notifications`, `:core-utils`. Migrated `Bookings ControllerTests`,
+     `BookingServiceTests` (rewired to mock the port), `BookingReminderSchedulerTest`, and
+     feature-only `BookingDataProvider`/`UserDataProvider`.
+   - `UserProfileDataProvider` (shared with tier-5 userProfile tests) → **`:authentication`
+     test-fixture**; `:app` consumes `testFixtures(:authentication)` for those tests.
+   - Full gate green across all 13 modules (15 `include`s incl. root/app).
 5. [ ] `user-profile` **last** (most entangled).
 
 Each feature module: applies convention plugins, depends on `:core-utils`/`:security`

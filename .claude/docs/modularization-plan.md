@@ -315,7 +315,22 @@ Order by fewest dependencies so each extraction stays acyclic:
    - `:app` now also depends on `:trainers`/`:facility-status`/`:checkin` and pulls
      `testFixtures(project(":trainers"))` for `AvailabilityServiceTests`. Full gate green
      across all 9 modules (incl. `:trainers:test`, `:facility-status:test`, `:checkin:test`).
-3. [ ] `fcm`, `fitness-class` (depend on `authentication`/`fcm`)
+3. [x] **Tier 3 done** ✅ — `fcm`, `fitnessclass`:
+   - **`fcm`** → **`:push-notifications`** (module named provider-agnostically for future
+     APNS/etc.; package kept as `fcm` — it's the current provider's sub-package, an `apns`
+     sibling can join later behind a shared abstraction). Depends on `:authentication`
+     (`FcmTokenService` stores the token on `User` via `UserRepository`) + `firebase-admin`
+     + `mongodb-reactive` (to resolve the repository supertype). Moved
+     `firebase-service-account.json` into the module's `src/main/resources` (updated
+     `.gitignore`) and dropped `firebase-admin` from `:app`. Migrated
+     `Fcm{Sender,TokenService,Controller}Tests` (build `User` inline — no shared mock).
+   - **`fitnessclass`** → **`:fitness-class`**, depends on `:authentication` +
+     `:push-notifications` (`ClassesScheduler` uses `UserRepository` + `FcmSender`). Migrated
+     `ClassesControllerTests` (`@WebFluxTest`, no embedded Mongo — uses fakes), the
+     `fakes/` (`FakeFitnessClassService`, `FitnessClassRepositoryTests`),
+     `FakeFitnessClassRepository`, and feature-only `FitnessClassDataProvider`.
+   - Both got base-package `*TestApplication`s + `application-test.properties`. Full gate
+     green across all 11 modules.
 4. [ ] `availability`, `booking` — **break the `availability ↔ booking` cycle**
        (ports) when reached.
 5. [ ] `user-profile` **last** (most entangled).

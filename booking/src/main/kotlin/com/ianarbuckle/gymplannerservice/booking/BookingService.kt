@@ -1,13 +1,11 @@
 package com.ianarbuckle.gymplannerservice.booking
 
-import com.ianarbuckle.gymplannerservice.availability.AvailabilityRepository
 import com.ianarbuckle.gymplannerservice.availability.Status
-import com.ianarbuckle.gymplannerservice.availability.exception.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.BookingsNotFoundException
 import com.ianarbuckle.gymplannerservice.booking.exception.PersonalTrainerAlreadyBookedException
+import com.ianarbuckle.gymplannerservice.common.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.utils.isEmpty
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -32,9 +30,9 @@ interface BookingService {
 @Service
 class BookingServiceImpl(
     private val bookingsRepository: BookingRepository,
-    private val personalTrainersRepository: PersonalTrainerRepository,
+    private val personalTrainerGateway: PersonalTrainerGateway,
     private val userProfileGateway: UserProfileGateway,
-    private val availabilityRepository: AvailabilityRepository,
+    private val availabilityGateway: AvailabilityGateway,
 ) : BookingService {
     override fun fetchAllBookings(): Flow<Booking> = bookingsRepository.findAll()
 
@@ -75,7 +73,7 @@ class BookingServiceImpl(
             }
         }
 
-        val availability = availabilityRepository.findByTimeId(booking.timeSlotId)
+        val availability = availabilityGateway.findByTimeId(booking.timeSlotId)
 
         val updatedSlots = availability?.slots ?: throw AvailabilityNotFoundException()
         updatedSlots.map { slot ->
@@ -84,7 +82,7 @@ class BookingServiceImpl(
             if (time != null && time.status == Status.AVAILABLE) {
                 val updatedTime = time.copy(status = Status.BOOKED)
                 val updatedSlot = slot.copy(times = slot.times - time + updatedTime)
-                availabilityRepository.save(
+                availabilityGateway.save(
                     availability.copy(slots = availability.slots - slot + updatedSlot),
                 )
             }
@@ -94,8 +92,9 @@ class BookingServiceImpl(
     }
 
     private suspend fun validatePersonalTrainer(personalTrainerId: String) {
-        personalTrainersRepository.findById(personalTrainerId)
-            ?: throw PersonalTrainerNotFoundException()
+        if (!personalTrainerGateway.existsById(personalTrainerId)) {
+            throw PersonalTrainerNotFoundException()
+        }
     }
 
     override suspend fun updateBooking(booking: Booking) {

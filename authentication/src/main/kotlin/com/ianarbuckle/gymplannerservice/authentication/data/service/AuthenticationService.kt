@@ -1,14 +1,14 @@
 package com.ianarbuckle.gymplannerservice.authentication.data.service
 
+import com.ianarbuckle.gymplannerservice.authentication.ERole
+import com.ianarbuckle.gymplannerservice.authentication.User
+import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.JwtResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.LoginRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
 import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.EmailAlreadyExistsException
 import com.ianarbuckle.gymplannerservice.authentication.data.exception.UserAlreadyExistsException
-import com.ianarbuckle.gymplannerservice.authentication.ERole
-import com.ianarbuckle.gymplannerservice.authentication.User
-import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
 import com.ianarbuckle.gymplannerservice.common.UserNotFoundException
 import com.ianarbuckle.gymplannerservice.security.JwtUtils

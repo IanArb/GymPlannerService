@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core-utils"))
     implementation(project(":trainers"))
+    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

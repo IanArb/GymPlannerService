@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":fitness-class"))
     implementation(project(":availability"))
     implementation(project(":booking"))
+    implementation(project(":user-profile"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
@@ -45,7 +46,4 @@ dependencies {
     testImplementation(libs.spring.boot.starter.data.mongodb.test)
     testImplementation(libs.reactor.test)
     testImplementation(libs.flapdoodle.mongo)
-    // The user-profile tests (still in :app, Tier 5) use UserProfileDataProvider
-    // (fixture in :authentication).
-    testImplementation(testFixtures(project(":authentication")))
 }

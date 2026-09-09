@@ -18,6 +18,8 @@ dependencies {
     implementation(project(":trainers"))
     implementation(project(":facility-status"))
     implementation(project(":checkin"))
+    implementation(project(":push-notifications"))
+    implementation(project(":fitness-class"))
 
     implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.spring.boot.starter.hateoas)
@@ -34,8 +36,6 @@ dependencies {
     developmentOnly(libs.spring.boot.devtools)
 
     implementation(libs.springdoc.openapi.webflux.ui)
-
-    implementation(libs.firebase.admin)
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.starter.webflux.test)

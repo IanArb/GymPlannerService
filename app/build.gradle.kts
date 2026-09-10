@@ -9,8 +9,6 @@ description = "app"
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":core-utils"))
-    implementation(project(":security"))
     implementation(project(":authentication"))
     implementation(project(":exercises"))
     implementation(project(":fault-reporting"))

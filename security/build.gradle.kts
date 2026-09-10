@@ -13,4 +13,9 @@ dependencies {
     implementation(libs.jjwt.api)
     runtimeOnly(libs.jjwt.impl)
     runtimeOnly(libs.jjwt.jackson)
+
+    // SecurityConfigTests drives the filter chain via @WebFluxTest against a
+    // test-only controller (no dependency on any feature module).
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.starter.webflux.test)
 }

@@ -1,13 +1,14 @@
-// Personal trainers feature. Depends on :core-utils because GymLocation appears
-// in PersonalTrainer's public API (hence `api`). Publishes a test-fixtures
-// artifact (PersonalTrainerDataProvider) consumed by :checkin and :app tests.
+// Personal trainers feature. Depends only on :domain (which re-exports :core-utils,
+// where GymLocation lives). The booking/availability gateway *ports* it used to
+// implement are now wired by adapters in :app, so this feature no longer depends on
+// :booking or :availability. Publishes a test-fixtures artifact
+// (PersonalTrainerDataProvider) consumed by :checkin and :app tests.
 plugins {
     id("gymplanner.spring-conventions")
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

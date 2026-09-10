@@ -1,13 +1,13 @@
-package com.ianarbuckle.gymplannerservice.userProfile.data
+package com.ianarbuckle.gymplannerservice.gateway
 
 import com.ianarbuckle.gymplannerservice.authentication.UserProfile
 import com.ianarbuckle.gymplannerservice.authentication.data.service.UserProfileRegistrar
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import org.springframework.stereotype.Component
 
 /**
- * Implements the authentication layer's [UserProfileRegistrar] port using the
- * user-profile feature's repository, so `:authentication` can create a profile
- * on registration without depending on this feature.
+ * Adapter wiring the authentication layer's [UserProfileRegistrar] port to the
+ * user-profile feature's repository.
  */
 @Component
 class UserProfileRegistrarAdapter(

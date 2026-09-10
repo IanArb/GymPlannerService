@@ -1,6 +1,7 @@
-// User-profile feature. Depends on :authentication (the UserProfile model + the
-// UserProfileRegistrar port) and :booking (the UserProfileGateway port); it
-// implements both ports here, so those modules never depend back on this one.
+// User-profile feature. The UserProfile model lives in :domain, and the two ports
+// this feature used to implement — authentication's UserProfileRegistrar and
+// booking's UserProfileGateway — are now wired by adapters in :app. So this feature
+// depends on no other feature module (only :domain and :core-utils).
 plugins {
     id("gymplanner.spring-conventions")
 }
@@ -8,8 +9,6 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":core-utils"))
-    implementation(project(":authentication"))
-    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

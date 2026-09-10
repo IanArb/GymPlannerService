@@ -1,13 +1,14 @@
-// Check-in feature. Depends on :trainers (PersonalTrainerRepository,
-// TrainerAvailabilityStatus) and consumes its PersonalTrainerDataProvider test
-// fixture. (:core-utils comes transitively via :trainers' api dependency.)
+// Check-in feature. The PersonalTrainer entity and TrainerAvailabilityStatus live in
+// :domain; the trainer lookup/update it needs is inverted behind the
+// PersonalTrainerGateway port (implemented by an adapter in :app), so this feature
+// depends on no other feature module. PersonalTrainerDataProvider comes from
+// :domain's test fixtures.
 plugins {
     id("gymplanner.spring-conventions")
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":trainers"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

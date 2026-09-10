@@ -4,7 +4,6 @@ import com.ianarbuckle.gymplannerservice.common.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.mocks.AvailabilityDataProvider
 import com.ianarbuckle.gymplannerservice.mocks.PersonalTrainerDataProvider
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainerRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -22,14 +21,14 @@ import kotlin.test.assertTrue
 
 class AvailabilityServiceTests {
     private val availabilityRepository = mockk<AvailabilityRepository>()
-    private val personalTrainerRepository = mockk<PersonalTrainerRepository>()
+    private val personalTrainerGateway = mockk<PersonalTrainerGateway>()
 
     private val fixedClock = Clock.fixed(Instant.parse("2025-12-01T08:00:00Z"), ZoneId.of("UTC"))
 
     private val availabilityService =
         AvailabilityServiceImpl(
             availabilityRepository = availabilityRepository,
-            personalTrainerRepository = personalTrainerRepository,
+            personalTrainerGateway = personalTrainerGateway,
             clock = fixedClock,
         )
 
@@ -42,7 +41,7 @@ class AvailabilityServiceTests {
                     id = availability.personalTrainerId,
                 )
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+            coEvery { personalTrainerGateway.findById(any()) } returns personalTrainer
             coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
                 availability
             coEvery { availabilityRepository.save(availability) } returns availability
@@ -77,7 +76,7 @@ class AvailabilityServiceTests {
                     id = availability.personalTrainerId,
                 )
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+            coEvery { personalTrainerGateway.findById(any()) } returns personalTrainer
             coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
                 availability
             coEvery { availabilityRepository.save(availability) } returns availability
@@ -97,7 +96,7 @@ class AvailabilityServiceTests {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
+            coEvery { personalTrainerGateway.findById(personalTrainerId) } returns mockk()
             coEvery {
                 availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
             } returns null
@@ -113,7 +112,7 @@ class AvailabilityServiceTests {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns null
+            coEvery { personalTrainerGateway.findById(personalTrainerId) } returns null
 
             assertFailsWith<PersonalTrainerNotFoundException> {
                 availabilityService.getAvailability(personalTrainerId, month)
@@ -129,7 +128,7 @@ class AvailabilityServiceTests {
                     id = availability.personalTrainerId,
                 )
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+            coEvery { personalTrainerGateway.findById(any()) } returns personalTrainer
             coEvery { availabilityRepository.save(any()) } returns availability
 
             val result = availabilityService.saveAvailability(availability)
@@ -190,7 +189,7 @@ class AvailabilityServiceTests {
             val personalTrainer =
                 PersonalTrainerDataProvider.createPersonalTrainer(id = personalTrainerId)
 
-            coEvery { personalTrainerRepository.findById(any()) } returns personalTrainer
+            coEvery { personalTrainerGateway.findById(any()) } returns personalTrainer
             coEvery { availabilityRepository.save(availability) } returns availability
             coEvery { availabilityRepository.findByPersonalTrainerIdAndMonth(any(), any()) } returns
                 availability
@@ -231,7 +230,7 @@ class AvailabilityServiceTests {
                         ),
                 )
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
+            coEvery { personalTrainerGateway.findById(personalTrainerId) } returns mockk()
             coEvery { availabilityRepository.save(availability) } returns availability
             coEvery {
                 availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
@@ -247,7 +246,7 @@ class AvailabilityServiceTests {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns mockk()
+            coEvery { personalTrainerGateway.findById(personalTrainerId) } returns mockk()
             coEvery {
                 availabilityRepository.findByPersonalTrainerIdAndMonth(personalTrainerId, month)
             } returns null
@@ -263,7 +262,7 @@ class AvailabilityServiceTests {
             val personalTrainerId = "trainer1"
             val month = "2023-12"
 
-            coEvery { personalTrainerRepository.findById(personalTrainerId) } returns null
+            coEvery { personalTrainerGateway.findById(personalTrainerId) } returns null
 
             assertFailsWith<PersonalTrainerNotFoundException> {
                 availabilityService.isAvailable(personalTrainerId, month)

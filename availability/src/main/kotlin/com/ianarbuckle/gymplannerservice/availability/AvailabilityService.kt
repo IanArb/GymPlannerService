@@ -2,7 +2,6 @@ package com.ianarbuckle.gymplannerservice.availability
 
 import com.ianarbuckle.gymplannerservice.common.AvailabilityNotFoundException
 import com.ianarbuckle.gymplannerservice.common.PersonalTrainerNotFoundException
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainerRepository
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.LocalDate
@@ -30,14 +29,14 @@ interface AvailabilityService {
 @Service
 class AvailabilityServiceImpl(
     private val availabilityRepository: AvailabilityRepository,
-    private val personalTrainerRepository: PersonalTrainerRepository,
+    private val personalTrainerGateway: PersonalTrainerGateway,
     private val clock: Clock = Clock.systemDefaultZone(),
 ) : AvailabilityService {
     override suspend fun getAvailability(
         personalTrainerId: String,
         month: String,
     ): Availability {
-        personalTrainerRepository.findById(personalTrainerId)
+        personalTrainerGateway.findById(personalTrainerId)
             ?: throw PersonalTrainerNotFoundException()
 
         val availability =
@@ -68,7 +67,7 @@ class AvailabilityServiceImpl(
     }
 
     override suspend fun saveAvailability(availability: Availability): Availability {
-        personalTrainerRepository.findById(availability.personalTrainerId)
+        personalTrainerGateway.findById(availability.personalTrainerId)
             ?: throw PersonalTrainerNotFoundException()
 
         return availabilityRepository.save(availability)

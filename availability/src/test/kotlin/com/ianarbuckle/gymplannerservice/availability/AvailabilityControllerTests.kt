@@ -17,7 +17,6 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
-import kotlin.test.Ignore
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(
@@ -130,7 +129,6 @@ class AvailabilityControllerTests {
             .isOk
     }
 
-    @Ignore("Flaky test")
     @Test
     fun `should return availability status`() =
         runTest {

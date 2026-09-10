@@ -1,13 +1,13 @@
-// Fitness-classes feature. Depends on :authentication (UserRepository, for the
-// reminder scheduler) and :push-notifications (FcmSender, to notify attendees).
+// Fitness-classes feature. The reminder scheduler's cross-feature needs are inverted
+// behind ports implemented by adapters in :app: UserGateway (authentication, for the
+// push tokens) and NotificationSender (push-notifications, to notify attendees). So
+// this feature depends on no other feature module.
 plugins {
     id("gymplanner.spring-conventions")
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":authentication"))
-    implementation(project(":push-notifications"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

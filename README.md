@@ -22,6 +22,24 @@ This service provides a scalable and reactive backend for managing gym operation
 - JWT-based authentication
 - Embedded MongoDB for easier testing
 
+## Architecture
+
+The service is a multi-module Spring Boot app built as a **hexagonal (ports & adapters)** system. Each feature is a self-contained vertical slice that depends only on the shared base modules (`:domain`, `:core-utils`) — **never on another feature**. When one feature needs something another owns, it declares a **port** (an interface it owns) and consumes that; the concrete **adapters** that satisfy every port live in `:app`, the single composition root that depends on every feature and wires them together at runtime via Spring component scanning.
+
+### Module layering
+
+`:app` → feature modules → `:domain` → `:core-utils`. No feature depends on another feature.
+
+![Module layering](docs/architecture-modules.png)
+
+### Ports & adapters flow
+
+Each edge is one dependency inversion: a consumer's **port** (left, blue) is implemented by an **adapter in `:app`** (edge label) that delegates to a **provider's bean** (right, green).
+
+![Ports and adapters](docs/architecture-ports-adapters.png)
+
+See [docs/architecture.md](docs/architecture.md) for the editable Mermaid sources and a fuller explanation.
+
 ## Getting Started
 
 ### Prerequisites
@@ -42,10 +60,27 @@ Ensure you have the following installed:
    ```sh
    docker run -d --name mongodb -p 27017:27017 mongo
    ```
-3. Run the application:
+3. Set the required environment variables (see [Environment Variables](#environment-variables) below), then run the application:
    ```sh
+   export MONGO_URI="mongodb://localhost:27017"
+   export MONGO_DATABASE_NAME="gymplanner"
+   export ENVIRONMENT="dev"
+   export JWT_EXPIRY="3600000"
+   export JWT_SECRET_KEY="a-long-random-secret"
    ./gradlew bootRun
    ```
+
+### Environment Variables
+
+`./gradlew bootRun` requires the following environment variables at runtime. They are **not** needed for tests, which use an embedded Flapdoodle MongoDB.
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017` |
+| `MONGO_DATABASE_NAME` | MongoDB database name | `gymplanner` |
+| `ENVIRONMENT` | Active Spring profile (`dev`, `staging`, `production`) | `dev` |
+| `JWT_EXPIRY` | JWT expiration in milliseconds | `3600000` |
+| `JWT_SECRET_KEY` | JWT signing secret | `a-long-random-secret` |
 
 ### Running Tests
 

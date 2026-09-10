@@ -1,8 +1,5 @@
 package com.ianarbuckle.gymplannerservice.fitnessclass
 
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.fcm.FcmSender
-import kotlinx.coroutines.flow.filter
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.Clock
@@ -10,9 +7,9 @@ import java.time.LocalDateTime
 
 @Component
 class ClassesScheduler(
-    private val fcmSender: FcmSender,
+    private val notificationSender: NotificationSender,
     private val classesService: FitnessClassesService,
-    private val userRepository: UserRepository,
+    private val userGateway: UserGateway,
     private val clock: Clock,
 ) {
     // Runs every hour
@@ -28,20 +25,12 @@ class ClassesScheduler(
                 val title = "Class Reminder"
                 val message = "${fitnessClass.name} class starts in 1 hour at $classStartTime"
 
-                val users =
-                    userRepository.findAll().filter {
-                        !it.pushNotificationToken.isNullOrEmpty()
-                    }
-
-                users.collect { user ->
-                    val pushNotificationToken = user.pushNotificationToken
-                    if (pushNotificationToken != null) {
-                        fcmSender.sendMessage(
-                            token = pushNotificationToken,
-                            title = title,
-                            body = message,
-                        )
-                    }
+                userGateway.findAllPushNotificationTokens().collect { token ->
+                    notificationSender.sendMessage(
+                        token = token,
+                        title = title,
+                        body = message,
+                    )
                 }
             }
         }

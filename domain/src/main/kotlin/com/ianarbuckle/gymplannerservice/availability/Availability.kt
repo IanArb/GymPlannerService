@@ -1,5 +1,6 @@
 package com.ianarbuckle.gymplannerservice.availability
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
@@ -43,5 +44,7 @@ enum class Status {
 @Document
 data class CheckAvailability(
     val personalTrainerId: String,
-    val isAvailable: Boolean,
+    // Pin the JSON name: without this, Jackson strips the `is` prefix and serializes
+    // this Boolean as `available`, breaking clients (and tests) expecting `isAvailable`.
+    @get:JsonProperty("isAvailable") val isAvailable: Boolean,
 )

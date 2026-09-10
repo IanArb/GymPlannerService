@@ -1,0 +1,26 @@
+flowchart TD
+    app[":app<br/>composition root · adapters · main()"]
+
+    subgraph features["Feature modules (no feature → feature edges)"]
+        direction LR
+        authentication
+        booking
+        availability
+        trainers
+        checkin
+        fitnessclass["fitness-class"]
+        pushnotifications["push-notifications"]
+        userprofile["user-profile"]
+        others["exercises · fault-reporting · gym-locations<br/>messages · facility-status"]
+    end
+
+    domain[":domain<br/>entities · test fixtures"]
+    coreutils[":core-utils<br/>common · validation · utils"]
+    security[":security"]
+
+    app --> features
+    app --> domain
+    features --> domain
+    domain -->|api| coreutils
+    app --> security
+    authentication --> security

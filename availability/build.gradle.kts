@@ -1,7 +1,8 @@
-// Trainer availability feature. Depends on :trainers (PersonalTrainerRepository)
-// and :core-utils (relocated PersonalTrainerNotFoundException). Publishes
-// AvailabilityDataProvider as a test fixture consumed by :booking (and :app while
-// booking still lives there).
+// Trainer availability feature. Depends on :domain and :core-utils (relocated
+// PersonalTrainerNotFoundException). The trainer lookup it needs is inverted behind
+// the PersonalTrainerGateway port (implemented by an adapter in :app), and its own
+// AvailabilityGateway port is likewise implemented in :app, so this feature depends
+// on neither :trainers nor :booking.
 plugins {
     id("gymplanner.spring-conventions")
 }
@@ -9,8 +10,6 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":core-utils"))
-    implementation(project(":trainers"))
-    implementation(project(":booking"))
 
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.data.mongodb.reactive)

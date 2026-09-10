@@ -1,14 +1,16 @@
-package com.ianarbuckle.gymplannerservice.availability
+package com.ianarbuckle.gymplannerservice.gateway
 
+import com.ianarbuckle.gymplannerservice.availability.Availability
+import com.ianarbuckle.gymplannerservice.availability.AvailabilityRepository
 import com.ianarbuckle.gymplannerservice.booking.AvailabilityGateway
 import org.springframework.stereotype.Component
 
 /**
- * Implements booking's [AvailabilityGateway] port using this feature's repository,
- * so :booking can read/update availability without depending on :availability.
+ * Adapter wiring booking's [AvailabilityGateway] port to the availability feature's
+ * repository.
  */
 @Component
-class AvailabilityGatewayImpl(
+class AvailabilityGateway(
     private val availabilityRepository: AvailabilityRepository,
 ) : AvailabilityGateway {
     override suspend fun findByTimeId(timeId: String): Availability? = availabilityRepository.findByTimeId(timeId)

@@ -6,7 +6,6 @@ import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerAlreadyChecked
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotCheckedInException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotFoundException
 import com.ianarbuckle.gymplannerservice.checkin.exception.TrainerNotScheduledException
-import com.ianarbuckle.gymplannerservice.trainers.PersonalTrainerRepository
 import com.ianarbuckle.gymplannerservice.trainers.TrainerAvailabilityStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -26,14 +25,14 @@ interface CheckInService {
 @Service
 class CheckInServiceImpl(
     private val checkInRepository: CheckInRepository,
-    private val personalTrainerRepository: PersonalTrainerRepository,
+    private val personalTrainerGateway: PersonalTrainerGateway,
 ) : CheckInService {
     override suspend fun checkIn(
         trainerId: String,
         checkInTime: LocalDateTime,
     ): CheckIn {
         val trainer =
-            personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
+            personalTrainerGateway.findById(trainerId) ?: throw TrainerNotFoundException()
 
         val startOfDay = checkInTime.toLocalDate().atStartOfDay()
         val endOfDay = startOfDay.plusDays(1)
@@ -63,7 +62,7 @@ class CheckInServiceImpl(
                 ),
             )
 
-        personalTrainerRepository.save(
+        personalTrainerGateway.save(
             trainer.copy(availabilityStatus = TrainerAvailabilityStatus.AVAILABLE),
         )
 
@@ -75,7 +74,7 @@ class CheckInServiceImpl(
         checkOutTime: LocalDateTime,
     ): CheckIn {
         val trainer =
-            personalTrainerRepository.findById(trainerId) ?: throw TrainerNotFoundException()
+            personalTrainerGateway.findById(trainerId) ?: throw TrainerNotFoundException()
 
         val startOfDay = checkOutTime.toLocalDate().atStartOfDay()
         val endOfDay = startOfDay.plusDays(1)
@@ -89,7 +88,7 @@ class CheckInServiceImpl(
 
         val updatedCheckIn = checkInRepository.save(existing.copy(checkOutTime = checkOutTime))
 
-        personalTrainerRepository.save(
+        personalTrainerGateway.save(
             trainer.copy(availabilityStatus = TrainerAvailabilityStatus.UNAVAILABLE),
         )
 

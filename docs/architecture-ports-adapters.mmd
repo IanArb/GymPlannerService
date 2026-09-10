@@ -1,0 +1,41 @@
+flowchart LR
+    subgraph consumers["Consumer features — own the port interfaces"]
+        direction TB
+        bPT["booking<br/>PersonalTrainerGateway"]
+        bAV["booking<br/>AvailabilityGateway"]
+        bUP["booking<br/>UserProfileGateway"]
+        bUSR["booking<br/>UserGateway"]
+        bNS["booking<br/>NotificationSender"]
+        aPT["availability<br/>PersonalTrainerGateway"]
+        cPT["checkin<br/>PersonalTrainerGateway"]
+        fUSR["fitness-class<br/>UserGateway"]
+        fNS["fitness-class<br/>NotificationSender"]
+        pUSR["push-notifications<br/>UserGateway"]
+        auREG["authentication<br/>UserProfileRegistrar"]
+    end
+
+    subgraph providers["Provider features — repositories / senders"]
+        direction TB
+        trRepo["trainers<br/>PersonalTrainerRepository"]
+        avRepo["availability<br/>AvailabilityRepository"]
+        upRepo["user-profile<br/>UserProfileRepository"]
+        usrRepo["authentication<br/>UserRepository"]
+        fcm["push-notifications<br/>FcmSender"]
+    end
+
+    bPT  -->|"BookingPersonalTrainerGateway"| trRepo
+    aPT  -->|"AvailabilityPersonalTrainerGateway"| trRepo
+    cPT  -->|"CheckInPersonalTrainerGateway"| trRepo
+    bAV  -->|"AvailabilityGatewayImpl"| avRepo
+    bUP  -->|"BookingUserProfileGateway"| upRepo
+    auREG -->|"UserProfileRegistrarAdapter"| upRepo
+    bUSR -->|"BookingUserGateway"| usrRepo
+    fUSR -->|"ClassesUserGateway"| usrRepo
+    pUSR -->|"FcmUserGateway"| usrRepo
+    bNS  -->|"FcmNotificationSender"| fcm
+    fNS  -->|"ClassesNotificationSender"| fcm
+
+    classDef port fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+    classDef prov fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
+    class bPT,bAV,bUP,bUSR,bNS,aPT,cPT,fUSR,fNS,pUSR,auREG port;
+    class trRepo,avRepo,upRepo,usrRepo,fcm prov;

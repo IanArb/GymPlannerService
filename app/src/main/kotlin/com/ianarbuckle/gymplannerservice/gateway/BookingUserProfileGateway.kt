@@ -1,12 +1,12 @@
-package com.ianarbuckle.gymplannerservice.userProfile.data
+package com.ianarbuckle.gymplannerservice.gateway
 
 import com.ianarbuckle.gymplannerservice.booking.UserProfileGateway
+import com.ianarbuckle.gymplannerservice.userProfile.data.UserProfileRepository
 import org.springframework.stereotype.Component
 
 /**
- * Implements booking's [UserProfileGateway] port using the user-profile feature's
- * repository, so :booking can verify a profile exists without depending on this
- * feature.
+ * Adapter wiring booking's [UserProfileGateway] port to the user-profile feature's
+ * repository.
  */
 @Component
 class BookingUserProfileGateway(

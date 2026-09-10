@@ -1,7 +1,5 @@
 package com.ianarbuckle.gymplannerservice.booking
 
-import com.ianarbuckle.gymplannerservice.authentication.data.repository.UserRepository
-import com.ianarbuckle.gymplannerservice.fcm.FcmSender
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.Clock
@@ -10,8 +8,8 @@ import java.time.LocalDateTime
 @Component
 class BookingReminderScheduler(
     private val bookingRepository: BookingRepository,
-    private val user: UserRepository,
-    private val fcmSender: FcmSender,
+    private val userGateway: UserGateway,
+    private val notificationSender: NotificationSender,
     private val clock: Clock,
 ) {
     // Runs every hour
@@ -21,11 +19,10 @@ class BookingReminderScheduler(
         val reminderTime = now.plusDays(1).toLocalDate()
         val bookings = bookingRepository.findBookingsByBookingDate(reminderTime)
         bookings.collect { booking ->
-            val user = user.findById(booking.userId) ?: return@collect
-            val token = user.pushNotificationToken
+            val token = userGateway.findPushNotificationToken(booking.userId)
             if (token.isNullOrEmpty()) return@collect
 
-            fcmSender.sendMessage(
+            notificationSender.sendMessage(
                 token,
                 "Booking Reminder",
                 "You have a booking with ${booking.personalTrainer.name} on ${booking.bookingDate}",

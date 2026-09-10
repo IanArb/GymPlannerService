@@ -2,19 +2,18 @@
 // named provider-agnostically so other providers (e.g. APNS for iOS) can be added
 // as sibling packages behind a shared abstraction later.
 //
-// Depends on :authentication because FcmTokenService stores the push token on the
-// User via UserRepository (mongodb-reactive is needed to resolve the repository's
-// CoroutineCrudRepository supertype).
+// FcmTokenService stores the push token on the User, but that lookup/update is
+// inverted behind the UserGateway port (implemented by an adapter in :app), so this
+// feature depends on no other feature module. The User entity itself lives in
+// :domain, which also supplies the mongodb-reactive API transitively.
 plugins {
     id("gymplanner.spring-conventions")
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":authentication"))
 
     implementation(libs.spring.boot.starter.webflux)
-    implementation(libs.spring.boot.starter.data.mongodb.reactive)
     implementation(libs.firebase.admin)
 
     testImplementation(libs.spring.boot.starter.test)

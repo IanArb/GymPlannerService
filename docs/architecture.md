@@ -10,6 +10,10 @@ together at runtime via Spring component scanning.
 
 ## Module layering
 
+`:app` depends on every feature module plus `:domain`; `:security` is not a direct
+`:app` dependency — it is pulled in transitively through `:authentication`, which is
+the only module that uses it.
+
 ```mermaid
 flowchart TD
     app[":app<br/>composition root · adapters · main()"]
@@ -35,7 +39,6 @@ flowchart TD
     app --> domain
     features --> domain
     domain -->|api| coreutils
-    app --> security
     authentication --> security
 ```
 

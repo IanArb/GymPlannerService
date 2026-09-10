@@ -1,16 +1,6 @@
-package com.ianarbuckle.gymplannerservice.authentication.security
+package com.ianarbuckle.gymplannerservice.security
 
 import com.google.common.truth.Truth.assertThat
-import com.ianarbuckle.gymplannerservice.authentication.AuthenticationController
-import com.ianarbuckle.gymplannerservice.authentication.ERole
-import com.ianarbuckle.gymplannerservice.authentication.data.domain.MessageResponse
-import com.ianarbuckle.gymplannerservice.authentication.data.domain.SignUpRequest
-import com.ianarbuckle.gymplannerservice.authentication.data.service.AuthenticationService
-import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusController
-import com.ianarbuckle.gymplannerservice.facilityStatus.FacilityStatusService
-import com.ianarbuckle.gymplannerservice.security.JWTAuthenticationManager
-import com.ianarbuckle.gymplannerservice.security.JwtServerAuthenticationConverter
-import com.ianarbuckle.gymplannerservice.security.SecurityConfig
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
@@ -20,7 +10,6 @@ import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest
 import org.springframework.mock.web.server.MockServerWebExchange
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -36,20 +25,12 @@ import reactor.core.publisher.Mono
 import kotlin.test.Test
 
 @ExtendWith(SpringExtension::class)
-@WebFluxTest(
-    controllers = [AuthenticationController::class, FacilityStatusController::class],
-)
+@WebFluxTest(controllers = [TestSecuredController::class])
 @Import(SecurityConfig::class, JwtServerAuthenticationConverter::class)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 class SecurityConfigTests {
     @Autowired private lateinit var webTestClient: WebTestClient
-
-    @MockitoBean private lateinit var authenticationService: AuthenticationService
-
-    @Suppress("UnusedPrivateProperty")
-    @MockitoBean
-    private lateinit var facilityStatusService: FacilityStatusService
 
     @MockitoBean private lateinit var jwtAuthenticationManager: JWTAuthenticationManager
 
@@ -62,23 +43,9 @@ class SecurityConfigTests {
     @Test
     fun `auth endpoints should be accessible without token`() =
         runTest {
-            val signUpRequest =
-                SignUpRequest(
-                    username = "newuser",
-                    firstName = "New",
-                    surname = "User",
-                    email = "newuser@mail.com",
-                    password = "password123",
-                    roles = setOf("user"),
-                )
-            `when`(authenticationService.createUser(signUpRequest))
-                .thenReturn(MessageResponse(message = "User registered successfully!"))
-
             webTestClient
                 .post()
                 .uri("/api/v1/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(signUpRequest)
                 .exchange()
                 .expectStatus()
                 .isOk
@@ -99,7 +66,7 @@ class SecurityConfigTests {
     fun `users with ROLE_USER should be forbidden from facilities`() =
         runTest {
             `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
-                .thenReturn(authenticationFor(ERole.ROLE_USER))
+                .thenReturn(authenticationFor("ROLE_USER"))
 
             webTestClient
                 .get()
@@ -114,7 +81,7 @@ class SecurityConfigTests {
     fun `users with ROLE_ADMIN should be allowed on facilities`() =
         runTest {
             `when`(jwtAuthenticationManager.authenticate(anyAuthentication()))
-                .thenReturn(authenticationFor(ERole.ROLE_ADMIN))
+                .thenReturn(authenticationFor("ROLE_ADMIN"))
 
             webTestClient
                 .get()
@@ -125,12 +92,12 @@ class SecurityConfigTests {
                 .isOk
         }
 
-    private fun authenticationFor(role: ERole): Mono<Authentication> =
+    private fun authenticationFor(authority: String): Mono<Authentication> =
         Mono.just(
             UsernamePasswordAuthenticationToken(
                 "user",
                 "password",
-                listOf(SimpleGrantedAuthority(role.name)),
+                listOf(SimpleGrantedAuthority(authority)),
             ),
         )
 
